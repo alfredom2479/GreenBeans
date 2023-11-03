@@ -1,5 +1,5 @@
-import {useState} from "react";
-import {redirect, useLoaderData} from "react-router-dom";
+import {useEffect, useState} from "react";
+import { redirect,useLoaderData} from "react-router-dom";
 import type {Params} from 'react-router-dom';
 
 import { requestTopTracks } from '../api';
@@ -35,39 +35,55 @@ export async function loader({params}:TopParams){
     const data = await requestTopTracks(access_token,3);
     console.log(data);
 
-    return data.items;
+    if(data.items && Array.isArray(data.items)){
+      return data.items
+    }
+    
+    return [];
   }catch(err){
     console.log("there has been an error");
     console.log(err);
     throw err;
   }
     
-  return null;
 }
 
-interface ITracks{
+interface ITrack{
   name?:string
 }
 
 export default function TopOf(){
 
-  const [topTracksList,setTopTracksList] = useState<ITracks[]>([]);
+  const [topTracksList,setTopTracksList] = useState<ITrack[]>([]);
 
-  const loaderItems = useLoaderData();
-  //deconstruct loader data items into only the essential parts of the tracks.
-  // like the name, artist, picture, (and maybe the track detaiuls)?, etc
+  const loadedData= useLoaderData();
 
-  if(Array.isArray(loaderItems)){
-    setTopTracksList();
-  }
+  useEffect(()=>{
+    let loaderItems = [];
+
+    const newTracks:ITrack[] = [];
+
+    if(Array.isArray(loadedData)){
+      loaderItems = loadedData;
+
+      for(let i = 0; i < loaderItems.length; i++){
+        newTracks.push({name: loaderItems[i].name ? loaderItems[i].name : "No Name"});
+      }
+    }
+
+    setTopTracksList(newTracks)
+  },[loadedData])
 
   console.log(topTracksList);
-
-
 
   return(
     <>
       <h1>These are your top songs of </h1>
+      <ul>
+        {topTracksList.map((track)=>{
+          return <li key={track.name} >{track.name}</li>
+        })}
+      </ul>
     </>
   )
 }
