@@ -92,13 +92,25 @@ export async function requestMySpotifyAccount(access_token:string){
   return data;
 }
 
+const rangeEnum =(rangeNum:number):string=> {
+  switch(rangeNum){
+    case 0:
+      return "short_term";
+    case 1:
+      return "medium_term";
+    default:
+      return "long_term";
+  }
+}
+
 export async function requestTopTracks(access_token:string, range:number ){
 
+  const inputRange:string = rangeEnum(range);
   console.log("in rmsa; access_token,range: "+access_token+","+range);
   let res:Response|null = null
 
   try{
-    res = await fetch("https://api.spotify.com/v1/me/top/tracks?time_range=short_term&limit=5",{
+    res = await fetch(`https://api.spotify.com/v1/me/top/tracks?time_range=${inputRange}&limit=5`,{
       method: "GET",
       headers: {
         Authorization: 'Bearer ' + access_token
