@@ -75,6 +75,7 @@ export default function TopOf(){
       loaderItems = loadedData;
       
       //There has to be a prettier way to write the code below
+      //lol i forgot i typed this ^, he's right
 
       for(let i = 0; i < loaderItems.length; i++){
         if(loaderItems[i].id){

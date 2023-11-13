@@ -25,9 +25,6 @@ export async function loader(){
   }
 }
 
-export interface ITrackInfo{
-
-}
 
 export default function RealTopPage(){
 

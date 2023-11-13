@@ -134,3 +134,68 @@ export async function requestTopTracks(access_token:string, range:number ){
 
   return data;
 }
+
+export async function requestSpotifyTrack(access_token:string, trackId:string ){
+
+  console.log("in rst; access_token,range: "+access_token+","+trackId);
+  let res:Response|null = null
+
+  try{
+    res= await fetch(`https://api.spotify.com/v1/tracks/${trackId}`,{
+      method: "GET",
+      headers: {
+        Authorization: 'Bearer ' + access_token
+      }
+    });
+  }catch(err){
+    console.log(err)
+    throw{err}
+  }
+
+  console.log(res);
+
+  const data = await res.json();
+  if(!res.ok){
+    throw{
+      message: data.message,
+      statusText: data.statusText,
+      status: data.status
+    };
+  }
+
+  return data;
+}
+
+export async function requestSpotifyRec(access_token:string, trackId:string ){
+
+  console.log("in rsr; access_token,range: "+access_token+","+trackId);
+  let res:Response|null = null
+
+  try{
+    res= await fetch(`https://api.spotify.com/v1/recommendations?seed_tracks=0c6xIDDpzE81m2q797ordA`,{
+      method: "GET",
+      headers: {
+        Authorization: 'Bearer ' + access_token
+      }
+    });
+  }catch(err){
+    console.log(err)
+    throw{err}
+  }
+
+  console.log(res);
+
+  const data = await res.json();
+  if(!res.ok){
+    throw{
+      message: data.message,
+      statusText: data.statusText,
+      status: data.status
+    };
+  }
+
+  return data;
+}
+
+//sample rec request endpoint
+//'https://api.spotify.com/v1/recommendations?seed_tracks=0c6xIDDpzE81m2q797ordA'

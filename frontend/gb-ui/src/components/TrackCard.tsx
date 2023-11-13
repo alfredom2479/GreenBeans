@@ -1,11 +1,6 @@
 
 import { ITrack } from "../interfaces"
 
-/*interface ITrackDetails{
-  id: string
-  trackTitle:string
-
-}*/
 
 export default function TrackCard({id,name,artist,image}:ITrack){
 
