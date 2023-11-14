@@ -12,7 +12,8 @@ import TopPage, {loader as tokensLoader} from "./pages/TopPage";
 import RealTopPage,{loader as spotifyDataLoader} from "./pages/RealTopPage"
 import TopOf, {loader as topDataLoader} from './assets/TopOf';
 import TrackPage,{loader as trackDataLoader} from './pages/TrackPage';
-import RecOptionsSection from './components/RecOptionsSection';
+import RecOptionsSection, {action as getRecsAction} from './components/RecOptionsSection';
+import RecsSection, {loader as recsDataLoader} from './components/RecsSecion';
 
 
 const router = createBrowserRouter([
@@ -50,11 +51,13 @@ const router = createBrowserRouter([
         children:[
           {
             path: "options",
-            element: <RecOptionsSection/>
+            element: <RecOptionsSection/>,
+            action: getRecsAction
           },
           {
             path: "recs",
-            element: <h1>This is the result of your input options</h1>
+            element: <RecsSection/>,
+            loader: recsDataLoader
           }
         ]
       }

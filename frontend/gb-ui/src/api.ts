@@ -172,7 +172,7 @@ export async function requestSpotifyRec(access_token:string, trackId:string ){
   let res:Response|null = null
 
   try{
-    res= await fetch(`https://api.spotify.com/v1/recommendations?seed_tracks=0c6xIDDpzE81m2q797ordA`,{
+    res= await fetch(`https://api.spotify.com/v1/recommendations?limit=5&seed_tracks=0c6xIDDpzE81m2q797ordA`,{
       method: "GET",
       headers: {
         Authorization: 'Bearer ' + access_token

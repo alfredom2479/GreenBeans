@@ -2,6 +2,7 @@ import {useState, useEffect} from "react";
 import {Outlet, redirect, useLoaderData} from "react-router-dom";
 import { requestSpotifyTrack } from "../api";
 import type {Params} from "react-router-dom";
+//import RecOptionsSection from "../components/RecOptionsSection";
 
 interface IURLParams{
   params:Params
@@ -9,7 +10,7 @@ interface IURLParams{
 
 export async function loader({params}:IURLParams){
   console.log(params);
-
+  
   let trackId:string = "bad_track_id";
 
   if(typeof params.trackid === "string"){
@@ -40,6 +41,8 @@ export async function loader({params}:IURLParams){
 }
 
 export default function TrackPage(){
+
+  //const [isSelectingOptions,setIsSelectingOptions] = useState(true);
 
   const [trackData, setTrackData] = useState({name: "", artist: "", image:""});
   const loaderData = useLoaderData();
@@ -89,6 +92,7 @@ export default function TrackPage(){
         </div>
       </div> 
       <Outlet/>
+      
     </>
   )
 }
