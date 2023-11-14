@@ -172,7 +172,7 @@ export async function requestSpotifyRec(access_token:string, trackId:string ){
   let res:Response|null = null
 
   try{
-    res= await fetch(`https://api.spotify.com/v1/recommendations?limit=5&seed_tracks=0c6xIDDpzE81m2q797ordA`,{
+    res= await fetch(`https://api.spotify.com/v1/recommendations?limit=5&seed_tracks=${trackId}`,{
       method: "GET",
       headers: {
         Authorization: 'Bearer ' + access_token
@@ -197,5 +197,35 @@ export async function requestSpotifyRec(access_token:string, trackId:string ){
   return data;
 }
 
+export async function requestSpotifyTrackAudioFeatures(access_token:string, trackId:string ){
+
+  console.log("in rsr; access_token,range: "+access_token+","+trackId);
+  let res:Response|null = null
+
+  try{
+    res= await fetch(`https://api.spotify.com/v1/audio-features/${trackId}`,{
+      method: "GET",
+      headers: {
+        Authorization: 'Bearer ' + access_token
+      }
+    });
+  }catch(err){
+    console.log(err)
+    throw{err}
+  }
+
+  console.log(res);
+
+  const data = await res.json();
+  if(!res.ok){
+    throw{
+      message: data.message,
+      statusText: data.statusText,
+      status: data.status
+    };
+  }
+
+  return data;
+}
 //sample rec request endpoint
 //'https://api.spotify.com/v1/recommendations?seed_tracks=0c6xIDDpzE81m2q797ordA'

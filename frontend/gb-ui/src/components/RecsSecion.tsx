@@ -5,13 +5,19 @@ import { requestSpotifyRec } from "../api";
 import { ITrack } from "../interfaces";
 import TrackCard from "./TrackCard";
 
-interface IURLParams{
-  params: Params
+interface ILoaderParams{
+  params: Params,
+  request: Request
 }
 
-export async function loader({params}:IURLParams){
-  console.log("in action");
+export async function loader({params,request}:ILoaderParams){
+  console.log("in rec Section loader");
   console.log(params);
+  const url = new URL(request.url);
+  const queryParams = new URLSearchParams(url.search);
+  console.log("has apple: "+queryParams.has("apple"));
+  console.log("has esketit: "+queryParams.has("esketit"));
+
   let trackId:string = "bad_track_id";
 
   if(typeof params.trackid === "string"){

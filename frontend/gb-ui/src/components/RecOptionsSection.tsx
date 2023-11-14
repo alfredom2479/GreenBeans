@@ -1,13 +1,44 @@
 //import {useState} from "react"
 import { Form, redirect } from "react-router-dom";
 import type {Params} from "react-router-dom";
+import { requestSpotifyTrackAudioFeatures } from "../api";
 //import { requestSpotifyRec } from "../api";
 
 interface IURLParams{
   params: Params
 }
 
-export async function action({params}:IURLParams){
+export async function loader({params}:IURLParams){
+  console.log("in rec options section loader");
+  console.log(params);
+  let trackId:string = "bad_track_id";
+
+  if(typeof params.trackid === "string"){
+    trackId = params.trackid;
+    console.log(trackId);
+  }
+  else{
+    return redirect("/");
+  }
+
+  const access_token:string|null = localStorage.getItem("access_token");
+
+  if(!access_token ||access_token===""){
+    return redirect("/");
+  }
+
+  try{
+    const data = await requestSpotifyTrackAudioFeatures(access_token,trackId);
+    console.log(data);
+    return data;
+  }catch(err){
+    console.log("there has been a req options loader error");
+    console.log(err);
+    throw err;
+  }
+}
+
+export async function action({params,}:IURLParams){
   console.log("in action");
   console.log(params);
   let trackId:string = "bad_track_id";
@@ -20,35 +51,7 @@ export async function action({params}:IURLParams){
     return redirect("/");
   }
 
-  return redirect("../recs")
-
-  //dont even try to request if u do not have
-  //access token or a trackId
-  
-
-  /*
-  const access_token:string|null = localStorage.getItem("access_token");
-
-  if(!access_token ||access_token===""){
-    return redirect("/");
-  }
-
-  try{
-    const data = await requestSpotifyRec(access_token,trackId);
-    console.log(data);
-
-   if(data.tracks && Array.isArray(data.tracks)){
-    return data.tracks;
-   } 
-
-   return [];
-  }catch(err){
-    console.log("there has been a rec action error");
-    console.log(err);
-    throw err;
-  }
-  */
-
+  return redirect("../recs?test&wedabest")
 
 }
 
