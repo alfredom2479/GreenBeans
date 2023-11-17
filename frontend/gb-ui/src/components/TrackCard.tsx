@@ -1,4 +1,4 @@
-
+import {Link} from "react-router-dom"
 import { ITrack } from "../interfaces"
 
 
@@ -14,6 +14,11 @@ export default function TrackCard({id,name,artist,image}:ITrack){
         <div className="flex-1">
           <div >{name}</div> 
           <div>{artist}</div>
+        </div>
+        <div>
+          <Link to={`/track/${id}`}> 
+            View
+          </Link>
         </div>
       </div> 
     </>

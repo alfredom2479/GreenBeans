@@ -124,6 +124,7 @@ export async function requestTopTracks(access_token:string, range:number ){
   console.log(res);
 
   const data = await res.json();
+  console.log(data);
   if(!res.ok){
     throw{
       message: data.message,

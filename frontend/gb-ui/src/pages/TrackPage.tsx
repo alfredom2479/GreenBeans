@@ -1,5 +1,5 @@
 import {useState, useEffect} from "react";
-import {Outlet, redirect, useLoaderData} from "react-router-dom";
+import {Outlet, NavLink,redirect, useLoaderData} from "react-router-dom";
 import { requestSpotifyTrack } from "../api";
 import type {Params} from "react-router-dom";
 //import RecOptionsSection from "../components/RecOptionsSection";
@@ -91,6 +91,22 @@ export default function TrackPage(){
           </div>
         </div>
       </div> 
+      <nav className=" font-bold bg-purple-950">
+        <ul className={`flex text-green-600`}>
+          <li className={`flex-1 flex justify-center `}>
+            <NavLink to="options" 
+            className={({isActive})=>isActive ? "text-purple-950 bg-green-500 text-center w-full" : ""}>
+              Options
+            </NavLink>
+          </li>
+          <li className={`flex-1 flex justify-center `}>
+            <NavLink to="recs" 
+            className={({isActive})=>isActive ? "text-purple-950 bg-green-500 text-center w-full" : ""}>
+              Recommendations
+            </NavLink>
+          </li>
+        </ul>
+      </nav>
       <Outlet/>
       
     </>
