@@ -12,11 +12,8 @@ import TopPage, {loader as tokensLoader} from "./pages/TopPage";
 import RealTopPage,{loader as spotifyDataLoader} from "./pages/RealTopPage"
 import TopOf, {loader as topDataLoader} from './assets/TopOf';
 import TrackPage,{loader as trackDataLoader} from './pages/TrackPage';
-import RecOptionsSection, {
-  loader as getTrackFeaturesLoader,
-  action as getRecsAction
-} from './components/RecOptionsSection';
-import RecsSection, {loader as recsDataLoader} from './components/RecsSecion';
+import {action as getRecsAction} from './components/RecOptionsSection';
+//import RecsSection, {loader as recsDataLoader} from './components/RecsSecion';
 
 
 const router = createBrowserRouter([
@@ -51,7 +48,13 @@ const router = createBrowserRouter([
         path: ":trackid",
         element: <TrackPage/>,
         loader: trackDataLoader,
-        children:[
+        action: getRecsAction,
+        shouldRevalidate: ({formMethod})=>{
+          console.log("in shouldRevalidate")
+          console.log(formMethod);
+          return formMethod !== "post"
+        }
+        /*children:[
           {
             path: "options",
             element: <RecOptionsSection/>,
@@ -63,7 +66,7 @@ const router = createBrowserRouter([
             element: <RecsSection/>,
             loader: recsDataLoader
           }
-        ]
+        ]*/
       }
     ]
   }

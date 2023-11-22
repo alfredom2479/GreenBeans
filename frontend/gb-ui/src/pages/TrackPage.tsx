@@ -1,7 +1,10 @@
 import {useState, useEffect} from "react";
-import {Outlet, NavLink,redirect, useLoaderData} from "react-router-dom";
-import { requestSpotifyTrack } from "../api";
+import {redirect, useActionData, useLoaderData} from "react-router-dom";
+import { requestSpotifyTrack,requestSpotifyTrackAudioFeatures } from "../api";
 import type {Params} from "react-router-dom";
+import RecOptionsSection from "../components/RecOptionsSection";
+import { ITrack, AudioFeatures } from "../interfaces";
+import TrackCard from "../components/TrackCard";
 //import RecOptionsSection from "../components/RecOptionsSection";
 
 interface IURLParams{
@@ -24,13 +27,17 @@ export async function loader({params}:IURLParams){
   }
 
   try{
-    const data = await requestSpotifyTrack(access_token, trackId);
-    console.log(data);
+    const trackLoaderData = await requestSpotifyTrack(access_token, trackId);
+    console.log("Track data:")
+    console.log(trackLoaderData);
 
+    const audioFeatureLoaderData = await requestSpotifyTrackAudioFeatures(access_token,trackId);
+    console.log("Audio feature data: ")
+    console.log(audioFeatureLoaderData);
     //dont check anything about the data.
     //should be fine. Pretty simple return object
     //yolo
-    return data;
+    return {trackLoaderData,audioFeatureLoaderData};
 
   }catch(err){
     console.log("there has been a get-trackId");
@@ -42,37 +49,118 @@ export async function loader({params}:IURLParams){
 
 export default function TrackPage(){
 
-  //const [isSelectingOptions,setIsSelectingOptions] = useState(true);
+  const [checkedBoxes,setCheckedBoxes] = useState<string[]>([]);
+
+  const loaderData = useLoaderData();
+  const actionData = useActionData();
+
+  const [isSelectingOptions,setIsSelectingOptions] = useState<boolean>(true);
 
   const [trackData, setTrackData] = useState({name: "", artist: "", image:""});
-  const loaderData = useLoaderData();
-
+  const [recList,setRecList] = useState<ITrack[]>([]);
+  const [currAudioFeatures,setCurrAudioFeatures] = useState<AudioFeatures>({});
+    
   useEffect(()=>{
+
+    let trackLoaderData: object|null = {};
+    let audioFeatureLoaderData: object|null = {};
     let tempName:string="";
     let tempArtist:string="";
     let tempImageUrl:string="";
 
-    if(typeof loaderData === 'object' && loaderData ){
-      if('name' in loaderData && typeof loaderData.name === "string"){
-        tempName = loaderData.name;
+    //Split loaderData into trackLoaderData and audioFeatureLoaderData
+    if(typeof loaderData === 'object' && loaderData) { 
+      if('trackLoaderData' in loaderData  &&
+        typeof loaderData.trackLoaderData==='object'){
+          trackLoaderData = loaderData.trackLoaderData;
       }
-      if('artists' in loaderData && Array.isArray(loaderData.artists) ){
-        if(loaderData.artists.length >0 && loaderData.artists[0].name){
-          tempArtist = loaderData.artists[0].name
+      if('audioFeatureLoaderData' in loaderData &&
+        typeof loaderData.audioFeatureLoaderData === 'object'){
+          audioFeatureLoaderData = loaderData.audioFeatureLoaderData
+        }
+    }
+    
+    //Construct current ITrack object
+    if(typeof trackLoaderData === 'object' && trackLoaderData ){
+      if('name' in trackLoaderData && typeof trackLoaderData.name === "string"){
+        tempName = trackLoaderData.name;
+      }
+      if('artists' in trackLoaderData && Array.isArray(trackLoaderData.artists) ){
+        if(trackLoaderData.artists.length >0 && trackLoaderData.artists[0].name){
+          tempArtist = trackLoaderData.artists[0].name
         }
       }
-      if('album' in loaderData && typeof loaderData.album === 'object' && loaderData.album){
+      if('album' in trackLoaderData && typeof trackLoaderData.album === 'object' && trackLoaderData.album){
         
-        if('images' in loaderData.album && Array.isArray(loaderData.album.images)){
-          if(loaderData.album.images.length > 0 && loaderData.album.images[loaderData.album.images.length-1].url){
-            tempImageUrl = loaderData.album.images[loaderData.album.images.length-1].url;
+        if('images' in trackLoaderData.album && Array.isArray(trackLoaderData.album.images)){
+          if(trackLoaderData.album.images.length > 0 && trackLoaderData.album.images[trackLoaderData.album.images.length-1].url){
+            tempImageUrl = trackLoaderData.album.images[trackLoaderData.album.images.length-1].url;
           }
         }
       }
       setTrackData({name: tempName, artist: tempArtist, image: tempImageUrl});
+    
+      //Construct current Audio feature data
+      /*
+      acousticness?: number,
+  danceability?: number,
+  energy?: number,
+  liveness?: number,
+  valence?: number
+  */
+      if(typeof audioFeatureLoaderData === 'object' && audioFeatureLoaderData){
+        console.log("audio feature data shape:");
+        const tempAudioFeatures:AudioFeatures = {}
+        if('acousticness' in audioFeatureLoaderData && typeof audioFeatureLoaderData.acousticness === "number"){
+          tempAudioFeatures.acousticness = audioFeatureLoaderData.acousticness
+        }
+        if('danceability' in audioFeatureLoaderData && typeof audioFeatureLoaderData.danceability === "number"){
+            tempAudioFeatures.danceability = audioFeatureLoaderData.danceability
+        }
+        if('energy' in audioFeatureLoaderData && typeof audioFeatureLoaderData.energy === "number"){
+            tempAudioFeatures.energy = audioFeatureLoaderData.energy
+        }
+        if('liveness' in audioFeatureLoaderData && typeof audioFeatureLoaderData.liveness === "number"){
+            tempAudioFeatures.liveness = audioFeatureLoaderData.liveness
+        }
+        if('valence' in audioFeatureLoaderData && typeof audioFeatureLoaderData.valence === "number"){
+            tempAudioFeatures.valence = audioFeatureLoaderData.valence
+        }
+        setCurrAudioFeatures(tempAudioFeatures);
+      }
     }
     
   },[loaderData])
+
+  useEffect(()=>{
+   if(Array.isArray(actionData)){
+    const tempTrackList:ITrack[] = [];
+    for(let i=0; i < actionData.length;i++){
+      const tempTrackInfo:ITrack = {id:"",name:"",artist:"",image:""}
+      if(actionData[i].id){
+        tempTrackInfo.id= actionData[i].id
+      }
+      if(actionData[i].name){
+        tempTrackInfo.name = actionData[i].name;
+      }
+      if(actionData[i].artists){
+        if(Array.isArray(actionData[i].artists) && actionData[i].artists.length > 0){
+          tempTrackInfo.artist = actionData[i].artists[0].name
+        }
+      }
+      if(actionData[i].album && actionData[i].album.images){
+        if(Array.isArray(actionData[i].album.images)
+          && actionData[i].album.images.length > 0){
+            tempTrackInfo.image = actionData[i].album.images[actionData[i].album.images.length-1].url;
+          }
+      }
+      tempTrackList.push(tempTrackInfo);
+    }
+    setRecList(tempTrackList);
+   } 
+  },[actionData]);
+
+  //console.log(recList);
 
   return(
     <>
@@ -94,21 +182,38 @@ export default function TrackPage(){
       <nav className=" font-bold bg-purple-950">
         <ul className={`flex text-green-600`}>
           <li className={`flex-1 flex justify-center `}>
-            <NavLink to="options" 
-            className={({isActive})=>isActive ? "text-purple-950 bg-green-500 text-center w-full" : ""}>
+            <button onClick={()=>setIsSelectingOptions(true)}  
+            className={isSelectingOptions ? "text-purple-950 bg-green-500 text-center w-full" : ""}>
               Options
-            </NavLink>
+            </button>
           </li>
           <li className={`flex-1 flex justify-center `}>
-            <NavLink to="recs" 
-            className={({isActive})=>isActive ? "text-purple-950 bg-green-500 text-center w-full" : ""}>
+            <button onClick={()=>setIsSelectingOptions(false)}
+            className={!isSelectingOptions ? "text-purple-950 bg-green-500 text-center w-full" : ""}>
               Recommendations
-            </NavLink>
+            </button>
           </li>
         </ul>
       </nav>
-      <Outlet/>
-      
+      { isSelectingOptions 
+        ? <RecOptionsSection checkedBoxes={checkedBoxes} setCheckedBoxes={setCheckedBoxes} audioFeatures={currAudioFeatures}/> 
+        : <div>
+            <ul>
+              {recList.map((track)=>{
+                return (
+                  <li key={track.id}>
+                    <TrackCard
+                      id={track.id}
+                      name={track.name}
+                      artist={track.artist}
+                      image={track.image}
+                    />
+                  </li>
+                )
+              })}
+            </ul>
+          </div>
+      }
     </>
   )
 }

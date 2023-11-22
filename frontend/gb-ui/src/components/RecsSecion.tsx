@@ -27,12 +27,8 @@ export async function loader({params,request}:ILoaderParams){
   else{
     return redirect("/");
   }
-
-
   //dont even try to request if u do not have
   //access token or a trackId
-  
-
   const access_token:string|null = localStorage.getItem("access_token");
 
   if(!access_token ||access_token===""){
@@ -40,7 +36,7 @@ export async function loader({params,request}:ILoaderParams){
   }
 
   try{
-    const data = await requestSpotifyRec(access_token,trackId);
+    const data = await requestSpotifyRec(access_token,trackId,[],{});
     console.log(data);
 
    if(data.tracks && Array.isArray(data.tracks)){

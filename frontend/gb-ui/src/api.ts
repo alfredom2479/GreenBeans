@@ -1,3 +1,5 @@
+import { AudioFeatures } from "./interfaces";
+
 export async function requestAuth(){
 
   let res:Response|null = null
@@ -167,13 +169,33 @@ export async function requestSpotifyTrack(access_token:string, trackId:string ){
   return data;
 }
 
-export async function requestSpotifyRec(access_token:string, trackId:string ){
+export async function requestSpotifyRec(access_token:string, trackId:string, selectedOptions: string[],audioFeatures:AudioFeatures){
 
-  console.log("in rsr; access_token,range: "+access_token+","+trackId);
+  console.log("in req spot rec; access_token,range: "+access_token+","+trackId);
+  console.log(selectedOptions);
+
+  //iterate through selectedOptions and form suffix
+  let queryOptionSuffix:string = trackId;
+
+  //iterate through audioFeatures and add to suffix string
+
+  if(audioFeatures.acousticness && selectedOptions.includes('acousticness')){
+    queryOptionSuffix+=`&target_acousticness=${audioFeatures.acousticness}`
+    queryOptionSuffix+=`&min_acousticness=${audioFeatures.acousticness-.1}`
+    queryOptionSuffix+=`&max_acousticness=${audioFeatures.acousticness+.1}`
+  }
+
+  console.log("final query suffix: "+queryOptionSuffix);
+  /*
+  for(const value in selectedOptions){
+    queryOptionSuffix+=`&$`;
+  }
+  */
+
   let res:Response|null = null
 
   try{
-    res= await fetch(`https://api.spotify.com/v1/recommendations?limit=5&seed_tracks=${trackId}`,{
+    res= await fetch(`https://api.spotify.com/v1/recommendations?limit=5&seed_tracks=${queryOptionSuffix}`,{
       method: "GET",
       headers: {
         Authorization: 'Bearer ' + access_token
@@ -184,9 +206,10 @@ export async function requestSpotifyRec(access_token:string, trackId:string ){
     throw{err}
   }
 
-  console.log(res);
+  console.log("The recs response")
 
   const data = await res.json();
+  console.log(data);
   if(!res.ok){
     throw{
       message: data.message,
@@ -203,6 +226,7 @@ export async function requestSpotifyTrackAudioFeatures(access_token:string, trac
   console.log("in rsr; access_token,range: "+access_token+","+trackId);
   let res:Response|null = null
 
+  //might not neet to send bearer token for this endpoint
   try{
     res= await fetch(`https://api.spotify.com/v1/audio-features/${trackId}`,{
       method: "GET",
@@ -211,8 +235,8 @@ export async function requestSpotifyTrackAudioFeatures(access_token:string, trac
       }
     });
   }catch(err){
-    console.log(err)
-    throw{err}
+    console.log(err);
+    throw{err};
   }
 
   console.log(res);
