@@ -171,6 +171,13 @@ export async function requestSpotifyTrack(access_token:string, trackId:string ){
 
 export async function requestSpotifyRec(access_token:string, trackId:string, selectedOptions: string[],audioFeatures:AudioFeatures){
 
+  const audioFeatureNames: (keyof AudioFeatures)[] = [
+    'acousticness' ,
+    'danceability' ,
+    'energy' ,
+    'liveness' ,
+    'valence' 
+  ]
   console.log("in req spot rec; access_token,range: "+access_token+","+trackId);
   console.log(selectedOptions);
 
@@ -178,12 +185,20 @@ export async function requestSpotifyRec(access_token:string, trackId:string, sel
   let queryOptionSuffix:string = trackId;
 
   //iterate through audioFeatures and add to suffix string
+  for(const audioFeatureName in audioFeatureNames ){
 
-  if(audioFeatures.acousticness && selectedOptions.includes('acousticness')){
-    queryOptionSuffix+=`&target_acousticness=${audioFeatures.acousticness}`
-    queryOptionSuffix+=`&min_acousticness=${audioFeatures.acousticness-.1}`
-    queryOptionSuffix+=`&max_acousticness=${audioFeatures.acousticness+.1}`
+    const name: keyof AudioFeatures = audioFeatureName as keyof AudioFeatures ;
+    const featureValue: number = audioFeatures[name] || -999;
+
+      if(featureValue !== -999){
+        queryOptionSuffix+=`&target_${name}=${featureValue}`
+        queryOptionSuffix+=`&min_${name}=${ featureValue-.1 }`
+        queryOptionSuffix+=`&max_${name}=${featureValue+.1}`
+      }
+      
   }
+  //const testString:string = "acousticness";
+  
 
   console.log("final query suffix: "+queryOptionSuffix);
   /*
