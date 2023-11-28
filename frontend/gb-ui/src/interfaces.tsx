@@ -11,7 +11,13 @@ export interface AudioFeatures{
   danceability?: number,
   energy?: number,
   liveness?: number,
-  valence?: number
+  valence?: number,
+  tempo?: number,
+  duration_ms?: number,
+  time_signature?: number,
+  instrumentalness?: number,
+  key?: number,
+  mode?: number
 }
 /*
 acousticness": 0.00242,

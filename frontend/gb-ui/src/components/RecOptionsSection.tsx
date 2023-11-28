@@ -65,7 +65,6 @@ interface RecommendationOptions{
 */
 
 export async function action({params,request}:IURLParams){  
-  console.log("in action");
   const access_token:string|null = localStorage.getItem("access_token");
   //const formData = await request.formData();
   //const selectedOptions:string[] = [];
@@ -84,21 +83,12 @@ export async function action({params,request}:IURLParams){
   }
   let audioFeatures:AudioFeatures = {};
   let settings:string[] = [];
-  console.log(trackId)
   const requestJson = await request.json();
   //console.log(requestJson);
 
   audioFeatures = requestJson.audioFeatures;
-  console.log("audio features in action: ")
-  console.log(audioFeatures);
 
   settings = requestJson.settings;
-  console.log("settings in action: ");
-  console.log(settings);
-  //console.log(requestJson.settings);
-
-  //Fill audioFeatures
-  
 
   try{
     const data = await requestSpotifyRec(access_token,trackId,settings,audioFeatures);
@@ -183,12 +173,10 @@ export default function RecOptionsSection({checkedBoxes,setCheckedBoxes, audioFe
   
   return(
     <>
-    <h1>
-      This is where u input ur stuff
-    </h1> 
       <div className="text-2xl">Vibe Features</div>
+
       <label htmlFor="acousticnesss">acousticnesss </label>
-      <input onClick={()=>handleToggleSettingBox("acousticness")} defaultChecked={isSettingPicked("acousticness")} name="acousticnesss" id="checkbox" type="checkbox"></input>
+      <input onClick={()=>handleToggleSettingBox("acousticness")} defaultChecked={isSettingPicked("acousticness")} name="acousticnesss" id="acousticness" type="checkbox"></input>
       <br/>
 
       <label htmlFor="danceability">danceability </label>
@@ -207,6 +195,31 @@ export default function RecOptionsSection({checkedBoxes,setCheckedBoxes, audioFe
       <input onClick={()=>handleToggleSettingBox("valence")} defaultChecked={isSettingPicked("valence")} name="valence" id="valence" type="checkbox"></input>
       <br/>
 
+      <div className="text-2xl">Tech Features</div>
+
+      <label htmlFor="tempo">tempo </label>
+      <input onClick={()=>handleToggleSettingBox("tempo")} defaultChecked={isSettingPicked("acousticness")} name="tempo" id="tempo" type="checkbox"></input>
+      <br/>
+
+      <label htmlFor="duration">duration </label>
+      <input onClick={()=>handleToggleSettingBox("duration")} defaultChecked={isSettingPicked("danceability")}name="duration" id="duration" type="checkbox"></input>
+      <br/>
+
+      <label htmlFor="time_signature">time signature </label>
+      <input onClick={()=>handleToggleSettingBox("time_signature")} defaultChecked={isSettingPicked("energy")} name="time_signature" id="time_signature" type="checkbox"></input>
+      <br/>
+
+      <label htmlFor="instrumentalness">instrumentalness </label>
+      <input onClick={()=>handleToggleSettingBox("instrumentalness")} defaultChecked={isSettingPicked("instrumentalness")} name="instrumentalness" id="liveness" type="checkbox"></input>
+      <br/>
+
+      <label htmlFor="key">key </label>
+      <input onClick={()=>handleToggleSettingBox("key")} defaultChecked={isSettingPicked("key")} name="key" id="key" type="checkbox"></input>
+      <br/>
+
+      <label htmlFor="mode">mode </label>
+      <input onClick={()=>handleToggleSettingBox("mode")} defaultChecked={isSettingPicked("mode")} name="mode" id="mode" type="checkbox"></input>
+      <br/>
       <button 
       onClick={()=>{
         const submissionJSON = JSON.stringify({settings:checkedBoxes,audioFeatures});
@@ -228,17 +241,12 @@ export default function RecOptionsSection({checkedBoxes,setCheckedBoxes, audioFe
   )
 }
 /*
-~VIBE Features~
-acousticnesss
-danceability
-energy
-liveness
-valence (how happy)
 
 ~NERD Features~
 tempo
 duration
 time signature
 instrumentalness
-loudness
+key
+mode
 */

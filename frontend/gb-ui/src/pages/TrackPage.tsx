@@ -37,6 +37,7 @@ export async function loader({params}:IURLParams){
     //dont check anything about the data.
     //should be fine. Pretty simple return object
     //yolo
+    //it got a little more complicated
     return {trackLoaderData,audioFeatureLoaderData};
 
   }catch(err){
@@ -125,6 +126,24 @@ export default function TrackPage(){
         }
         if('valence' in audioFeatureLoaderData && typeof audioFeatureLoaderData.valence === "number"){
             tempAudioFeatures.valence = audioFeatureLoaderData.valence
+        }
+        if('tempo' in audioFeatureLoaderData && typeof audioFeatureLoaderData.tempo=== "number"){
+            tempAudioFeatures.tempo = audioFeatureLoaderData.tempo
+        }
+        if('duration_ms' in audioFeatureLoaderData && typeof audioFeatureLoaderData.duration_ms=== "number"){
+            tempAudioFeatures.duration_ms = audioFeatureLoaderData.duration_ms
+        }
+        if('time_signature' in audioFeatureLoaderData && typeof audioFeatureLoaderData.time_signature=== "number"){
+            tempAudioFeatures.time_signature = audioFeatureLoaderData.time_signature
+        }
+        if('instrumentalness' in audioFeatureLoaderData && typeof audioFeatureLoaderData.instrumentalness=== "number"){
+            tempAudioFeatures.instrumentalness= audioFeatureLoaderData.instrumentalness
+        }
+        if('key' in audioFeatureLoaderData && typeof audioFeatureLoaderData.key === "number"){
+            tempAudioFeatures.key= audioFeatureLoaderData.key
+        }
+        if('mode' in audioFeatureLoaderData && typeof audioFeatureLoaderData.mode === "number"){
+            tempAudioFeatures.mode = audioFeatureLoaderData.mode
         }
         setCurrAudioFeatures(tempAudioFeatures);
       }

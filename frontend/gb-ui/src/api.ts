@@ -171,34 +171,92 @@ export async function requestSpotifyTrack(access_token:string, trackId:string ){
 
 export async function requestSpotifyRec(access_token:string, trackId:string, selectedOptions: string[],audioFeatures:AudioFeatures){
 
+  //NOTE
+  //u might have to organize the results in best match to worse match
   const audioFeatureNames: (keyof AudioFeatures)[] = [
     'acousticness' ,
     'danceability' ,
     'energy' ,
     'liveness' ,
-    'valence' 
+    'valence' ,
+    'tempo',
+    'duration_ms',
+    'time_signature',
+    'instrumentalness',
+    'key',
+    'mode'
   ]
+
+  /*
+  const easyRangeFeatures: (keyof AudioFeatures)[]=[
+    'acousticness',
+    'danceability',
+    'energy',
+    'liveness',
+    'valence'
+  ]
+  */
   console.log("in req spot rec; access_token,range: "+access_token+","+trackId);
   console.log(selectedOptions);
+  console.log("audio features: ");
+  console.log(audioFeatures);
 
   //iterate through selectedOptions and form suffix
   let queryOptionSuffix:string = trackId;
 
   //iterate through audioFeatures and add to suffix string
-  for(const audioFeatureName in audioFeatureNames ){
+  for(let i =0; i < audioFeatureNames.length; i++ ){
+    if(!selectedOptions.includes(audioFeatureNames[i]) ){
+      continue
+    }
 
-    const name: keyof AudioFeatures = audioFeatureName as keyof AudioFeatures ;
-    const featureValue: number = audioFeatures[name] || -999;
+    const name: keyof AudioFeatures = audioFeatureNames[i] as keyof AudioFeatures ;
+
+    const featureValue: number | undefined = audioFeatures[name] ;
+    if(featureValue === undefined) continue;
+    
+    let upperLimit: number = featureValue;
+    let lowerLimit: number = featureValue;
+
+    switch(audioFeatureNames[i]){
+      case 'tempo':
+        upperLimit = +(featureValue + 10).toFixed(4);
+        lowerLimit = +(featureValue - 10).toFixed(4);
+        break;
+      case 'duration_ms':
+        upperLimit = +(featureValue + 30000).toFixed(1);
+        lowerLimit = +(featureValue - 30000).toFixed(1);
+        break;
+      case 'time_signature' :
+      case 'key':
+      case 'mode':
+        upperLimit = featureValue;
+        lowerLimit = featureValue;
+        break;
+      
+      default:
+        upperLimit = +(featureValue + .15).toFixed(4);
+        lowerLimit = +(featureValue - .15).toFixed(4);
+        if(upperLimit > 1){
+          upperLimit =1;
+        }
+        if(lowerLimit < 0){
+          lowerLimit=0;
+        }
+    }
+    
+    console.log(`${audioFeatureNames[i]} value: `+featureValue)
 
       if(featureValue !== -999){
         queryOptionSuffix+=`&target_${name}=${featureValue}`
-        queryOptionSuffix+=`&min_${name}=${ featureValue-.1 }`
-        queryOptionSuffix+=`&max_${name}=${featureValue+.1}`
+        queryOptionSuffix+=`&min_${name}=${ lowerLimit }`
+        queryOptionSuffix+=`&max_${name}=${ upperLimit}`
       }
       
   }
   //const testString:string = "acousticness";
   
+
 
   console.log("final query suffix: "+queryOptionSuffix);
   /*
@@ -210,7 +268,7 @@ export async function requestSpotifyRec(access_token:string, trackId:string, sel
   let res:Response|null = null
 
   try{
-    res= await fetch(`https://api.spotify.com/v1/recommendations?limit=5&seed_tracks=${queryOptionSuffix}`,{
+    res= await fetch(`https://api.spotify.com/v1/recommendations?limit=99&seed_tracks=${queryOptionSuffix}`,{
       method: "GET",
       headers: {
         Authorization: 'Bearer ' + access_token
