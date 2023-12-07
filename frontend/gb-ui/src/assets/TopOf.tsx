@@ -89,7 +89,7 @@ export default function TopOf(){
              Array.isArray(loaderItems[i].album.images)
           && loaderItems[i].album.images.length > 0 &&
           loaderItems[i].album.images[loaderItems[i].album.images.length-1].url){
-              smallImageURL = loaderItems[i].album.images[loaderItems[i].album.images.length-1].url;
+              smallImageURL = loaderItems[i].album.images[loaderItems[i].album.images.length-2].url;
             }
           newTracks.push({
             name: loaderItems[i].name ? loaderItems[i].name : "No Name",
@@ -109,17 +109,7 @@ export default function TopOf(){
   console.log(topTracksList);
 
   return(
-    <>
-      {/*  
-      <h1>These are your top songs of </h1>
-      <ul>
-        {topTracksList.map((track)=>{
-          return <li key={track.name} >{track.name}</li>
-        })}
-      </ul>
-        */}
-      <div>
-        {/* <TrackCard/> */}
+      <div className="overflow-scroll max-h-[75vh]">
         <ul>
           {topTracksList.map((track)=>{
             return (
@@ -135,6 +125,5 @@ export default function TopOf(){
         </ul>
       </div>
 
-    </>
   )
 }

@@ -112,7 +112,7 @@ export async function requestTopTracks(access_token:string, range:number ){
   let res:Response|null = null
 
   try{
-    res = await fetch(`https://api.spotify.com/v1/me/top/tracks?time_range=${inputRange}&limit=5`,{
+    res = await fetch(`https://api.spotify.com/v1/me/top/tracks?time_range=${inputRange}&limit=10`,{
       method: "GET",
       headers: {
         Authorization: 'Bearer ' + access_token

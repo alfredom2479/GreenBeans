@@ -95,7 +95,7 @@ export default function TrackPage(){
         
         if('images' in trackLoaderData.album && Array.isArray(trackLoaderData.album.images)){
           if(trackLoaderData.album.images.length > 0 && trackLoaderData.album.images[trackLoaderData.album.images.length-1].url){
-            tempImageUrl = trackLoaderData.album.images[trackLoaderData.album.images.length-1].url;
+            tempImageUrl = trackLoaderData.album.images[trackLoaderData.album.images.length-2].url;
           }
         }
       }

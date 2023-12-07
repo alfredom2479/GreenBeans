@@ -37,37 +37,39 @@ export default function RealTopPage(){
   }
 
   return(
-    <>
-      <h1 className="text-green-900 font-bold text-4xl text-center my-5">
+    <div className="max-h-screen overflow-scroll">
+      <div className="h-1/4">
+      <h1 className="text-purple-200 font-bold text-4xl text-center my-5">
         {display_name}!<br/>Here Are Your Top Songs
       </h1> 
-      <nav className=" font-bold bg-purple-950">
-        <ul className={`flex text-green-600`}>
-          <li className={`flex-1 flex justify-center `}>
+      <nav className=" font-bold bg-stone-900 h-full">
+        <ul className={`flex text-green-800`}>
+          <li className={`flex-1 flex justify-center content-center `}>
           {/* u have to define string with default style and add
           to it if isActive is true with the appropriate styles */}
           
             <NavLink to="month" 
-            className={({isActive})=>isActive ? "text-purple-950 bg-green-500 text-center w-full" : "text-center w-full"}>
+            className={({isActive})=>isActive ? "text-stone-900 bg-green-700 text-center w-full text-2xl align-middle" : "text-center w-full text-2xl align-middle"}>
               Month
             </NavLink>
           </li>
           <li className={`flex-1 flex justify-center `}>
             <NavLink to="sixmonths" 
-            className={({isActive})=>isActive ? "text-purple-950 bg-green-500 text-center w-full" : "text-center w-full"}>
+            className={({isActive})=>isActive ? "text-stone-900 bg-green-700 text-center w-full text-2xl" : "text-center w-full text-2xl"}>
               Six Months
             </NavLink>
           </li>
           <li className={`flex-1 flex justify-center` }>
             <NavLink to="alltime"
-            className={({isActive})=> isActive ? "text-purple-950 bg-green-500 text-center w-full" : "text-center w-full"}>
-              Past Few Years
+            className={({isActive})=> isActive ? "text-stone-900 bg-green-700 text-center w-full text-2xl" : "text-center w-full text-2xl"}>
+              Years+
             </NavLink>
           </li>
         </ul>
       </nav>
+      </div>
       <Outlet/>
 
-    </>
+    </div>
   )
 }
