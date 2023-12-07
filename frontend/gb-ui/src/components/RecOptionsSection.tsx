@@ -120,39 +120,6 @@ export default function RecOptionsSection({checkedBoxes,setCheckedBoxes, audioFe
   console.log("audio features in RecOptionsSection")
   console.log(audioFeatures);
   const submit = useSubmit();
-  /*const actionData = useActionData();
-  const [recList,setRecList] = useState<ITrack[]>([]);
-
-  useEffect(()=>{
-   if(Array.isArray(actionData)){
-    const tempTrackList:ITrack[] = [];
-    for(let i=0; i < actionData.length;i++){
-      const tempTrackInfo:ITrack = {id:"",name:"",artist:"",image:""}
-      if(actionData[i].id){
-        tempTrackInfo.id= actionData[i].id
-      }
-      if(actionData[i].name){
-        tempTrackInfo.name = actionData[i].name;
-      }
-      if(actionData[i].artists){
-        if(Array.isArray(actionData[i].artists) && actionData[i].artists.length > 0){
-          tempTrackInfo.artist = actionData[i].artists[0].name
-        }
-      }
-      if(actionData[i].album && actionData[i].album.images){
-        if(Array.isArray(actionData[i].album.images)
-          && actionData[i].album.images.length > 0){
-            tempTrackInfo.image = actionData[i].album.images[actionData[i].album.images.length-1].url;
-          }
-      }
-      tempTrackList.push(tempTrackInfo);
-    }
-    setRecList(tempTrackList);
-   } 
-  },[actionData]);
-
-  console.log(recList);
-  */
 
   const isSettingPicked = (setting:string)=>{
     return checkedBoxes.includes(setting)

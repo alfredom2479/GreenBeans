@@ -202,13 +202,13 @@ export default function TrackPage(){
         <ul className={`flex text-green-600`}>
           <li className={`flex-1 flex justify-center `}>
             <button onClick={()=>setIsSelectingOptions(true)}  
-            className={isSelectingOptions ? "text-purple-950 bg-green-500 text-center w-full" : ""}>
+            className={isSelectingOptions ? "text-purple-950 bg-green-500 text-center w-full" : "text-center w-full"}>
               Options
             </button>
           </li>
           <li className={`flex-1 flex justify-center `}>
             <button onClick={()=>setIsSelectingOptions(false)}
-            className={!isSelectingOptions ? "text-purple-950 bg-green-500 text-center w-full" : ""}>
+            className={!isSelectingOptions ? "text-purple-950 bg-green-500 text-center w-full" : "text-center w-full"}>
               Recommendations
             </button>
           </li>

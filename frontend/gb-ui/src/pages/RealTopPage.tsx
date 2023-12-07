@@ -48,19 +48,19 @@ export default function RealTopPage(){
           to it if isActive is true with the appropriate styles */}
           
             <NavLink to="month" 
-            className={({isActive})=>isActive ? "text-purple-950 bg-green-500" : ""}>
+            className={({isActive})=>isActive ? "text-purple-950 bg-green-500 text-center w-full" : "text-center w-full"}>
               Month
             </NavLink>
           </li>
           <li className={`flex-1 flex justify-center `}>
             <NavLink to="sixmonths" 
-            className={({isActive})=>isActive ? "text-purple-950 bg-green-500 text-center w-full" : ""}>
+            className={({isActive})=>isActive ? "text-purple-950 bg-green-500 text-center w-full" : "text-center w-full"}>
               Six Months
             </NavLink>
           </li>
           <li className={`flex-1 flex justify-center` }>
             <NavLink to="alltime"
-            className={({isActive})=> isActive ? "text-purple-950 bg-green-500" : ""}>
+            className={({isActive})=> isActive ? "text-purple-950 bg-green-500 text-center w-full" : "text-center w-full"}>
               Past Few Years
             </NavLink>
           </li>
