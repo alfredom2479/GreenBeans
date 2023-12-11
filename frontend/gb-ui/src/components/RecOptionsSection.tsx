@@ -97,7 +97,8 @@ export default function RecOptionsSection({checkedBoxes,setCheckedBoxes, audioFe
   
   return(
     <>
-      <div className="basis-8/12">
+      <div className="text-xl w-screen text-center  font-bold text-green-100">What do you like about this song?</div>
+      <div className="basis-6/12  grid grid-cols-2 justify-items-center">
       <div>
       <div className="text-2xl font-bold text-green-400">Vibe Features</div>
       {vibeFeatures.map((feature)=>{
@@ -138,7 +139,7 @@ export default function RecOptionsSection({checkedBoxes,setCheckedBoxes, audioFe
       </div>
       </div>
 
-      <div className="flex flex-col basis-2/12">
+      <div className="flex flex-col basis-2/12 grow-[3]">
       <button 
         onClick={()=>{
           const submissionJSON = JSON.stringify({settings:checkedBoxes,audioFeatures});

@@ -183,11 +183,11 @@ export default function TrackPage(){
 
   return(
     <div className="flex flex-col justify-between h-screen">
-      <div className="basis-2/12">
-      <div className="bg-stone-900 text-purple-200 flex">
-        <div className="basis-5/12">
+      <div className="basis-4/12 flex flex-col">
+      <div className="basis-5/6 bg-stone-900 text-purple-200 flex">
+        <div className="basis-5/12 flex items-center">
           <img src={trackData.image}
-          className="h-40">
+          className="flex-1 w-full h-full object-cover">
           </img>
         </div>
         <div className="basis-7/12">
@@ -199,8 +199,8 @@ export default function TrackPage(){
           </div>
         </div>
       </div> 
-      <nav className=" font-bold bg-purple-200">
-        <ul className={`flex text-stone-900`}>
+      <nav className=" font-bold bg-purple-200 basis-1/6">
+        <ul className={`flex text-stone-900 h-full`}>
           <li className={`flex-1 flex justify-center `}>
             <button onClick={()=>setIsSelectingOptions(true)}  
             className={isSelectingOptions ? "text-stone-950 bg-purple-600 text-center w-full" : "text-center w-full"}>
