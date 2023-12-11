@@ -97,11 +97,12 @@ export default function RecOptionsSection({checkedBoxes,setCheckedBoxes, audioFe
   
   return(
     <>
-      <div className="text-2xl">Vibe Features</div>
-
+      <div className="basis-8/12">
+      <div>
+      <div className="text-2xl font-bold text-green-400">Vibe Features</div>
       {vibeFeatures.map((feature)=>{
         return (
-          <div key={feature}>
+          <div key={feature} className="m-2">
             <input 
               onClick={()=>handleToggleSettingBox(feature)} 
               defaultChecked={isSettingPicked(feature)} 
@@ -109,17 +110,19 @@ export default function RecOptionsSection({checkedBoxes,setCheckedBoxes, audioFe
               id={feature} 
               type="checkbox">
             </input>
-            <label className="text-lg"htmlFor={feature}> {feature}</label>
+            <label className="text-lg text-green-200"htmlFor={feature}> {feature}</label>
             <br/>
           </div>
         )
       })}
+      </div>
 
-      <div className="text-2xl">Tech Features</div>
+      <div>
+      <div className="text-2xl font-bold text-green-400">Tech Features</div>
       
       {techFeatures.map((feature)=>{
         return (
-          <div key={feature[0]}>
+          <div key={feature[0]} className="m-2">
             <input 
               onClick={()=>handleToggleSettingBox(feature[0])} 
               defaultChecked={isSettingPicked(feature[0])} 
@@ -127,12 +130,15 @@ export default function RecOptionsSection({checkedBoxes,setCheckedBoxes, audioFe
               id={feature[0]} 
               type="checkbox">
             </input>
-            <label className="text-lg"htmlFor={feature[0]}> {feature[1]}</label>
+            <label className="text-lg text-green-200"htmlFor={feature[0]}> {feature[1]}</label>
             <br/>
           </div>
         )
       })}
+      </div>
+      </div>
 
+      <div className="flex flex-col basis-2/12">
       <button 
         onClick={()=>{
           const submissionJSON = JSON.stringify({settings:checkedBoxes,audioFeatures});
@@ -141,14 +147,15 @@ export default function RecOptionsSection({checkedBoxes,setCheckedBoxes, audioFe
             { method: "post", encType: "application/json" }
           );
         }}
-        className="bg-green-900 text-purple-300 p-2 w-full mt-2"
-        >Recommend!
+        className="basis-1/2 bg-green-950 hover:bg-green-600 text-white text-2xl font-bold p-2 w-full mt-2"
+        >Get Recommendations
       </button>
       <a 
         href="/real-top/month"
-        className="block absolute bottom-0 bg-green-900 text-purple-300 p-2 w-screen mb-0 text-center"
+        className="basis-1/2 flex items-center justify-center  bg-stone-900 hover:text-purple-600 text-purple-200 text-2xl font-bold p-2 w-screen mb-0 text-center"
         >View Top Songs
       </a>
+      </div>
     </>
   )
 }

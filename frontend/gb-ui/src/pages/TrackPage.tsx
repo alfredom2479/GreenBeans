@@ -182,40 +182,42 @@ export default function TrackPage(){
   //console.log(recList);
 
   return(
-    <>
-      <div className="bg-purple-400 flex">
-        <div className="flex-5">
+    <div className="flex flex-col justify-between h-screen">
+      <div className="basis-2/12">
+      <div className="bg-stone-900 text-purple-200 flex">
+        <div className="basis-5/12">
           <img src={trackData.image}
           className="h-40">
           </img>
         </div>
-        <div className="flex-1">
+        <div className="basis-7/12">
           <div className="text-2xl">
             {trackData.name}
           </div>
-          <div>
+          <div className="text-purple-300">
             <i>{trackData.artist}</i>
           </div>
         </div>
       </div> 
-      <nav className=" font-bold bg-purple-950">
-        <ul className={`flex text-green-600`}>
+      <nav className=" font-bold bg-purple-200">
+        <ul className={`flex text-stone-900`}>
           <li className={`flex-1 flex justify-center `}>
             <button onClick={()=>setIsSelectingOptions(true)}  
-            className={isSelectingOptions ? "text-purple-950 bg-green-500 text-center w-full" : "text-center w-full"}>
+            className={isSelectingOptions ? "text-stone-950 bg-purple-600 text-center w-full" : "text-center w-full"}>
               Options
             </button>
           </li>
           <li className={`flex-1 flex justify-center `}>
             <button onClick={()=>setIsSelectingOptions(false)}
-            className={!isSelectingOptions ? "text-purple-950 bg-green-500 text-center w-full" : "text-center w-full"}>
+            className={!isSelectingOptions ? "text-stone-950 bg-purple-600 text-center w-full" : "text-center w-full"}>
               Recommendations
             </button>
           </li>
         </ul>
       </nav>
+      </div>
       { isSelectingOptions 
-        ? <RecOptionsSection checkedBoxes={checkedBoxes} setCheckedBoxes={setCheckedBoxes} audioFeatures={currAudioFeatures}/> 
+        ? <RecOptionsSection key={trackData.name+trackData.artist} checkedBoxes={checkedBoxes} setCheckedBoxes={setCheckedBoxes} audioFeatures={currAudioFeatures}/> 
         : <div>
             <ul>
               {recList.map((track)=>{
@@ -233,7 +235,7 @@ export default function TrackPage(){
             </ul>
           </div>
       }
-    </>
+    </div>
   )
 }
 

@@ -38,30 +38,30 @@ export default function RealTopPage(){
 
   return(
     <div className="max-h-screen flex flex-col">
-      <div className="basis-1/4">
-      <h1 className="text-purple-200 font-bold text-4xl text-center my-5">
+      <div className="basis-1/4 flex flex-col ">
+      <h1 className="basis-1/2 text-purple-200 font-bold text-4xl text-center my-5">
         {display_name}'s<br/> Top Songs
       </h1> 
-      <nav className=" font-bold bg-stone-900 h-full">
-        <ul className={`flex text-green-800`}>
-          <li className={`flex-1 flex justify-center content-center `}>
+      <nav className=" basis-1/2 font-bold bg-stone-800 h-full">
+        <ul className={`flex text-white`}>
+          <li className={`flex-1 p-1 flex justify-center content-center `}>
           {/* u have to define string with default style and add
           to it if isActive is true with the appropriate styles */}
           
             <NavLink to="month" 
-            className={({isActive})=>isActive ? "text-stone-900 bg-green-900 text-center w-full text-2xl align-middle truncate" : "text-center w-full text-2xl align-middle truncate"}>
+            className={({isActive})=>isActive ? "text-green-200 text-center w-full text-2xl align-middle truncate" : "text-center w-full text-2xl align-middle truncate"}>
               Month
             </NavLink>
           </li>
-          <li className={`flex-1 flex justify-center `}>
+          <li className={`flex-1 p-1 flex justify-center `}>
             <NavLink to="sixmonths" 
-            className={({isActive})=>isActive ? "text-stone-900 bg-green-900 text-center w-full text-2xl truncate" : "text-center w-full text-2xl truncate"}>
+            className={({isActive})=>isActive ? "text-green-200 text-center w-full text-2xl truncate" : "text-center w-full text-2xl truncate"}>
               Six Months
             </NavLink>
           </li>
-          <li className={`flex-1 flex justify-center` }>
+          <li className={`flex-1 p-1 flex justify-center` }>
             <NavLink to="alltime"
-            className={({isActive})=> isActive ? "text-stone-900 bg-green-900 text-center w-full text-2xl" : "text-center w-full text-2xl"}>
+            className={({isActive})=> isActive ? "text-green-200 text-center w-full text-2xl" : "text-center w-full text-2xl"}>
               Years+
             </NavLink>
           </li>
