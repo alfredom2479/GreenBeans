@@ -17,15 +17,12 @@ export async function loader({params}:TopParams){
 
   switch(params.range){
     case "month":
-      console.log("This is top of month");
       rangeNum = 0;
       break;
     case "sixmonths":
-      console.log("This is top of past 6 months");
       rangeNum = 1;
       break;
     case "alltime":
-      console.log("This is top of all time");
       rangeNum=2;
       break;
     default:
@@ -109,7 +106,7 @@ export default function TopOf(){
   console.log(topTracksList);
 
   return(
-      <div className="overflow-scroll max-h-[75vh]">
+      <div className="overflow-y-scroll basis-3/4">
         <ul>
           {topTracksList.map((track)=>{
             return (

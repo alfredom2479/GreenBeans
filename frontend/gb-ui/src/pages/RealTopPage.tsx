@@ -37,10 +37,10 @@ export default function RealTopPage(){
   }
 
   return(
-    <div className="max-h-screen overflow-scroll">
-      <div className="h-1/4">
+    <div className="max-h-screen flex flex-col">
+      <div className="basis-1/4">
       <h1 className="text-purple-200 font-bold text-4xl text-center my-5">
-        {display_name}!<br/>Here Are Your Top Songs
+        {display_name}'s<br/> Top Songs
       </h1> 
       <nav className=" font-bold bg-stone-900 h-full">
         <ul className={`flex text-green-800`}>
@@ -49,19 +49,19 @@ export default function RealTopPage(){
           to it if isActive is true with the appropriate styles */}
           
             <NavLink to="month" 
-            className={({isActive})=>isActive ? "text-stone-900 bg-green-700 text-center w-full text-2xl align-middle" : "text-center w-full text-2xl align-middle"}>
+            className={({isActive})=>isActive ? "text-stone-900 bg-green-900 text-center w-full text-2xl align-middle truncate" : "text-center w-full text-2xl align-middle truncate"}>
               Month
             </NavLink>
           </li>
           <li className={`flex-1 flex justify-center `}>
             <NavLink to="sixmonths" 
-            className={({isActive})=>isActive ? "text-stone-900 bg-green-700 text-center w-full text-2xl" : "text-center w-full text-2xl"}>
+            className={({isActive})=>isActive ? "text-stone-900 bg-green-900 text-center w-full text-2xl truncate" : "text-center w-full text-2xl truncate"}>
               Six Months
             </NavLink>
           </li>
           <li className={`flex-1 flex justify-center` }>
             <NavLink to="alltime"
-            className={({isActive})=> isActive ? "text-stone-900 bg-green-700 text-center w-full text-2xl" : "text-center w-full text-2xl"}>
+            className={({isActive})=> isActive ? "text-stone-900 bg-green-900 text-center w-full text-2xl" : "text-center w-full text-2xl"}>
               Years+
             </NavLink>
           </li>
