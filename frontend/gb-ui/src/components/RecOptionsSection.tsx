@@ -52,10 +52,11 @@ export async function action({params,request}:IURLParams){
 interface RecOptionsSectionProps{
   checkedBoxes: string[],
   setCheckedBoxes: React.Dispatch<string[]>,
-  audioFeatures: AudioFeatures
+  audioFeatures: AudioFeatures,
+  setIsSelectingOptions: React.Dispatch<boolean>
 }
 
-export default function RecOptionsSection({checkedBoxes,setCheckedBoxes, audioFeatures}:RecOptionsSectionProps){
+export default function RecOptionsSection({checkedBoxes,setCheckedBoxes, audioFeatures, setIsSelectingOptions}:RecOptionsSectionProps){
 
   const submit = useSubmit();
 
@@ -96,9 +97,9 @@ export default function RecOptionsSection({checkedBoxes,setCheckedBoxes, audioFe
   }
   
   return(
-    <>
+    <div className="basis-3/4 max-h-[75%] overflow-y-scroll">
       <div className="text-xl w-screen text-center  font-bold text-green-100">What do you like about this song?</div>
-      <div className="basis-6/12  grid grid-cols-2 justify-items-center">
+      <div className="grid grid-cols-2 justify-items-center">
       <div>
       <div className="text-2xl font-bold text-green-400">Vibe Features</div>
       {vibeFeatures.map((feature)=>{
@@ -139,7 +140,7 @@ export default function RecOptionsSection({checkedBoxes,setCheckedBoxes, audioFe
       </div>
       </div>
 
-      <div className="flex flex-col basis-2/12 grow-[3]">
+      <div className="flex flex-col ">
       <button 
         onClick={()=>{
           const submissionJSON = JSON.stringify({settings:checkedBoxes,audioFeatures});
@@ -147,6 +148,7 @@ export default function RecOptionsSection({checkedBoxes,setCheckedBoxes, audioFe
             submissionJSON,
             { method: "post", encType: "application/json" }
           );
+          setIsSelectingOptions(false)
         }}
         className="basis-1/2 bg-green-950 hover:bg-green-600 text-white text-2xl font-bold p-2 w-full mt-2"
         >Get Recommendations
@@ -157,6 +159,6 @@ export default function RecOptionsSection({checkedBoxes,setCheckedBoxes, audioFe
         >View Top Songs
       </a>
       </div>
-    </>
+    </div>
   )
 }

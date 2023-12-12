@@ -179,15 +179,20 @@ export default function TrackPage(){
    } 
   },[actionData]);
 
-  //console.log(recList);
+  useEffect(()=>{
+    console.log("switch tabs use effect is IN DA HOUSE")
+    setIsSelectingOptions(true)
+    setRecList([]) 
+      
+  },[trackData]);
 
   return(
-    <div className="flex flex-col justify-between h-screen">
-      <div className="basis-4/12 flex flex-col">
-      <div className="basis-5/6 bg-stone-900 text-purple-200 flex">
+    <div className="flex flex-col justify-between h-screen min-h-screen max-h-screen">
+      <div className=" flex flex-col basis-1/4 ">
+      <div className=" bg-stone-900 text-purple-200 flex">
         <div className="basis-5/12 flex items-center">
           <img src={trackData.image}
-          className="flex-1 w-full h-full object-cover">
+          className="flex-1 object-cover">
           </img>
         </div>
         <div className="basis-7/12">
@@ -217,8 +222,13 @@ export default function TrackPage(){
       </nav>
       </div>
       { isSelectingOptions 
-        ? <RecOptionsSection key={trackData.name+trackData.artist} checkedBoxes={checkedBoxes} setCheckedBoxes={setCheckedBoxes} audioFeatures={currAudioFeatures}/> 
-        : <div>
+        ? <RecOptionsSection 
+            checkedBoxes={checkedBoxes} 
+            setCheckedBoxes={setCheckedBoxes} 
+            audioFeatures={currAudioFeatures}
+            setIsSelectingOptions={setIsSelectingOptions}
+          /> 
+        : <div className="basis-3/4">
             <ul>
               {recList.map((track)=>{
                 return (
