@@ -97,11 +97,11 @@ export default function RecOptionsSection({checkedBoxes,setCheckedBoxes, audioFe
   }
   
   return(
-    <div className="basis-3/4 max-h-[75%] overflow-y-scroll">
-      <div className="text-xl w-screen text-center  font-bold text-green-100">What do you like about this song?</div>
+    <div className="flex flex-col justify-between h-full">
+      <div className="text-xl w-screen text-center  font-bold text-white">What do you like about this song?</div>
       <div className="grid grid-cols-2 justify-items-center">
       <div>
-      <div className="text-2xl font-bold text-green-400">Vibe Features</div>
+      <div className="text-2xl font-bold text-white">Vibe Features</div>
       {vibeFeatures.map((feature)=>{
         return (
           <div key={feature} className="m-2">
@@ -112,7 +112,7 @@ export default function RecOptionsSection({checkedBoxes,setCheckedBoxes, audioFe
               id={feature} 
               type="checkbox">
             </input>
-            <label className="text-lg text-green-200"htmlFor={feature}> {feature}</label>
+            <label className="text-lg text-green-50"htmlFor={feature}> {feature}</label>
             <br/>
           </div>
         )
@@ -120,7 +120,7 @@ export default function RecOptionsSection({checkedBoxes,setCheckedBoxes, audioFe
       </div>
 
       <div>
-      <div className="text-2xl font-bold text-green-400">Tech Features</div>
+      <div className="text-2xl font-bold text-white">Tech Features</div>
       
       {techFeatures.map((feature)=>{
         return (
@@ -132,7 +132,7 @@ export default function RecOptionsSection({checkedBoxes,setCheckedBoxes, audioFe
               id={feature[0]} 
               type="checkbox">
             </input>
-            <label className="text-lg text-green-200"htmlFor={feature[0]}> {feature[1]}</label>
+            <label className="text-lg text-green-50"htmlFor={feature[0]}> {feature[1]}</label>
             <br/>
           </div>
         )
@@ -140,7 +140,7 @@ export default function RecOptionsSection({checkedBoxes,setCheckedBoxes, audioFe
       </div>
       </div>
 
-      <div className="flex flex-col ">
+      <div className="flex flex-col items-center">
       <button 
         onClick={()=>{
           const submissionJSON = JSON.stringify({settings:checkedBoxes,audioFeatures});
@@ -150,8 +150,8 @@ export default function RecOptionsSection({checkedBoxes,setCheckedBoxes, audioFe
           );
           setIsSelectingOptions(false)
         }}
-        className="basis-1/2 bg-green-950 hover:bg-green-600 text-white text-2xl font-bold p-2 w-full mt-2"
-        >Get Recommendations
+        className="basis-1/2 bg-green-50 hover:bg-green-200 text-stone-900 text-xl rounded-xl font-bold p-2 w-1/2"
+        >Recommend!
       </button>
       <a 
         href="/real-top/month"

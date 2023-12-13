@@ -28,12 +28,8 @@ export async function loader({params}:IURLParams){
 
   try{
     const trackLoaderData = await requestSpotifyTrack(access_token, trackId);
-    console.log("Track data:")
-    console.log(trackLoaderData);
 
     const audioFeatureLoaderData = await requestSpotifyTrackAudioFeatures(access_token,trackId);
-    console.log("Audio feature data: ")
-    console.log(audioFeatureLoaderData);
     //dont check anything about the data.
     //should be fine. Pretty simple return object
     //yolo
@@ -180,19 +176,19 @@ export default function TrackPage(){
   },[actionData]);
 
   useEffect(()=>{
-    console.log("switch tabs use effect is IN DA HOUSE")
     setIsSelectingOptions(true)
+    setCheckedBoxes([]);
     setRecList([]) 
       
   },[trackData]);
 
   return(
-    <div className="flex flex-col justify-between h-screen min-h-screen max-h-screen">
-      <div className=" flex flex-col basis-1/4 ">
-      <div className=" bg-stone-900 text-purple-200 flex">
-        <div className="basis-5/12 flex items-center">
+    <div className="flex flex-col h-screen min-h-screen max-h-screen">
+      <div className=" flex flex-col basis-1/4 grow-0 max-h-[25%]">
+      <div className=" bg-stone-900 text-purple-200 flex max-h-[80%]">
+        <div className="basis-5/12 flex items-center max-h-full">
           <img src={trackData.image}
-          className="flex-1 object-cover">
+          className="flex-1 object-cover max-h-full">
           </img>
         </div>
         <div className="basis-7/12">
@@ -204,7 +200,7 @@ export default function TrackPage(){
           </div>
         </div>
       </div> 
-      <nav className=" font-bold bg-purple-200 basis-1/6">
+      <nav className=" font-bold bg-purple-200 max-h-fit">
         <ul className={`flex text-stone-900 h-full`}>
           <li className={`flex-1 flex justify-center `}>
             <button onClick={()=>setIsSelectingOptions(true)}  
@@ -228,7 +224,7 @@ export default function TrackPage(){
             audioFeatures={currAudioFeatures}
             setIsSelectingOptions={setIsSelectingOptions}
           /> 
-        : <div className="basis-3/4">
+        : <div className="basis-3/4  overflow-y-scroll">
             <ul>
               {recList.map((track)=>{
                 return (

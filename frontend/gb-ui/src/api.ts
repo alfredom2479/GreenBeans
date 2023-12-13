@@ -25,10 +25,38 @@ export async function requestAuth(){
   return data;
 }
 
+export async function refreshTokens(refresh_token:string|null){
+
+  if(refresh_token ===null){
+    console.log("Refresh token is null");
+    throw(new Error("Refresh token is null fam"));
+  }
+  let res:Response|null = null
+
+  const authParams = new URLSearchParams({refresh_token});
+
+  try{
+    res = await fetch("/api/auth/refresh_token?"+authParams.toString(),{
+      method:"GET"
+    });
+  }catch(err){
+    console.log(err);
+    throw(err)
+  }
+
+  const data  = await res.json();
+  if(!res.ok){
+    throw{
+      message:data.message,
+      statusText: data.statusText,
+      status: data.status
+    };
+  }
+  return data;
+}
+
 export async function requestTokens(code:string|null, state:string|null){
 
-  console.log("code: "+code);
-  console.log("statte: "+state);
   if (code===null || state===null){
     console.log("code or state is null");
     throw(new Error("Code or state are null"));
@@ -36,9 +64,7 @@ export async function requestTokens(code:string|null, state:string|null){
   let res:Response|null = null
 
   const authParams = new URLSearchParams({code,state});
-  console.log(authParams.toString());
 
-  console.log("in requestTokens");
   try{
     res = await fetch("/api/auth/gettokens?"+authParams.toString(),{
       method: "GET",
@@ -48,8 +74,6 @@ export async function requestTokens(code:string|null, state:string|null){
     throw{err}
   }
 
-  console.log(res);
-
   const data = await res.json();
   if(!res.ok){
     throw{
@@ -58,7 +82,6 @@ export async function requestTokens(code:string|null, state:string|null){
       status: data.status
     };
   }
-
   return data;
 }
 
@@ -80,7 +103,6 @@ export async function requestMySpotifyAccount(access_token:string){
     throw{err}
   }
 
-  console.log(res);
 
   const data = await res.json();
   if(!res.ok){
@@ -108,7 +130,6 @@ const rangeEnum =(rangeNum:number):string=> {
 export async function requestTopTracks(access_token:string, range:number ){
 
   const inputRange:string = rangeEnum(range);
-  console.log("in rmsa; access_token,range: "+access_token+","+range);
   let res:Response|null = null
 
   try{
@@ -123,10 +144,8 @@ export async function requestTopTracks(access_token:string, range:number ){
     throw{err}
   }
 
-  console.log(res);
 
   const data = await res.json();
-  console.log(data);
   if(!res.ok){
     throw{
       message: data.message,
@@ -140,7 +159,6 @@ export async function requestTopTracks(access_token:string, range:number ){
 
 export async function requestSpotifyTrack(access_token:string, trackId:string ){
 
-  console.log("in rst; access_token,range: "+access_token+","+trackId);
   let res:Response|null = null
 
   try{
@@ -155,7 +173,6 @@ export async function requestSpotifyTrack(access_token:string, trackId:string ){
     throw{err}
   }
 
-  console.log(res);
 
   const data = await res.json();
   if(!res.ok){
@@ -173,6 +190,9 @@ export async function requestSpotifyRec(access_token:string, trackId:string, sel
 
   //NOTE
   //u might have to organize the results in best match to worse match
+  //Audio Features is the actual data for the given track
+  //Options selected is the features that the user has selected
+  //to filter by
   const audioFeatureNames: (keyof AudioFeatures)[] = [
     'acousticness' ,
     'danceability' ,
@@ -187,19 +207,6 @@ export async function requestSpotifyRec(access_token:string, trackId:string, sel
     'mode'
   ]
 
-  /*
-  const easyRangeFeatures: (keyof AudioFeatures)[]=[
-    'acousticness',
-    'danceability',
-    'energy',
-    'liveness',
-    'valence'
-  ]
-  */
-  console.log("in req spot rec; access_token,range: "+access_token+","+trackId);
-  console.log(selectedOptions);
-  console.log("audio features: ");
-  console.log(audioFeatures);
 
   //iterate through selectedOptions and form suffix
   let queryOptionSuffix:string = trackId;
@@ -245,7 +252,7 @@ export async function requestSpotifyRec(access_token:string, trackId:string, sel
         }
     }
     
-    console.log(`${audioFeatureNames[i]} value: `+featureValue)
+    //console.log(`${audioFeatureNames[i]} value: `+featureValue)
 
       if(featureValue !== -999){
         queryOptionSuffix+=`&target_${name}=${featureValue}`
@@ -258,7 +265,7 @@ export async function requestSpotifyRec(access_token:string, trackId:string, sel
   
 
 
-  console.log("final query suffix: "+queryOptionSuffix);
+  //console.log("final query suffix: "+queryOptionSuffix);
   /*
   for(const value in selectedOptions){
     queryOptionSuffix+=`&$`;
@@ -279,10 +286,10 @@ export async function requestSpotifyRec(access_token:string, trackId:string, sel
     throw{err}
   }
 
-  console.log("The recs response")
+  //console.log("The recs response")
 
   const data = await res.json();
-  console.log(data);
+  //console.log(data);
   if(!res.ok){
     throw{
       message: data.message,
@@ -307,9 +314,14 @@ export async function requestSpotifyTrackAudioFeatures(access_token:string, trac
         Authorization: 'Bearer ' + access_token
       }
     });
+    if(res.status === 401){
+      console.log("The status code is 401")
+
+    }
   }catch(err){
     console.log(err);
     throw{err};
+    
   }
 
   console.log(res);

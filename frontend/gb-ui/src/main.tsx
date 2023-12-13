@@ -50,23 +50,8 @@ const router = createBrowserRouter([
         loader: trackDataLoader,
         action: getRecsAction,
         shouldRevalidate: ({formMethod})=>{
-          console.log("in shouldRevalidate")
-          console.log(formMethod);
           return formMethod !== "post"
         }
-        /*children:[
-          {
-            path: "options",
-            element: <RecOptionsSection/>,
-            loader: getTrackFeaturesLoader,
-            action: getRecsAction
-          },
-          {
-            path: "recs",
-            element: <RecsSection/>,
-            loader: recsDataLoader
-          }
-        ]*/
       }
     ]
   }
