@@ -106,34 +106,36 @@ export async function requestTokens(code:string|null, state:string|null){
 }
 
 
-export async function requestMySpotifyAccount(access_token:string){
+export async function requestMySpotifyAccount(accessToken:string){
 
-  console.log("in rmsa; access_token: "+access_token);
   let res:Response|null = null
 
   try{
-    res = await fetch("https://api.spotify.com/v1/me",{
-      method: "GET",
-      headers: {
-        Authorization: 'Bearer ' + access_token
-      }
-    });
+    res = await sendRequest("https://api.spotify.com/v1/me", accessToken);
+    if(res === null){
+      throw Error("sendRequest returned null");
+    }
+
+    if(res.status !== 200){
+      throw Error("spot account status err");
+    }
+
+    const data = await res.json();
+    if(!res.ok){
+      throw{
+        message: data.message,
+        statusText: data.statusText,
+        status: data.status
+      };
+    }
+
+    return data;
+
   }catch(err){
+    console.log("spotify account api error");
     console.log(err)
-    throw{err}
   }
-
-
-  const data = await res.json();
-  if(!res.ok){
-    throw{
-      message: data.message,
-      statusText: data.statusText,
-      status: data.status
-    };
-  }
-
-  return data;
+  
 }
 
 const rangeEnum =(rangeNum:number):string=> {
@@ -229,10 +231,8 @@ export async function requestSpotifyRec(access_token:string, trackId:string, sel
   ]
 
 
-  //iterate through selectedOptions and form suffix
   let queryOptionSuffix:string = trackId;
 
-  //iterate through audioFeatures and add to suffix string
   for(let i =0; i < audioFeatureNames.length; i++ ){
     if(!selectedOptions.includes(audioFeatureNames[i]) ){
       continue
@@ -273,8 +273,6 @@ export async function requestSpotifyRec(access_token:string, trackId:string, sel
         }
     }
     
-    //console.log(`${audioFeatureNames[i]} value: `+featureValue)
-
       if(featureValue !== -999){
         queryOptionSuffix+=`&target_${name}=${featureValue}`
         queryOptionSuffix+=`&min_${name}=${ lowerLimit }`
@@ -297,10 +295,7 @@ export async function requestSpotifyRec(access_token:string, trackId:string, sel
     throw{err}
   }
 
-  //console.log("The recs response")
-
   const data = await res.json();
-  //console.log(data);
   if(!res.ok){
     throw{
       message: data.message,
@@ -314,43 +309,17 @@ export async function requestSpotifyRec(access_token:string, trackId:string, sel
 
 export async function requestSpotifyTrackAudioFeatures(accessToken:string, trackId:string ){
 
-  console.log("in rsr; access_token,range: "+accessToken+","+trackId);
-  let res:Response|null = null
-
-  //might not neet to send bearer token for this endpoint
-
   try{
+    const data = await sendRequest(`https://api.spotify.com/v1/audio-features/${trackId}`, accessToken)
+    return data;
 
-    res = await sendRequest(`https://api.spotify.com/v1/audio-features/${trackId}`, accessToken)
-    if(res === null){
-      throw Error("sendRequest returned null")
-    }
-
-    /*
-    */
-
-  if(res.status !== 200){
-    throw Error("Big oopsie doopsie")
-  }
-  console.log(res);
-
-  const data = await res.json();
-  console.log(data);
-  if(!res.ok){
-    throw{
-      message: data.message,
-      statusText: data.statusText,
-      status: data.status
-    };
-  }
-
-  return data;
   }catch(err){
     console.log("there has been an api oopsie");
     console.log(err);
   }
 }
 
+//u might be able to abstract this further
 async function sendRequest(endpoint:string, accessToken:string){
   let res:Response|null = null
 
@@ -375,11 +344,15 @@ async function sendRequest(endpoint:string, accessToken:string){
       }
     })
   }
-  if(res.status === 200){
-    return res
-  }
-  else{
-    return null;
+
+  const data = await res.json();
+  if(!res.ok){
+    throw{
+      message: data.message,
+      statusText: data.statusText,
+      status: data.status
+    };
   }
 
+  return data
 }
