@@ -2,12 +2,15 @@ import { AudioFeatures } from "./interfaces";
 
 function handleNewTokens(newAccessToken:string):boolean{
 
+  console.log("new at: "+newAccessToken);
   if(!newAccessToken){
     console.log("There was an error parsing new tokens")
     return false;
   }
 
   localStorage.setItem('access_token', newAccessToken);
+  console.log("local storage after success:")
+  console.log(localStorage);
   return true;
 
 }
@@ -210,6 +213,7 @@ export async function requestSpotifyRec(access_token:string, trackId:string, sel
   //Audio Features is the actual data for the given track
   //Options selected is the features that the user has selected
   //to filter by
+  console.log("in requestSpotRec: ", access_token );
   const audioFeatureNames: (keyof AudioFeatures)[] = [
     'acousticness' ,
     'danceability' ,
@@ -314,34 +318,16 @@ export async function requestSpotifyTrackAudioFeatures(accessToken:string, track
   let res:Response|null = null
 
   //might not neet to send bearer token for this endpoint
-  //try{
 
-    res= await fetch(`https://api.spotify.com/v1/audio-features/${trackId}`,{
-      method: "GET",
-      headers: {
-        Authorization: 'Bearer ' + accessToken
-      }
-    });
-    if(res.status === 401){
-      const {access_token} = await refreshTokens(localStorage.getItem('refresh_token'));
-      const tokensHandled:boolean = handleNewTokens(access_token);
+  try{
 
-      if(!tokensHandled){
-        throw Error("unsuccessful token refresh. tokens were not handled")
-        console.log("token refresh unsuccessful")
-      }
-     res= await fetch(`https://api.spotify.com/v1/audio-features/${trackId}`,{
-      method: "GET",
-      headers: {
-        Authorization: 'Bearer ' + access_token
-      }
-    }); 
+    res = await sendRequest(`https://api.spotify.com/v1/audio-features/${trackId}`, accessToken)
+    if(res === null){
+      throw Error("sendRequest returned null")
     }
-  /*}catch(err){
-    console.log(err);
-    throw{err};
-    
-  }*/
+
+    /*
+    */
 
   if(res.status !== 200){
     throw Error("Big oopsie doopsie")
@@ -349,6 +335,7 @@ export async function requestSpotifyTrackAudioFeatures(accessToken:string, track
   console.log(res);
 
   const data = await res.json();
+  console.log(data);
   if(!res.ok){
     throw{
       message: data.message,
@@ -358,6 +345,41 @@ export async function requestSpotifyTrackAudioFeatures(accessToken:string, track
   }
 
   return data;
+  }catch(err){
+    console.log("there has been an api oopsie");
+    console.log(err);
+  }
 }
-//'https://api.spotify.com/v1/recommendations?seed_tracks=0c6xIDDpzE81m2q797ordA'
 
+async function sendRequest(endpoint:string, accessToken:string){
+  let res:Response|null = null
+
+  res = await fetch(endpoint,{
+    method: "GET",
+    headers: {
+      Authorization:  'Bearer '+ accessToken
+    }
+  });
+
+  if(res.status === 401){
+    const {access_token} = await refreshTokens(localStorage.getItem('refresh_token'));
+    const tokensHandled:boolean = handleNewTokens(access_token);
+
+    if(!tokensHandled){
+      console.log("token refresh unsuccessful");
+    }
+    res = await fetch(endpoint, {
+      method: "GET", 
+      headers: {
+        Authorization: 'Bearer ' + access_token
+      }
+    })
+  }
+  if(res.status === 200){
+    return res
+  }
+  else{
+    return null;
+  }
+
+}
