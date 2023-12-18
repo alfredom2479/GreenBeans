@@ -37,9 +37,9 @@ export async function loader({params}:IURLParams){
     return {trackLoaderData,audioFeatureLoaderData};
 
   }catch(err){
-    console.log("there has been a get-trackId");
+    console.log("there has been a get-trackId error");
     console.log(err);
-    throw err;
+    throw(err);
   }
 
 }

@@ -1,5 +1,17 @@
 import { AudioFeatures } from "./interfaces";
 
+function handleNewTokens(newAccessToken:string):boolean{
+
+  if(!newAccessToken){
+    console.log("There was an error parsing new tokens")
+    return false;
+  }
+
+  localStorage.setItem('access_token', newAccessToken);
+  return true;
+
+}
+
 export async function requestAuth(){
 
   let res:Response|null = null
@@ -27,6 +39,7 @@ export async function requestAuth(){
 
 export async function refreshTokens(refresh_token:string|null){
 
+  console.log("in refresh tokne: "+refresh_token)
   if(refresh_token ===null){
     console.log("Refresh token is null");
     throw(new Error("Refresh token is null fam"));
@@ -39,12 +52,16 @@ export async function refreshTokens(refresh_token:string|null){
     res = await fetch("/api/auth/refresh_token?"+authParams.toString(),{
       method:"GET"
     });
+    console.log("res data: ")
+    console.log(res)
   }catch(err){
     console.log(err);
     throw(err)
   }
 
   const data  = await res.json();
+  console.log("The refresh token data")
+  console.log(data);
   if(!res.ok){
     throw{
       message:data.message,
@@ -261,16 +278,6 @@ export async function requestSpotifyRec(access_token:string, trackId:string, sel
       }
       
   }
-  //const testString:string = "acousticness";
-  
-
-
-  //console.log("final query suffix: "+queryOptionSuffix);
-  /*
-  for(const value in selectedOptions){
-    queryOptionSuffix+=`&$`;
-  }
-  */
 
   let res:Response|null = null
 
@@ -301,29 +308,44 @@ export async function requestSpotifyRec(access_token:string, trackId:string, sel
   return data;
 }
 
-export async function requestSpotifyTrackAudioFeatures(access_token:string, trackId:string ){
+export async function requestSpotifyTrackAudioFeatures(accessToken:string, trackId:string ){
 
-  console.log("in rsr; access_token,range: "+access_token+","+trackId);
+  console.log("in rsr; access_token,range: "+accessToken+","+trackId);
   let res:Response|null = null
 
   //might not neet to send bearer token for this endpoint
-  try{
+  //try{
+
     res= await fetch(`https://api.spotify.com/v1/audio-features/${trackId}`,{
+      method: "GET",
+      headers: {
+        Authorization: 'Bearer ' + accessToken
+      }
+    });
+    if(res.status === 401){
+      const {access_token} = await refreshTokens(localStorage.getItem('refresh_token'));
+      const tokensHandled:boolean = handleNewTokens(access_token);
+
+      if(!tokensHandled){
+        throw Error("unsuccessful token refresh. tokens were not handled")
+        console.log("token refresh unsuccessful")
+      }
+     res= await fetch(`https://api.spotify.com/v1/audio-features/${trackId}`,{
       method: "GET",
       headers: {
         Authorization: 'Bearer ' + access_token
       }
-    });
-    if(res.status === 401){
-      console.log("The status code is 401")
-
+    }); 
     }
-  }catch(err){
+  /*}catch(err){
     console.log(err);
     throw{err};
     
-  }
+  }*/
 
+  if(res.status !== 200){
+    throw Error("Big oopsie doopsie")
+  }
   console.log(res);
 
   const data = await res.json();
@@ -337,5 +359,5 @@ export async function requestSpotifyTrackAudioFeatures(access_token:string, trac
 
   return data;
 }
-//sample rec request endpoint
 //'https://api.spotify.com/v1/recommendations?seed_tracks=0c6xIDDpzE81m2q797ordA'
+

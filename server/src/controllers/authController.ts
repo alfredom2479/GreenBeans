@@ -91,14 +91,19 @@ const getInitialTokens = asyncHandler( async (req:Request,res:Response): Promise
 });
 
 const refreshToken = asyncHandler(async (req:Request, res:Response)=>{
+  console.log("in server refresh tokens");
   const old_refresh_token = req.query.refresh_token
   const authData = {
     grant_type: 'refresh_token',
-    refreshToken: old_refresh_token
+    refresh_token: old_refresh_token
   }
+
+  console.log(old_refresh_token);
 
   const authHeaderString = 'Basic '+ (Buffer.from(process.env.SPOTIFY_CLIENT_ID+
     ':'+process.env.SPOTIFY_CLIENT_SECRET, "utf-8").toString('base64'));
+
+  try{
 
   const {data,status,statusText} = await axios.post(
     "https://accounts.spotify.com/api/token",
@@ -106,11 +111,10 @@ const refreshToken = asyncHandler(async (req:Request, res:Response)=>{
     {headers: {"Authorization": authHeaderString, "Content-Type": "application/x-www-form-urlencoded"}}
   );
 
+  
   if(statusText==='OK' && status === 200){
-    console.log(data);
     const access_token = data.access_token;
-    const refresh_token = data.refresh_token;
-    res.json({access_token, refresh_token}).status(200);
+    res.json({access_token }).status(200);
   }
   else{
     console.log("There was an error refreshing ze tokens");
@@ -119,6 +123,11 @@ const refreshToken = asyncHandler(async (req:Request, res:Response)=>{
     //console.log(statusText);
     res.json({error: "no new tokens :("}).status(500)
   }
+
+}catch(error){
+    console.log(error)
+  }
+
   /*
 
   if(statusText === 'OK' && status === 200){
