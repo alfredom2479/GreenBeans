@@ -8,9 +8,6 @@ interface FetchRequest{
 
 
 export async function loader({request}:FetchRequest){
-  console.log("loader params");
-  //console.log(params.code);
-  //console.log(params.state);
   const url = new URL(request.url);
   const authCode = url.searchParams.get("code");
   const authState = url.searchParams.get("state");
@@ -18,8 +15,6 @@ export async function loader({request}:FetchRequest){
   try{
     const {access_token, refresh_token} = await  requestTokens(authCode,authState);
     
-    console.log("data.access_token: "+access_token);
-    console.log("data.refresh_token "+refresh_token);
     localStorage.setItem('access_token', access_token);
     localStorage.setItem('refresh_token',refresh_token);
     return redirect("/real-top");

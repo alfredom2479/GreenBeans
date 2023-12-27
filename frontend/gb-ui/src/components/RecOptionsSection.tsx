@@ -153,11 +153,7 @@ export default function RecOptionsSection({checkedBoxes,setCheckedBoxes, audioFe
         className="basis-1/2 bg-green-50 hover:bg-green-200 text-stone-900 text-xl rounded-xl font-bold p-2 w-1/2"
         >Recommend!
       </button>
-      <a 
-        href="/real-top/month"
-        className="basis-1/2 flex items-center justify-center  bg-stone-900 hover:text-purple-600 text-purple-200 text-2xl font-bold p-2 w-screen mb-0 text-center"
-        >View Top Songs
-      </a>
+      
       </div>
     </div>
   )

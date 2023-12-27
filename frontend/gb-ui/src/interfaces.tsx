@@ -4,6 +4,7 @@ export interface ITrack{
   name: string,
   artist: string,
   image: string
+  url?: string
 }
 
 export interface AudioFeatures{

@@ -169,6 +169,12 @@ export default function TrackPage(){
             tempTrackInfo.image = actionData[i].album.images[actionData[i].album.images.length-1].url;
           }
       }
+      if(actionData[i].preview_url){
+        tempTrackInfo.url = actionData[i].preview_url;
+      }
+      else if(actionData[i].external_urls && actionData[i].external_urls.spotify){
+        tempTrackInfo.url = actionData[i].external_urls.spotify
+      }
       tempTrackList.push(tempTrackInfo);
     }
     setRecList(tempTrackList);
@@ -234,6 +240,7 @@ export default function TrackPage(){
                       name={track.name}
                       artist={track.artist}
                       image={track.image}
+                      url={track.url}
                     />
                   </li>
                 )
@@ -241,10 +248,12 @@ export default function TrackPage(){
             </ul>
           </div>
       }
+      <a 
+        href="/real-top/month"
+        className="flex items-center justify-center  bg-stone-900 hover:text-purple-600 text-purple-200 text-2xl font-bold p-2 w-screen mb-0 text-center"
+        >View Top Songs
+      </a>
     </div>
   )
 }
 
-
-//test image:
-//https://i.scdn.co/image/ab67616d000048517974d577a51ae3a912685b24
