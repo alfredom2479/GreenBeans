@@ -1,20 +1,6 @@
 import { AudioFeatures } from "./interfaces";
 
-function handleNewTokens(newAccessToken:string):boolean{
-
-  console.log("new at: "+newAccessToken);
-  if(!newAccessToken){
-    console.log("There was an error parsing new tokens")
-    return false;
-  }
-
-  localStorage.setItem('access_token', newAccessToken);
-  console.log("local storage after success:")
-  console.log(localStorage);
-  return true;
-
-}
-
+//INITIAL AUTH FUNC
 export async function requestAuth(){
 
   let res:Response|null = null
@@ -40,9 +26,25 @@ export async function requestAuth(){
   return data;
 }
 
+//TOKEN HANDLERS
+
+function handleNewTokens(newAccessToken:string):boolean{
+
+  console.log("new at: "+newAccessToken);
+  if(!newAccessToken){
+    console.log("There was an error parsing new tokens")
+    return false;
+  }
+
+  localStorage.setItem('access_token', newAccessToken);
+  console.log("local storage after success:")
+  console.log(localStorage);
+  return true;
+
+}
+
 export async function refreshTokens(refresh_token:string|null){
 
-  console.log("in refresh tokne: "+refresh_token)
   if(refresh_token ===null){
     console.log("Refresh token is null");
     throw(new Error("Refresh token is null fam"));
@@ -55,16 +57,12 @@ export async function refreshTokens(refresh_token:string|null){
     res = await fetch("/api/auth/refresh_token?"+authParams.toString(),{
       method:"GET"
     });
-    console.log("res data: ")
-    console.log(res)
   }catch(err){
     console.log(err);
     throw(err)
   }
 
   const data  = await res.json();
-  console.log("The refresh token data")
-  console.log(data);
   if(!res.ok){
     throw{
       message:data.message,
@@ -81,6 +79,7 @@ export async function requestTokens(code:string|null, state:string|null){
     console.log("code or state is null");
     throw(new Error("Code or state are null"));
   }
+
   let res:Response|null = null
 
   const authParams = new URLSearchParams({code,state});
@@ -105,6 +104,7 @@ export async function requestTokens(code:string|null, state:string|null){
   return data;
 }
 
+//SPOTIFY DATA REQUEST FUNCTIONS
 
 export async function requestMySpotifyAccount(accessToken:string){
 
