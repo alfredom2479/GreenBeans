@@ -2,7 +2,7 @@ import {useEffect, useState} from "react";
 import { redirect,useLoaderData} from "react-router-dom";
 import type {Params} from 'react-router-dom';
 
-import TrackCard from "../components/TrackCard";
+import TrackCard from "./TrackCard";
 import { ITrack } from "../interfaces";
 
 import { requestTopTracks } from '../api';
@@ -12,7 +12,6 @@ interface TopParams{
 }
 
 export async function loader({params}:TopParams){
-  console.log(params);
   let rangeNum:number = 0;
 
   switch(params.range){
@@ -77,24 +76,33 @@ export default function TopOf(){
       for(let i = 0; i < loaderItems.length; i++){
         if(loaderItems[i].id){
           let mainArtist:string = "???";
+          let smallImageURL:string = "default_image_url";
+          let listenUrl:string = "";
           if(loaderItems[i].artists && Array.isArray(loaderItems[i].artists)
             && loaderItems[i].artists.length > 0 && loaderItems[i].artists[0].name ){
             mainArtist = loaderItems[i].artists[0].name;
           }
-          let smallImageURL:string = "default_image_url";
           if(loaderItems[i].album && loaderItems[i].album.images &&
              Array.isArray(loaderItems[i].album.images)
           && loaderItems[i].album.images.length > 0 &&
           loaderItems[i].album.images[loaderItems[i].album.images.length-1].url){
               smallImageURL = loaderItems[i].album.images[loaderItems[i].album.images.length-2].url;
             }
+          if(loaderItems[i].preview_url){
+            listenUrl = loaderItems[i].preview_url;
+          }
+          else if(loaderItems[i].external_urls && loaderItems[i].external_urls.spotify){
+            listenUrl = loaderItems[i].external_urls.spotify;
+          }
           newTracks.push({
             name: loaderItems[i].name ? loaderItems[i].name : "No Name",
             //no item should have the id of "no_id" bc of the 
             //wrapping if statement
             id: loaderItems[i].name ? loaderItems[i].id : "no_id",
             artist: mainArtist,
-            image: smallImageURL
+            image: smallImageURL,
+            url: listenUrl
+
           });
         }
       }
@@ -116,6 +124,7 @@ export default function TopOf(){
               name={track.name}
               artist={track.artist}
               image={track.image}
+              url={track.url}
             />
             </li>)
           })}

@@ -115,7 +115,6 @@ export async function requestMySpotifyAccount(accessToken:string){
     console.log("There has been a req spotify account oopsie");
     console.log(err);
   }
-
   
 }
 
@@ -130,34 +129,31 @@ const rangeEnum =(rangeNum:number):string=> {
   }
 }
 
-export async function requestTopTracks(access_token:string, range:number ){
+export async function requestTopTracks(accessToken:string, range:number ){
 
   const inputRange:string = rangeEnum(range);
-  let res:Response|null = null
 
   try{
-    res = await fetch(`https://api.spotify.com/v1/me/top/tracks?time_range=${inputRange}&limit=50`,{
-      method: "GET",
-      headers: {
-        Authorization: 'Bearer ' + access_token
-      }
-    });
+    const data = await sendRequest(
+      `https://api.spotify.com/v1/me/top/tracks?time_range=${inputRange}&limit=50`, 
+      accessToken
+    )
+    return data;
   }catch(err){
-    console.log(err)
-    throw{err}
+      console.log("There has been an api top tracks oopsie");
+      console.log(err);
   }
+}
 
-
-  const data = await res.json();
-  if(!res.ok){
-    throw{
-      message: data.message,
-      statusText: data.statusText,
-      status: data.status
-    };
+export async function requestSavedTracks(accessToken:string){
+  
+  try{
+    const data = await sendRequest(`https://api.spotify.com/v1/me/tracks`,accessToken);
+    return data;
+  }catch(err){
+    console.log("There has been a saved tracks api oopsie");
+    console.log(err);
   }
-
-  return data;
 }
 
 export async function requestSpotifyTrack(accessToken:string, trackId:string ){
