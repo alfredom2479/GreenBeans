@@ -114,7 +114,7 @@ export default function TopOf(){
   console.log(topTracksList);
 
   return(
-      <div className="overflow-y-scroll basis-3/4">
+      <div className="overflow-y-scroll">
         <ul>
           {topTracksList.map((track)=>{
             return (

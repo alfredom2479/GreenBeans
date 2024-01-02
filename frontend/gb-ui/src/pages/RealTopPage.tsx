@@ -42,9 +42,9 @@ export default function RealTopPage(){
       <h1 className="basis-1/2 text-purple-200 font-bold text-4xl text-center my-5">
         {display_name}'s Top Songs
       </h1> 
-      <nav className=" basis-1/2 font-bold bg-stone-800 h-full">
+      <nav className=" basis-1/2 font-bold bg-stone-800 ">
         <ul className={`flex text-white`}>
-          <li className={`flex-1 p-1 flex justify-center content-center `}>
+          <li className={`flex-1  flex justify-center content-center `}>
           {/* u have to define string with default style and add
           to it if isActive is true with the appropriate styles */}
           
@@ -53,13 +53,13 @@ export default function RealTopPage(){
               Month
             </NavLink>
           </li>
-          <li className={`flex-1 p-1 flex justify-center `}>
+          <li className={`flex-1  flex justify-center `}>
             <NavLink to="sixmonths" 
             className={({isActive})=>isActive ? "text-green-200 text-center w-full text-2xl truncate" : "text-center w-full text-2xl truncate"}>
               Six Months
             </NavLink>
           </li>
-          <li className={`flex-1 p-1 flex justify-center` }>
+          <li className={`flex-1  flex justify-center` }>
             <NavLink to="alltime"
             className={({isActive})=> isActive ? "text-green-200 text-center w-full text-2xl" : "text-center w-full text-2xl"}>
               Years+
@@ -69,7 +69,13 @@ export default function RealTopPage(){
       </nav>
       </div>
       <Outlet/>
-
+      <div className="flex">
+            <a
+            href="/saved"
+        className="flex-1 items-center justify-center bg-stone-900 hover:text-purple-600 text-purple-200 text-2xl font-bold p-2 mb-0 text-center border-white border-t-2 w-screen hover:border-purple-600"
+        >Saved Songs
+      </a>
+      </div>
     </div>
   )
 }

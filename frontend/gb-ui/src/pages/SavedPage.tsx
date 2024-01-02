@@ -81,6 +81,13 @@ export default  function SavedPage(){
         </h1>
       </div>
       <Outlet/>
+      <div>
+      <a 
+        href="/real-top/month"
+        className="flex flex-1 items-center justify-center  bg-stone-900 hover:text-purple-600 text-purple-200 text-2xl font-bold p-2 mb-0 text-center border-white border-t-2  hover:border-purple-600"
+        >Top Songs
+      </a>
+      </div>
     </div>
   )
 }
