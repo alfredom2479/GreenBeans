@@ -4,7 +4,8 @@ export interface ITrack{
   name: string,
   artist: string,
   image: string
-  url?: string
+  url?: string,
+  isRec?:boolean
 }
 
 export interface AudioFeatures{

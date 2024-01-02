@@ -241,6 +241,7 @@ export default function TrackPage(){
                       artist={track.artist}
                       image={track.image}
                       url={track.url}
+                      isRec={true}
                     />
                   </li>
                 )

@@ -3,7 +3,7 @@ import { ITrack } from "../interfaces"
 import { saveSpotifyTrack } from "../api"
 
 
-export default function TrackCard({id,name,artist,image,url}:ITrack){
+export default function TrackCard({id,name,artist,image,url,isRec=false}:ITrack){
 
   async function handleOnClick(){
     console.log("handleing save...")
@@ -50,12 +50,14 @@ export default function TrackCard({id,name,artist,image,url}:ITrack){
            * since u don't need to know what it returns... bc it doesn't return anything.
            * I guess print something on screen on if the request was succesful or not.
            */}
-          <button
+          {isRec?
+            <button
             className="bg-green-950 text-white basis-1/6 p-1 text-center block items-center justify-center font-bold text-lg" 
             onClick={()=>handleOnClick()}
           >Save
-            
-          </button>
+          </button>: null
+          }
+          
 
         {/* </div> */}
       </div> 
