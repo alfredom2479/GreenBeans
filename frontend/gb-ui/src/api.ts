@@ -156,6 +156,34 @@ export async function requestSavedTracks(accessToken:string){
   }
 }
 
+export async function saveSpotifyTrack( trackId:string) :Promise<Response|null>{
+  let res:Response|null = null;
+  let accessToken:string|null = null;
+
+  accessToken = localStorage.getItem("access_token");
+  
+  if(!accessToken || accessToken === ""){
+    console.log("unable to save track, bad token")
+    return null;
+  }
+
+  res = await fetch("https://api.spotify.com/v1/me/tracks?ids="+trackId,{
+    method: "PUT",
+    headers: {
+      Authorization: 'Bearer ' + accessToken
+    }
+  });
+  console.log(res);
+  //const data = await res.json();
+  if(!res.ok){
+    throw{
+      error: "Oopsies in save track put request"
+    };
+  }
+
+  return res;
+}
+
 export async function requestSpotifyTrack(accessToken:string, trackId:string ){
 
   try{

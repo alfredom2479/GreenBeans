@@ -1,9 +1,8 @@
-import {useState, useEffect} from 'react';
-import { redirect, useLoaderData } from "react-router-dom";
+//import {useState, useEffect} from 'react';
+import { Outlet, redirect  } from "react-router-dom";
 import { requestSavedTracks } from "../api";
 
-import { ITrack } from '../interfaces';
-import SavedTrackList from '../components/SavedTrackList';
+//import { ITrack } from '../interfaces';
 
 
 export async function loader(){
@@ -31,6 +30,7 @@ export async function loader(){
 
 export default  function SavedPage(){
   
+  /*
   const [savedTracksList, setSavedTracksList] = useState<ITrack[]>([]);
 
   const loaderData = useLoaderData();
@@ -71,6 +71,7 @@ export default  function SavedPage(){
       setSavedTracksList(tempTrackList);
     }
   },[loaderData]);
+  */
   
   return(
     <div className="max-h-screen flex flex-col">
@@ -79,7 +80,7 @@ export default  function SavedPage(){
           Your Saved Tracks
         </h1>
       </div>
-      <SavedTrackList trackList={3}/> 
+      <Outlet/>
     </div>
   )
 }

@@ -14,6 +14,7 @@ import TopOf, {loader as topDataLoader} from './components/TopOf';
 import TrackPage,{loader as trackDataLoader} from './pages/TrackPage';
 import {action as getRecsAction} from './components/RecOptionsSection';
 import SavedPage from './pages/SavedPage';
+import SavedTrackList,{loader as savedTracksLoader} from './components/SavedTrackList';
 //import RecsSection, {loader as recsDataLoader} from './components/RecsSecion';
 
 
@@ -59,6 +60,13 @@ const router = createBrowserRouter([
   {
     path: "/saved",
     element:<SavedPage/>,
+    children:[
+      {
+        path: "",
+        element: <SavedTrackList/>,
+        loader: savedTracksLoader
+      }
+    ]
     
   }
 ]);

@@ -20,7 +20,7 @@ const spotifyLoginUser =  (req:Request,res:Response)
 
   res.cookie(stateKey, state);
 
-  const authScope:string = "user-top-read user-read-private user-read-email";
+  const authScope:string = "user-top-read user-read-private user-read-email user-library-read user-library-modify";
 
   const spotifyRedirectParams = new URLSearchParams({
     response_type: 'code',

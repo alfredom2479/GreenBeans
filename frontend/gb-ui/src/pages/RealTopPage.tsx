@@ -40,7 +40,7 @@ export default function RealTopPage(){
     <div className="max-h-screen flex flex-col">
       <div className="basis-1/4 flex flex-col ">
       <h1 className="basis-1/2 text-purple-200 font-bold text-4xl text-center my-5">
-        {display_name}'s<br/> Top Songs
+        {display_name}'s Top Songs
       </h1> 
       <nav className=" basis-1/2 font-bold bg-stone-800 h-full">
         <ul className={`flex text-white`}>

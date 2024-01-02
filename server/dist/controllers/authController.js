@@ -7,7 +7,7 @@ const spotifyLoginUser = (req, res) => {
     //Protection against CSRF
     const state = generateRandomString(16);
     res.cookie(stateKey, state);
-    const authScope = "user-top-read user-read-private user-read-email";
+    const authScope = "user-top-read user-read-private user-read-email user-library-read user-library-modify";
     const spotifyRedirectParams = new URLSearchParams({
         response_type: 'code',
         client_id: process.env.SPOTIFY_CLIENT_ID,
