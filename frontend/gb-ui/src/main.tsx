@@ -40,6 +40,11 @@ const router = createBrowserRouter([
         element: <TopOf/>,
         loader: topDataLoader
       },
+      {
+        path:"",
+        element: <TopOf/>,
+        loader: topDataLoader
+      }
     ]
   },
   {
@@ -63,6 +68,11 @@ const router = createBrowserRouter([
     children:[
       {
         path: "",
+        element: <SavedTrackList/>,
+        loader: savedTracksLoader
+      },
+      {
+        path:":page",
         element: <SavedTrackList/>,
         loader: savedTracksLoader
       }

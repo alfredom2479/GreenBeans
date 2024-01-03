@@ -145,10 +145,12 @@ export async function requestTopTracks(accessToken:string, range:number ){
   }
 }
 
-export async function requestSavedTracks(accessToken:string){
+export async function requestSavedTracks(pageNumber:number,tracksPerPage:number,accessToken:string){
+
+  const totalOffset:number = pageNumber*tracksPerPage;
   
   try{
-    const data = await sendRequest(`https://api.spotify.com/v1/me/tracks`,accessToken);
+    const data = await sendRequest(`https://api.spotify.com/v1/me/tracks?limit=${tracksPerPage}&offset=${totalOffset}`,accessToken);
     return data;
   }catch(err){
     console.log("There has been a saved tracks api oopsie");
@@ -173,7 +175,7 @@ export async function saveSpotifyTrack( trackId:string) :Promise<Response|null>{
       Authorization: 'Bearer ' + accessToken
     }
   });
-  console.log(res);
+  //console.log(res);
   //const data = await res.json();
   if(!res.ok){
     throw{
@@ -299,16 +301,27 @@ export async function requestSpotifyTrackAudioFeatures(accessToken:string, track
 //MAIN SEND REQUEST function
 //u might be able to abstract this further
 async function sendRequest(endpoint:string, accessToken:string){
+  console.log("endpoing: "+endpoint);
   let res:Response|null = null
 
+  try{
   res = await fetch(endpoint,{
     method: "GET",
     headers: {
       Authorization:  'Bearer '+ accessToken
     }
   });
+}catch(err){
+  console.log(err);
+  console.log('fauled GET '+endpoint);
+}
 
-  if(res.status === 401){
+  if(res === null){
+    throw {err: "big request oopsies"};
+
+  }
+
+  if( res.status === 401){
     const {access_token} = await refreshTokens(localStorage.getItem('refresh_token'));
     const tokensHandled:boolean = handleNewTokens(access_token);
 

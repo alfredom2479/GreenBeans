@@ -21,9 +21,6 @@ export async function loader({params}:TopParams){
     case "sixmonths":
       rangeNum = 1;
       break;
-    case "alltime":
-      rangeNum=2;
-      break;
     default:
       rangeNum=2
       console.log("This is top of NO time bc this is an error");

@@ -1,10 +1,10 @@
 //import {useState, useEffect} from 'react';
-import { Outlet, redirect  } from "react-router-dom";
-import { requestSavedTracks } from "../api";
+import { Outlet } from "react-router-dom";
 
 //import { ITrack } from '../interfaces';
 
 
+/*
 export async function loader(){
   
   const accessToken:string|null = localStorage.getItem("access_token");
@@ -27,6 +27,7 @@ export async function loader(){
     console.log(err);
   }
 }
+*/
 
 export default  function SavedPage(){
   
@@ -76,9 +77,11 @@ export default  function SavedPage(){
   return(
     <div className="max-h-screen flex flex-col">
       <div className="basis-1/4 flex flex-col">
-        <h1 className="basis-1/2 text-purple-200 font-bold text-4xl text-center py-5">
+        <h1 className="basis-1/2 text-purple-200 font-bold text-4xl text-center py-3">
           Your Saved Tracks
         </h1>
+        <div className="flex">
+        </div>
       </div>
       <Outlet/>
       <div>
