@@ -147,7 +147,11 @@ export async function requestTopTracks(accessToken:string, range:number ){
 
 export async function requestSavedTracks(pageNumber:number,tracksPerPage:number,accessToken:string){
 
-  const totalOffset:number = pageNumber*tracksPerPage;
+  let totalOffset:number = pageNumber*tracksPerPage;
+
+  if(totalOffset > 999999999){
+    totalOffset = 99999999;
+  }
   
   try{
     const data = await sendRequest(`https://api.spotify.com/v1/me/tracks?limit=${tracksPerPage}&offset=${totalOffset}`,accessToken);

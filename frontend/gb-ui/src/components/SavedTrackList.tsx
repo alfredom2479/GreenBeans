@@ -33,7 +33,10 @@ export async function loader({params}:URLParams){
   try{
     const data = await requestSavedTracks(pageNumber,50,accessToken);
     
-    if(data.items && Array.isArray(data.items)){
+    if(data && data.items && Array.isArray(data.items)){
+      if(data.items.length === 0){
+        return redirect("/saved/0")
+      }
       return data.items;
     }
     else{
