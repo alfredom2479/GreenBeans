@@ -249,16 +249,21 @@ export default function TrackPage(){
             </ul>
           </div>
       }
-      <div className="flex">
+      <div className="flex mt-2">
       <a 
         href="/real-top/month"
-        className="flex flex-1 items-center justify-center  bg-stone-900 hover:text-purple-600 text-purple-200 text-2xl font-bold p-2 mb-0 text-center border-white border-t-2 border-r-2 hover:border-purple-600"
-        >Top Songs
+        className="flex flex-1 items-center justify-center  bg-stone-900 hover:text-purple-600 text-purple-200 text-xl font-bold  mb-0 text-center border-white border-t-2 border-r-2 hover:border-purple-600"
+        >top
       </a>
       <a 
         href="/saved"
-        className="flex-1 items-center justify-center bg-stone-900 hover:text-purple-600 text-purple-200 text-2xl font-bold p-2 mb-0 text-center border-white border-t-2 border-l-2 hover:border-purple-600"
-        >Saved Songs
+        className="flex flex-1 items-center justify-center bg-stone-900 hover:text-purple-600 text-purple-200 text-xl font-bold  mb-0 text-center border-white border-t-2 border-l-2 hover:border-purple-600"
+        >saved
+      </a>
+      <a 
+        href="/link-search"
+        className="flex flex-1 items-center justify-center bg-stone-900 hover:text-purple-600 text-purple-200 text-xl font-bold  mb-0 text-center border-white border-t-2 border-l-2 hover:border-purple-600"
+        >search
       </a>
       </div>
       

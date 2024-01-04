@@ -15,6 +15,7 @@ import TrackPage,{loader as trackDataLoader} from './pages/TrackPage';
 import {action as getRecsAction} from './components/RecOptionsSection';
 import SavedPage from './pages/SavedPage';
 import SavedTrackList,{loader as savedTracksLoader} from './components/SavedTrackList';
+import LinkSearchPage, {action as searchLinkAction} from './pages/LinkSearchPage';
 //import RecsSection, {loader as recsDataLoader} from './components/RecsSecion';
 
 
@@ -77,7 +78,11 @@ const router = createBrowserRouter([
         loader: savedTracksLoader
       }
     ]
-    
+  },
+  {
+    path: "/link-search",
+    element: <LinkSearchPage/>,
+    action: searchLinkAction
   }
 ]);
 

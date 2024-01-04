@@ -1,5 +1,5 @@
 import {useState, useEffect} from "react"
-import { redirect, useLoaderData, useParams } from "react-router-dom";
+import { redirect, useLoaderData, useParams, NavLink } from "react-router-dom";
 import TrackCard from "./TrackCard";
 import { requestSavedTracks } from "../api";
 
@@ -120,16 +120,16 @@ export default function SavedTrackList(){
   return(
   <>
   <div className="flex">
-        <a 
-          href={`/saved/${prevPageNumber}`}
+        <NavLink 
+          to={`/saved/${prevPageNumber}`}
           className="flex-1 items-center justify-center bg-stone-900 hover:text-purple-600 text-purple-200 text-xl font-bold p-1 mb-0 text-center border-white border-t-2 border-r-2 hover:border-purple-600"
           >prev
-        </a>
-        <a 
-          href={`/saved/${nextPageNumber}`}
+        </NavLink>
+        <NavLink 
+          to={`/saved/${nextPageNumber}`}
           className="flex-1 items-center justify-center bg-stone-900 hover:text-purple-600 text-purple-200 text-xl font-bold p-1 mb-0 text-center border-white border-t-2 border-l-2 hover:border-purple-600"
           >next
-        </a>
+        </NavLink>
             </div>
     <div className="basis-3/4 overflow-y-scroll">
       <ul>
