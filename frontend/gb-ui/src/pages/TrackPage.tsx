@@ -47,6 +47,8 @@ export async function loader({params}:IURLParams){
 export default function TrackPage(){
 
   const [checkedBoxes,setCheckedBoxes] = useState<string[]>([]);
+  const [showModal, setShowModal] = useState(false);
+  const [modalSongPreviewUrl, setModalSongPreviewUrl] = useState<string>("");
 
   const loaderData = useLoaderData();
   const actionData = useActionData();
@@ -97,14 +99,6 @@ export default function TrackPage(){
       }
       setTrackData({name: tempName, artist: tempArtist, image: tempImageUrl});
     
-      //Construct current Audio feature data
-      /*
-      acousticness?: number,
-  danceability?: number,
-  energy?: number,
-  liveness?: number,
-  valence?: number
-  */
       if(typeof audioFeatureLoaderData === 'object' && audioFeatureLoaderData){
         console.log("audio feature data shape:");
         const tempAudioFeatures:AudioFeatures = {}
@@ -188,6 +182,17 @@ export default function TrackPage(){
       
   },[trackData]);
 
+
+  function handleListenOnClick(songPreviewUrl:string|undefined) {
+    if(songPreviewUrl === undefined){
+      console.log("Song Preview url is undefined");
+      return;
+    }
+    setModalSongPreviewUrl(songPreviewUrl);
+    setShowModal(true);
+    return;
+  }
+
   return(
     <div className="flex flex-col h-screen min-h-screen max-h-screen">
       <div className=" flex flex-col basis-1/4 grow-0 max-h-[25%]">
@@ -242,6 +247,7 @@ export default function TrackPage(){
                       image={track.image}
                       url={track.url}
                       isRec={true}
+                      popModal={handleListenOnClick}
                     />
                   </li>
                 )
@@ -256,7 +262,7 @@ export default function TrackPage(){
         >top
       </a>
       <a 
-        href="/saved"
+        href="/saved/0"
         className="flex flex-1 items-center justify-center bg-stone-900 hover:text-purple-600 text-purple-200 text-xl font-bold  mb-0 text-center border-white border-t-2 border-l-2 hover:border-purple-600"
         >saved
       </a>
@@ -266,7 +272,18 @@ export default function TrackPage(){
         >search
       </a>
       </div>
-      
+     {showModal ?
+      <div className="z-10 fixed h-full w-full left-0 top-0 pt-48 bg-[rgba(0,0,0,.4)]"
+      onClick={()=>{setShowModal(false)}}>
+        <div className="bg-gray-50 m-auto w-10/12 flex justify-center">
+          <iframe className="m-2" src={modalSongPreviewUrl}/>
+        </div>
+    
+      </div>
+      :
+      null
+    }
+
     </div>
   )
 }

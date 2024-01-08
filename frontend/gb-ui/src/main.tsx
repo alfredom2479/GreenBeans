@@ -57,7 +57,7 @@ const router = createBrowserRouter([
         element: <TrackPage/>,
         loader: trackDataLoader,
         action: getRecsAction,
-        shouldRevalidate: ({formMethod})=>{
+        shouldRevalidate: ({formMethod}) => {
           return formMethod !== "post"
         }
       }

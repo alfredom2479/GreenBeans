@@ -50,6 +50,9 @@ export async function loader({params}:URLParams){
 
 export default function SavedTrackList(){
 
+  const [showModal, setShowModal] = useState(false);
+  const [modalSongPreviewUrl, setModalSongPreviewUrl] = useState<string>("");
+
   const [savedTracksList, setSavedTracksList] = useState<ITrack[]>([])
 
   const loaderData = useLoaderData();
@@ -116,6 +119,15 @@ export default function SavedTrackList(){
     }
   },[loaderData]);
 
+  function handleListenOnClick(songPreviewUrl:string|undefined){
+    if(songPreviewUrl === undefined){
+      console.log("Song preview url is undefined");
+      return;
+    }
+    setModalSongPreviewUrl(songPreviewUrl);
+    setShowModal(true);
+    return;
+  }
 
   return(
   <>
@@ -142,6 +154,7 @@ export default function SavedTrackList(){
                 artist={track.artist}
                 image={track.image}
                 url={track.url}
+                popModal={handleListenOnClick}
                 />
             </li>
             
@@ -149,6 +162,17 @@ export default function SavedTrackList(){
         })}
       </ul>
     </div>
+{showModal ?
+      <div className="z-10 fixed h-full w-full left-0 top-0 pt-48 bg-[rgba(0,0,0,.4)]"
+      onClick={()=>{setShowModal(false)}}>
+        <div className="bg-gray-50 m-auto w-10/12 flex justify-center">
+          <iframe className="m-2" src={modalSongPreviewUrl}/>
+        </div>
+    
+      </div>
+      :
+      null
+    }
     </>
   )
 

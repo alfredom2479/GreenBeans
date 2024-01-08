@@ -2,8 +2,11 @@ import {Link} from "react-router-dom"
 import { ITrack } from "../interfaces"
 import { saveSpotifyTrack } from "../api"
 
+function handleDefaultModalError(prevUrl: string){
+  console.log("no modal was given to handle preview: "+ prevUrl);
+}
 
-export default function TrackCard({id,name,artist,image,url,isRec=false}:ITrack){
+export default function TrackCard({id,name,artist,image,url,isRec=false,popModal=handleDefaultModalError}:ITrack){
 
   async function handleOnClick(){
     console.log("handleing save...")
@@ -40,12 +43,18 @@ export default function TrackCard({id,name,artist,image,url,isRec=false}:ITrack)
 
         {/* </div> */}
         {/* <div className="basis-1/5 bg-purple-200 flex hover:bg-purple-300"> */}
+          {/*  
           <a
             href={url}
             className="bg-green-900 text-white basis-1/6 flex p-1 text-center items-center justify-center font-bold text-lg"
             target="_blank"
           >Listen
-          </a>
+          </a>*/}
+          <button
+            onClick={()=>popModal(url)}
+            className="bg-green-900 text-white basis-1/6 flex p-1 text-center items-center justify-center font-bold text-lg"
+          >Listen
+          </button>
           {/** Maybe directly call the api function from here 
            * since u don't need to know what it returns... bc it doesn't return anything.
            * I guess print something on screen on if the request was succesful or not.

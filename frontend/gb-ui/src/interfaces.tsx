@@ -6,6 +6,7 @@ export interface ITrack{
   image: string
   url?: string,
   isRec?:boolean
+  popModal?(url:string|undefined):void
 }
 
 export interface AudioFeatures{

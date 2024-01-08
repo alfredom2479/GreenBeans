@@ -55,6 +55,9 @@ export async function loader({params}:TopParams){
 */
 export default function TopOf(){
 
+  const [showModal, setShowModal] = useState(false);
+  const [modalSongPreviewUrl, setModalSongPreviewUrl] = useState<string>("")
+
   const [topTracksList,setTopTracksList] = useState<ITrack[]>([]);
 
   const loadedData= useLoaderData();
@@ -108,7 +111,17 @@ export default function TopOf(){
     setTopTracksList(newTracks)
   },[loadedData])
 
-  console.log(topTracksList);
+  function handleListenOnClick(songPreviewUrl:string|undefined){
+    if(songPreviewUrl === undefined){
+      console.log("Song preview url is undefined");
+      return
+    }
+    setModalSongPreviewUrl(songPreviewUrl);
+    setShowModal(true);
+    return;
+  }
+
+  //console.log(topTracksList);
 
   return(
       <div className="overflow-y-scroll">
@@ -122,10 +135,22 @@ export default function TopOf(){
               artist={track.artist}
               image={track.image}
               url={track.url}
+              popModal={handleListenOnClick}
             />
             </li>)
           })}
         </ul>
+      {showModal ?
+      <div className="z-10 fixed h-full w-full left-0 top-0 pt-48 bg-[rgba(0,0,0,.4)]"
+      onClick={()=>{setShowModal(false)}}>
+        <div className="bg-gray-50 m-auto w-10/12 flex justify-center">
+          <iframe className="m-2" src={modalSongPreviewUrl}/>
+        </div>
+    
+      </div>
+      :
+      null
+    }
       </div>
 
   )
