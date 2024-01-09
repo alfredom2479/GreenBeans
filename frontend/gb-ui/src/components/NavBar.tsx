@@ -25,6 +25,7 @@ export async function loader(){
 export default function NavBar(){
 
   const [currUser, setCurrUser] = useState<string>("")
+  const [showLogOutModal, setShowLogOutModal] = useState<boolean>(false);
 
   const loaderData = useLoaderData();
 
@@ -59,12 +60,34 @@ export default function NavBar(){
               Log In
             </button>
           :
-            <p className="flex justify-center items-center basis-32 grow text-center font-bold text-lg bg-green-900 text-white border-white">
+            <button className="flex justify-center items-center basis-32 grow text-center font-bold text-lg bg-green-900 text-white border-white"
+              onClick={()=>{setShowLogOutModal(true)}}>
               {currUser}
-            </p>
+            </button>
         }
         
       </div>
+      {
+        showLogOutModal ?
+          <div className="z-10 fixed h-full w-full left-0 top-0 pt-48 bg-[rgba(0,0,0,.4)]"
+            onClick={()=>{setShowLogOutModal(false)}}>
+              <div className="bg-gray-50 m-auto w-10/12 flex justify-center">
+                <div className="flex flex-col text-xl">
+                  <div>
+                    u wanna log out?
+                  </div>
+                  <div className="flex justify-center">
+                    <button className="bg-red-950 text-white p-4 m-4 rounded-md">yeh</button>
+                    <button className="bg-gray-700 text-white p-4 m-4 rounded-md">nah</button>
+                  </div>
+                </div>
+              </div>
+
+          </div>
+        :
+        null
+
+      }
     </div>
   )
 }
