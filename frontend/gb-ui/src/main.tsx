@@ -7,7 +7,7 @@ import {
   RouterProvider
 } from "react-router-dom";
 
-import HomePage, {action as requestAction} from "./pages/HomePage";
+//import HomePage  from "./pages/HomePage";
 import TopPage, {loader as tokensLoader} from "./pages/TopPage";
 import RealTopPage,{loader as spotifyDataLoader} from "./pages/RealTopPage"
 import TopOf, {loader as topDataLoader} from './components/TopOf';
@@ -16,15 +16,69 @@ import {action as getRecsAction} from './components/RecOptionsSection';
 import SavedPage from './pages/SavedPage';
 import SavedTrackList,{loader as savedTracksLoader} from './components/SavedTrackList';
 import LinkSearchPage, {action as searchLinkAction} from './pages/LinkSearchPage';
+import NavBar, {loader as loggedInCheckerLoader} from './components/NavBar';
 //import RecsSection, {loader as recsDataLoader} from './components/RecsSecion';
 
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <HomePage/>,
-    action:  requestAction
+    element: <NavBar/>,
+    loader: loggedInCheckerLoader,
+    errorElement: <h1>A big oopsies has occured</h1>,
+    children: [
+      {
+        path:"/",
+        element: <LinkSearchPage/>,
+        action: searchLinkAction
+      },
+      {
+        path: "/top",
+        element: <TopPage/>,
+        loader: tokensLoader
+      },
+      {
+        path: "real-top",
+        element: <RealTopPage/>,
+        loader: spotifyDataLoader,
+        children: [
+          {
+            path: ":range",
+            element: <TopOf/>,
+            loader: topDataLoader
+          },
+          {
+            path:"",
+            element: <TopOf/>,
+            loader: topDataLoader
+          }
+        ]
+      },
+      {
+        path: "/saved",
+        element:<SavedPage/>,
+        children:[
+          {
+            path: "",
+            element: <SavedTrackList/>,
+            loader: savedTracksLoader
+          },
+          {
+            path:":page",
+            element: <SavedTrackList/>,
+            loader: savedTracksLoader
+          }
+        ]
+      },
+      {
+        path: "*",
+        element: <LinkSearchPage/>,
+        action:searchLinkAction
+      }
+      
+    ]
   },
+  /*
   {
     path: "/top",
     element: <TopPage/>,
@@ -84,6 +138,7 @@ const router = createBrowserRouter([
     element: <LinkSearchPage/>,
     action: searchLinkAction
   }
+  */
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')!).render(

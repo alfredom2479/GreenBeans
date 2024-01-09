@@ -36,11 +36,13 @@ export default function RealTopPage(){
     display_name = accountData
   }
 
+  console.log(display_name);
+
   return(
-    <div className="max-h-screen flex flex-col">
+    <div className="h-full pb-16 flex flex-col">
       <div className="basis-1/4 flex flex-col ">
       <h1 className="basis-1/2 text-purple-200 font-bold text-4xl text-center my-5">
-        {display_name}'s Top Songs
+        Your Top Songs
       </h1> 
       <nav className=" basis-1/2 font-bold bg-stone-800 ">
         <ul className={`flex text-white`}>
@@ -69,23 +71,6 @@ export default function RealTopPage(){
       </nav>
       </div>
       <Outlet/>
-      <div className="flex mt-2">
-      <a 
-        href="/real-top/month"
-        className="flex flex-1 items-center justify-center  bg-stone-900 hover:text-purple-600 text-purple-200 text-xl font-bold  mb-0 text-center border-white border-t-2 border-r-2 hover:border-purple-600"
-        >top
-      </a>
-      <a 
-        href="/saved/0"
-        className="flex flex-1 items-center justify-center bg-stone-900 hover:text-purple-600 text-purple-200 text-xl font-bold  mb-0 text-center border-white border-t-2 border-l-2 hover:border-purple-600"
-        >saved
-      </a>
-      <a 
-        href="/link-search"
-        className="flex flex-1 items-center justify-center bg-stone-900 hover:text-purple-600 text-purple-200 text-xl font-bold  mb-0 text-center border-white border-t-2 border-l-2 hover:border-purple-600"
-        >search
-      </a>
-      </div>
     </div>
   )
 }

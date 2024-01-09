@@ -62,7 +62,7 @@ const getInitialTokens = asyncHandler( async (req:Request,res:Response): Promise
       grant_type: 'authorization_code'
     }
 
-    const tokenurl = "https://accounts.spotify.com/api/token"
+    //const tokenurl = "https://accounts.spotify.com/api/token"
     console.log(authData);
     const {data, status, statusText} = await axios.post(
       "https://accounts.spotify.com/api/token",

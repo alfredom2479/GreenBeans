@@ -1,22 +1,11 @@
-import { requestAuth } from "../api";
-
-// u actually don't need this at all
-export async function action(){
-  console.log("in action");
-  try{
-    const data = await requestAuth();
-    console.log(data);
-  }catch(err){
-    return err;
-  }
-  
-}
+//import { requestAuth } from "../api";
 
 export default function HomePage(){
   
   return(
-    <>
-      <a href="api/auth/requestauth">Log In to spotify!</a>
-    </>
+    <div className="flex justify-center items-center mt-32 text-2xl">
+      <a className="bg-green-900 text-white border-white border-2 p-4 rounded-sm"href="api/auth/requestauth">Log In With Spotify</a>
+
+    </div>
   )
 }

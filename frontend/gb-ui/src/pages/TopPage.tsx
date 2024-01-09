@@ -21,7 +21,7 @@ export async function loader({request}:FetchRequest){
   }catch(err){
     console.log("there was an error in the loader");
     console.log(err);
-    return err;
+    return redirect("/");
   }
 }
 export default function TopPage(){

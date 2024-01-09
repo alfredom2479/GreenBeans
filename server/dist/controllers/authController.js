@@ -40,7 +40,7 @@ const getInitialTokens = asyncHandler(async (req, res) => {
             redirect_uri: "http://localhost:3000/top",
             grant_type: 'authorization_code'
         };
-        const tokenurl = "https://accounts.spotify.com/api/token";
+        //const tokenurl = "https://accounts.spotify.com/api/token"
         console.log(authData);
         const { data, status, statusText } = await axios.post("https://accounts.spotify.com/api/token", authData, { headers: { "Authorization": authHeaderStr, "Content-Type": "application/x-www-form-urlencoded" } });
         if (statusText === 'OK' && status === 200) {
