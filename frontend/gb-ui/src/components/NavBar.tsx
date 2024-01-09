@@ -37,20 +37,20 @@ export default function NavBar(){
   return (
     <div className="max-h-screen h-screen flex flex-col items-center justify-center">
       <Outlet/>
-      <div className="flex fixed bottom-0 left-0 right-0 h-16">
+      <div className="flex fixed bottom-0 left-0 right-0 h-16 border-t-2 border-white">
         <a 
           href="/real-top/month"
-          className="flex basis-32 items-center justify-center  bg-stone-900 hover:text-purple-600 text-purple-200 text-xl font-bold  mb-0 text-center border-white border-t-2 border-r-2 hover:border-purple-600"
+          className="flex basis-32 items-center justify-center  bg-stone-900 hover:text-purple-600 text-purple-200 text-xl font-bold  mb-0 text-center border-white border-r-2 hover:border-purple-600"
           >Top
         </a>
         <a 
           href="/saved/0"
-          className="flex basis-32 items-center justify-center bg-stone-900 hover:text-purple-600 text-purple-200 text-xl font-bold  mb-0 text-center border-white border-t-2 border-l-2 hover:border-purple-600"
+          className="flex basis-32 items-center justify-center bg-stone-900 hover:text-purple-600 text-purple-200 text-xl font-bold  mb-0 text-center border-white hover:border-purple-600"
           >Saved
         </a>
         <a 
           href="/link-search"
-          className="flex basis-32 items-center justify-center bg-stone-900 hover:text-purple-600 text-purple-200 text-xl font-bold  mb-0 text-center border-white border-t-2 border-l-2 hover:border-purple-600"
+          className="flex basis-32 items-center justify-center bg-stone-900 hover:text-purple-600 text-purple-200 border-r-2 text-xl font-bold  mb-0 text-center border-white border-l-2 hover:border-purple-600"
           >search
         </a>
         {
@@ -59,7 +59,7 @@ export default function NavBar(){
               Log In
             </button>
           :
-            <p className="flex justify-center items-center basis-32 grow text-center font-bold text-lg bg-green-900 text-white border-white border-1-2 border-t-2 round-sm">
+            <p className="flex justify-center items-center basis-32 grow text-center font-bold text-lg bg-green-900 text-white border-white">
               {currUser}
             </p>
         }

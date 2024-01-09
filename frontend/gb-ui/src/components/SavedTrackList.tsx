@@ -134,16 +134,16 @@ export default function SavedTrackList(){
   <div className="flex">
         <NavLink 
           to={`/saved/${prevPageNumber}`}
-          className="flex-1 items-center justify-center bg-stone-900 hover:text-purple-600 text-purple-200 text-xl font-bold p-1  text-center border-white border-t-2 border-r-2 hover:border-purple-600"
+          className="flex-1 items-center justify-center bg-stone-900 hover:text-purple-600 text-purple-200 text-xl font-bold p-1  text-center border-white border-2 border-l-0 hover:border-purple-600"
           >prev
         </NavLink>
         <NavLink 
           to={`/saved/${nextPageNumber}`}
-          className="flex-1 items-center justify-center bg-stone-900 hover:text-purple-600 text-purple-200 text-xl font-bold p-1  text-center border-white border-t-2 border-l-2 hover:border-purple-600"
+          className="flex-1 items-center justify-center bg-stone-900 hover:text-purple-600 text-purple-200 text-xl font-bold p-1  text-center border-white border-2 border-r-0 border-l-2 hover:border-purple-600"
           >next
         </NavLink>
             </div>
-    <div className="basis-3/4 overflow-y-scroll">
+    <div className=" overflow-y-scroll">
       <ul>
         {savedTracksList.map((track)=>{
           return (

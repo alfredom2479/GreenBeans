@@ -74,8 +74,22 @@ const router = createBrowserRouter([
         path: "*",
         element: <LinkSearchPage/>,
         action:searchLinkAction
-      }
-      
+      },
+      {
+        path: "/track",
+        //element: <TrackPage/>,
+        children: [
+        {
+          path: ":trackid",
+          element: <TrackPage/>,
+          loader: trackDataLoader,
+          action: getRecsAction,
+          shouldRevalidate: ({formMethod}) => {
+            return formMethod !== "post"
+          }
+        }
+    ]
+  },
     ]
   },
   /*

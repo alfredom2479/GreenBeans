@@ -97,7 +97,7 @@ export default function RecOptionsSection({checkedBoxes,setCheckedBoxes, audioFe
   }
   
   return(
-    <div className="flex flex-col justify-between h-full">
+    <div className="flex flex-col justify-between max-w-full h-full py-2  overflow-y-scroll">
       <div className="text-xl w-screen text-center  font-bold text-white">What do you like about this song?</div>
       <div className="grid grid-cols-2 justify-items-center">
       <div>

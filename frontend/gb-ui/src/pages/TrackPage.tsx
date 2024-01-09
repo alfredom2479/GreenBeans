@@ -194,12 +194,12 @@ export default function TrackPage(){
   }
 
   return(
-    <div className="flex flex-col h-screen min-h-screen max-h-screen">
-      <div className=" flex flex-col basis-1/4 grow-0 max-h-[25%]">
-      <div className=" bg-stone-900 text-purple-200 flex max-h-[80%]">
-        <div className="basis-5/12 flex items-center max-h-full">
-          <img src={trackData.image}
-          className="flex-1 object-cover max-h-full">
+    <div className="flex flex-col h-full pb-16 w-full">
+      <div className=" flex flex-col basis-32 grow-0 max-h-[25%] max-w-full">
+      <div className=" bg-stone-900 text-purple-200 flex max-h-[95%]">
+        <div className="basis-5/12 flex items-center h-full">
+           <img src={trackData.image} 
+          className="flex-1 object-cover h-full">
           </img>
         </div>
         <div className="basis-7/12">
@@ -211,7 +211,7 @@ export default function TrackPage(){
           </div>
         </div>
       </div> 
-      <nav className=" font-bold bg-purple-200 max-h-fit">
+      <nav className=" font-bold bg-purple-200 h-14">
         <ul className={`flex text-stone-900 h-full`}>
           <li className={`flex-1 flex justify-center `}>
             <button onClick={()=>setIsSelectingOptions(true)}  
@@ -235,7 +235,7 @@ export default function TrackPage(){
             audioFeatures={currAudioFeatures}
             setIsSelectingOptions={setIsSelectingOptions}
           /> 
-        : <div className="basis-3/4  overflow-y-scroll">
+        : <div className=" overflow-y-scroll">
             <ul>
               {recList.map((track)=>{
                 return (
@@ -255,23 +255,6 @@ export default function TrackPage(){
             </ul>
           </div>
       }
-      <div className="flex mt-2">
-      <a 
-        href="/real-top/month"
-        className="flex flex-1 items-center justify-center  bg-stone-900 hover:text-purple-600 text-purple-200 text-xl font-bold  mb-0 text-center border-white border-t-2 border-r-2 hover:border-purple-600"
-        >top
-      </a>
-      <a 
-        href="/saved/0"
-        className="flex flex-1 items-center justify-center bg-stone-900 hover:text-purple-600 text-purple-200 text-xl font-bold  mb-0 text-center border-white border-t-2 border-l-2 hover:border-purple-600"
-        >saved
-      </a>
-      <a 
-        href="/link-search"
-        className="flex flex-1 items-center justify-center bg-stone-900 hover:text-purple-600 text-purple-200 text-xl font-bold  mb-0 text-center border-white border-t-2 border-l-2 hover:border-purple-600"
-        >search
-      </a>
-      </div>
      {showModal ?
       <div className="z-10 fixed h-full w-full left-0 top-0 pt-48 bg-[rgba(0,0,0,.4)]"
       onClick={()=>{setShowModal(false)}}>
