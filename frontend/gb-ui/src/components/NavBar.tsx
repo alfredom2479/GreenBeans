@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Outlet, useLoaderData } from "react-router-dom";
+import { Outlet, useLoaderData,  NavLink, useNavigate} from "react-router-dom";
 import { requestMySpotifyAccount } from "../api";
 
 export async function loader(){
@@ -22,6 +22,10 @@ export async function loader(){
   
 }
 
+export async function action(){
+  console.log("an action has occured");
+}
+
 export default function NavBar(){
 
   const [currUser, setCurrUser] = useState<string>("")
@@ -29,36 +33,48 @@ export default function NavBar(){
 
   const loaderData = useLoaderData();
 
+  const navigate = useNavigate();
+
   useEffect(()=>{
     if(typeof loaderData ==="string" && loaderData !== ""){
       setCurrUser(loaderData);
     }
   },[loaderData])
 
+
+  function handleLogOut(){
+    console.log("u clicked yeh bruh");
+    setShowLogOutModal(false);
+    localStorage.clear();
+    navigate("/");
+    window.location.reload();
+  }
+
   return (
     <div className="max-h-screen h-screen flex flex-col items-center justify-center">
       <Outlet/>
       <div className="flex fixed bottom-0 left-0 right-0 h-16 border-t-2 border-white">
-        <a 
-          href="/real-top/month"
+        <NavLink 
+          to="/real-top/month"
           className="flex basis-32 items-center justify-center  bg-stone-900 hover:text-purple-600 text-purple-200 text-xl font-bold  mb-0 text-center border-white border-r-2 hover:border-purple-600"
           >Top
-        </a>
-        <a 
-          href="/saved/0"
+        </NavLink>
+        <NavLink 
+          to="/saved/0"
           className="flex basis-32 items-center justify-center bg-stone-900 hover:text-purple-600 text-purple-200 text-xl font-bold  mb-0 text-center border-white hover:border-purple-600"
           >Saved
-        </a>
-        <a 
-          href="/link-search"
+        </NavLink>
+        <NavLink 
+          to="/link-search"
           className="flex basis-32 items-center justify-center bg-stone-900 hover:text-purple-600 text-purple-200 border-r-2 text-xl font-bold  mb-0 text-center border-white border-l-2 hover:border-purple-600"
           >search
-        </a>
+        </NavLink>
         {
           !currUser || currUser==="" ?
-            <button className=" bg-green-900 text-white border-white border-l-2 border-t-2 rounded-sm">
+            <a className="flex justify-center items-center basis-32 grow texxt-center font-bold text-lg bg-green-900 text-white border-white "
+            href="api/auth/requestauth">
               Log In
-            </button>
+            </a>
           :
             <button className="flex justify-center items-center basis-32 grow text-center font-bold text-lg bg-green-900 text-white border-white"
               onClick={()=>{setShowLogOutModal(true)}}>
@@ -70,15 +86,19 @@ export default function NavBar(){
       {
         showLogOutModal ?
           <div className="z-10 fixed h-full w-full left-0 top-0 pt-48 bg-[rgba(0,0,0,.4)]"
-            onClick={()=>{setShowLogOutModal(false)}}>
+            >
               <div className="bg-gray-50 m-auto w-10/12 flex justify-center">
                 <div className="flex flex-col text-xl">
-                  <div>
+                  <div className="font-bold">
                     u wanna log out?
                   </div>
+                  <div>
+                    when you log back in, on the Permissions Page, Click 'not you?' link to switch accounts.
+                    </div>
                   <div className="flex justify-center">
-                    <button className="bg-red-950 text-white p-4 m-4 rounded-md">yeh</button>
-                    <button className="bg-gray-700 text-white p-4 m-4 rounded-md">nah</button>
+                    
+                    <button type="submit" onClick={()=>{handleLogOut()}}className="bg-red-950 text-white p-4 m-4 rounded-md">yeh</button>
+                    <button onClick={()=>{setShowLogOutModal(false)}} className="bg-gray-700 text-white p-4 m-4 rounded-md">nah</button>
                   </div>
                 </div>
               </div>

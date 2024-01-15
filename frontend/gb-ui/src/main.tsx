@@ -29,8 +29,7 @@ const router = createBrowserRouter([
     children: [
       {
         path:"/",
-        element: <LinkSearchPage/>,
-        action: searchLinkAction
+        element: <div className='text-white text-2xl'><h1>This is home page</h1><h2>under construction</h2></div>
       },
       {
         path: "/top",
@@ -92,67 +91,6 @@ const router = createBrowserRouter([
   },
     ]
   },
-  /*
-  {
-    path: "/top",
-    element: <TopPage/>,
-    loader: tokensLoader,
-    errorElement: <h1> The developer is dumb, please try again</h1>
-  },
-  {
-    path: "/real-top",
-    element: <RealTopPage/>,
-    loader: spotifyDataLoader,
-    children: [
-      {
-        path: ":range",
-        element: <TopOf/>,
-        loader: topDataLoader
-      },
-      {
-        path:"",
-        element: <TopOf/>,
-        loader: topDataLoader
-      }
-    ]
-  },
-  {
-    path: "/track",
-    //element: <TrackPage/>,
-    children: [
-      {
-        path: ":trackid",
-        element: <TrackPage/>,
-        loader: trackDataLoader,
-        action: getRecsAction,
-        shouldRevalidate: ({formMethod}) => {
-          return formMethod !== "post"
-        }
-      }
-    ]
-  },
-  {
-    path: "/saved",
-    element:<SavedPage/>,
-    children:[
-      {
-        path: "",
-        element: <SavedTrackList/>,
-        loader: savedTracksLoader
-      },
-      {
-        path:":page",
-        element: <SavedTrackList/>,
-        loader: savedTracksLoader
-      }
-    ]
-  },
-  {
-    path: "/link-search",
-    element: <LinkSearchPage/>,
-    action: searchLinkAction
-  }
-  */
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')!).render(

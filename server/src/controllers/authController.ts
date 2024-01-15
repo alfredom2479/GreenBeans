@@ -27,7 +27,8 @@ const spotifyLoginUser =  (req:Request,res:Response)
     client_id: process.env.SPOTIFY_CLIENT_ID,
     scope: authScope,
     redirect_uri: "http://localhost:3000/top",
-    state: state
+    state: state,
+    show_dialog: "true"
   })
 
   console.log(spotifyRedirectParams);

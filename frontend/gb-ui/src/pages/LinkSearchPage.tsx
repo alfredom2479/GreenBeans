@@ -9,6 +9,8 @@ interface ActionParams{
 }
 export async function action({request}:ActionParams){
 
+  console.log("link search action activated");
+
   const access_token:string|null = localStorage.getItem("access_token");
   if(!access_token || access_token === ""){
     return redirect("/");
