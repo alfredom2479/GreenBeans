@@ -78,34 +78,12 @@ const refreshToken = asyncHandler(async (req, res) => {
         else {
             console.log("There was an error refreshing ze tokens");
             console.log(data);
-            //console.log(status);
-            //console.log(statusText);
             res.json({ error: "no new tokens :(" }).status(500);
         }
     }
     catch (error) {
         console.log(error);
     }
-    /*
-  
-    if(statusText === 'OK' && status === 200){
-        
-        console.log(data)
-        const access_token = data.access_token;
-        const refresh_token = data.refresh_token;
-  
-  
-        res.json({access_token, refresh_token}).status(200);
-      }
-      else{
-        console.log("There was an error getting the mcTokens");
-        console.log(data);
-        console.log(status);
-        console.log(statusText);
-  
-        res.json({error: 'no tokens :('}).status(500);
-      }
-    */
 });
 export { spotifyLoginUser, getInitialTokens, refreshToken };
 //# sourceMappingURL=authController.js.map
