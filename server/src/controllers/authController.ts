@@ -120,7 +120,7 @@ const refreshToken = asyncHandler(async (req:Request, res:Response)=>{
   else{
     console.log("There was an error refreshing ze tokens");
     console.log(data);
-    res.json({error: "no new tokens :("}).status(500)
+    res.json({error: "no new tokens :("}).status(500);
   }
 
 }catch(error){
@@ -129,8 +129,10 @@ const refreshToken = asyncHandler(async (req:Request, res:Response)=>{
 
 
 })
+
 export {
   spotifyLoginUser,
   getInitialTokens,
   refreshToken
 };
+
