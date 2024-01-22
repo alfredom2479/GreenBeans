@@ -190,22 +190,45 @@ export async function saveSpotifyTrack( trackId:string) :Promise<Response|null>{
   return res;
 }
 
-export async function requestSpotifyTrack(accessToken:string, trackId:string ){
+export async function requestSpotifyTrack(accessToken:string, trackId:string, isLoggedIn:boolean ){
 
-  try{
-    const data = await sendRequest(`https://api.spotify.com/v1/tracks/${trackId}`,accessToken);
-    return data;
-  }catch(err){
-    console.log("There has been a req top tracks oopsie");
-    console.log(err);
+  if(isLoggedIn){
+    try{
+      const data = await sendRequest(`https://api.spotify.com/v1/tracks/${trackId}`,accessToken);
+      return data;
+    }catch(err){
+      console.log("There has been a req top tracks oopsie");
+      console.log(err);
+    }
   }
-
+  else{
+    console.log("ur not logged in foo");
+    try{
+      const res = await fetch(`/api/spotify/gettrack?id=${trackId}`,{
+        method: "GET"
+      });
+      const data = await res.json();
+      if(!res.ok){
+        throw Error("Response is not ok");
+      }
+      console.log(data);
+      if(data.result){
+        return data.result;
+      }
+      else{
+        throw Error("Incorrect data was received")
+      }
+    }catch(err){
+      console.log("Error getting track info (w/o track info)"+err);
+      return null
+    } 
+  }
 }
 
 //Selected options - The features that the user has selected
 //audioFeatures - the numerical values for the fesatures of the current track
 
-export async function requestSpotifyRec(accessToken:string, trackId:string, selectedOptions: string[],audioFeatures:AudioFeatures){
+export async function requestSpotifyRec(accessToken:string, trackId:string, selectedOptions: string[],audioFeatures:AudioFeatures, isLoggedIn: boolean){
 
   //NOTE
   //u might have to organize the results in best match to worse match
@@ -278,28 +301,75 @@ export async function requestSpotifyRec(accessToken:string, trackId:string, sele
       
   }
 
-  try{
-    const data = await sendRequest(
-      `https://api.spotify.com/v1/recommendations?limit=99&seed_tracks=${queryOptionSuffix}`,
-      accessToken);
-    return data;
-  }catch(err){
-    console.log("there has been a request recommendation oopsie");
-    console.log(err);
-  }
 
+  //Here is where u decide what u do if logged in or not
+
+  if(isLoggedIn){
+    try{
+      const data = await sendRequest(
+        `https://api.spotify.com/v1/recommendations?limit=99&seed_tracks=${queryOptionSuffix}`,
+        accessToken);
+      return data;
+    }catch(err){
+      console.log("there has been a request recommendation oopsie");
+      console.log(err);
+    }
+  }
+  else{
+    try{
+      const res = await fetch(`/api/spotify/getrecs?querysuffix=${encodeURIComponent(queryOptionSuffix)}`,{
+        method: "GET"
+      });
+      const data = await res.json();
+      if(!res.ok){
+        throw Error("Response is not OK :(");
+      }
+      if(data.result){
+        return data.result;
+      }
+      else{
+        throw Error("Wrong data was returned");
+      }
+    }catch(err){
+      console.log("Error getting recs (w/o log in)"+ err)
+      return null;
+
+    }
+  }
 }
 
-export async function requestSpotifyTrackAudioFeatures(accessToken:string, trackId:string ){
+export async function requestSpotifyTrackAudioFeatures(accessToken:string, trackId:string, isLoggedIn: boolean){
 
-  try{
-    const data = await sendRequest(`https://api.spotify.com/v1/audio-features/${trackId}`, accessToken)
-    return data;
-
-  }catch(err){
-    console.log("there has been an api oopsie");
-    console.log(err);
+  if(isLoggedIn){
+    try{
+      const data = await sendRequest(`https://api.spotify.com/v1/audio-features/${trackId}`, accessToken)
+      return data;
+    }catch(err){
+      console.log("there has been an api oopsie");
+      console.log(err);
+    }
   }
+  else{
+    try{
+      const res = await fetch(`api/spotify/getaudiofeatures?id=${trackId}`,{
+        method: "GET"
+      });
+      const data = await res.json();
+      if(!res.ok){
+        throw Error("Response is not OK (audio features w/o log in)");
+      }
+      if(data.result){
+        return data.result;
+      }
+      else{
+        throw Error("Wrong data was returned")
+      }
+    }catch(err){
+      console.log("Error getting audio features (w/o log in): "+err);
+      return null;
+    }
+  }
+  
 }
 
 //MAIN SEND REQUEST function

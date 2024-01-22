@@ -93,7 +93,7 @@ const getSpotifyRecs = asyncHandler(async (req, res) => {
         res.json({ error: "missing querysuffix param" });
         return;
     }
-    const requestURI = "https://api.spotify.com/v1/recommendations?limit=3&seed_tracks=" + decodeURI(querysuffix);
+    const requestURI = "https://api.spotify.com/v1/recommendations?limit=99&seed_tracks=" + decodeURI(querysuffix);
     console.log(requestURI);
     try {
         const { data, status, statusText } = await axios.get(requestURI, { headers: { "Authorization": "Bearer " + clientCredsAuthToken } });

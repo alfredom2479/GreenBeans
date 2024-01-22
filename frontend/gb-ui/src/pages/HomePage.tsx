@@ -1,5 +1,16 @@
 //import { requestAuth } from "../api";
 
+import { redirect } from "react-router-dom";
+
+export async function loader(){
+  const access_token:string|null = localStorage.getItem("access_token");
+
+  if(!access_token || access_token == ""){
+    return redirect("/link-search")
+  }
+  return redirect("/real-top")
+}
+
 export default function HomePage(){
   
   return(

@@ -38,8 +38,12 @@ export default function NavBar(){
   useEffect(()=>{
     if(typeof loaderData ==="string" && loaderData !== ""){
       setCurrUser(loaderData);
+      navigate("real-top");
     }
-  },[loaderData])
+    else{
+      navigate("/link-search");
+    } 
+  },[loaderData,navigate])
 
 
   function handleLogOut(){

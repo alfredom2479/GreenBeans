@@ -10,7 +10,7 @@ export async function loader(){
   const access_token:string|null = localStorage.getItem("access_token");
 
   if(!access_token || access_token===""){
-    return redirect("/");
+    return redirect("/link-search");
   }
 
   try{

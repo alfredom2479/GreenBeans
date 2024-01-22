@@ -1,5 +1,5 @@
 import {useState, useEffect} from "react";
-import {redirect, useActionData, useLoaderData} from "react-router-dom";
+import {useActionData, useLoaderData} from "react-router-dom";
 import { requestSpotifyTrack,requestSpotifyTrackAudioFeatures } from "../api";
 import type {Params} from "react-router-dom";
 import RecOptionsSection from "../components/RecOptionsSection";
@@ -15,21 +15,24 @@ export async function loader({params}:IURLParams){
   console.log(params);
   
   let trackId:string = "bad_track_id";
+  let isLoggedIn = true;
 
   if(typeof params.trackid === "string"){
     trackId = params.trackid;
   }
 
-  const access_token:string|null = localStorage.getItem("access_token");
+  let access_token:string|null = localStorage.getItem("access_token");
 
   if(!access_token || access_token===""){
-    return redirect("/");
+    isLoggedIn = false;
+    access_token = "";
+    //return redirect("/");
   }
 
   try{
-    const trackLoaderData = await requestSpotifyTrack(access_token, trackId);
+    const trackLoaderData = await requestSpotifyTrack(access_token, trackId, isLoggedIn);
 
-    const audioFeatureLoaderData = await requestSpotifyTrackAudioFeatures(access_token,trackId);
+    const audioFeatureLoaderData = await requestSpotifyTrackAudioFeatures(access_token,trackId, isLoggedIn);
     //dont check anything about the data.
     //should be fine. Pretty simple return object
     //yolo

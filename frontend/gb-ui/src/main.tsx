@@ -70,7 +70,7 @@ const router = createBrowserRouter([
         ]
       },
       {
-        path: "*",
+        path: "link-search",
         element: <LinkSearchPage/>,
         action:searchLinkAction
       },

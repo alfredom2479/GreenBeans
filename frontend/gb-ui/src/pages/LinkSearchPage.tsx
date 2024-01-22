@@ -9,11 +9,15 @@ interface ActionParams{
 }
 export async function action({request}:ActionParams){
 
+  let isLoggedIn = true;
   console.log("link search action activated");
 
-  const access_token:string|null = localStorage.getItem("access_token");
+  let access_token:string|null = localStorage.getItem("access_token");
+  console.log("go past getting local storage access token");
   if(!access_token || access_token === ""){
-    return redirect("/");
+    //return redirect("/");
+    isLoggedIn = false;
+    access_token = "";
   }
 
   //Example share link:
@@ -38,7 +42,7 @@ export async function action({request}:ActionParams){
   trackId = spotifyLink.substring(spotifyUrlIndex+18,spotifyUrlIndex+40);
 
   try{
-    const data = await requestSpotifyTrack(access_token,trackId);
+    const data = await requestSpotifyTrack(access_token,trackId,isLoggedIn);
     console.log(data);
     if(!data || data === undefined){
       console.log("Track not found")

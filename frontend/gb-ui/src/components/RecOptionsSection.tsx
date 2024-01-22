@@ -11,12 +11,15 @@ interface IURLParams{
 }
 
 export async function action({params,request}:IURLParams){  
-  const access_token:string|null = localStorage.getItem("access_token");
+  let access_token:string|null = localStorage.getItem("access_token");
+  let isLoggedIn = true;
 
   let trackId:string = "default_track_id";
 
   if(!access_token || access_token === ""){
-    return redirect("/")
+    //return redirect("/")
+    access_token = "";
+    isLoggedIn = false;
   }
 
   if(typeof params.trackid === "string"){
@@ -34,7 +37,7 @@ export async function action({params,request}:IURLParams){
   settings = requestJson.settings;
 
   try{
-    const data = await requestSpotifyRec(access_token,trackId,settings,audioFeatures);
+    const data = await requestSpotifyRec(access_token,trackId,settings,audioFeatures, isLoggedIn);
     console.log(data);
 
     if(data.tracks && Array.isArray(data.tracks)){

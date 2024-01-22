@@ -136,7 +136,7 @@ const getSpotifyRecs = asyncHandler(async (req:Request,res:Response)=>{
       return;
     }
 
-    const requestURI: string = "https://api.spotify.com/v1/recommendations?limit=3&seed_tracks="+decodeURI(querysuffix)
+    const requestURI: string = "https://api.spotify.com/v1/recommendations?limit=99&seed_tracks="+decodeURI(querysuffix)
     console.log(requestURI)
     
     try{

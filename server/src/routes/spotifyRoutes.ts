@@ -7,7 +7,7 @@ import {
   getSpotifyRecs
 } from "../controllers/spotifyController.js";
 
-router.get("/getrack", getSpotifyTrackInfo);
+router.get("/gettrack", getSpotifyTrackInfo);
 router.get("/getaudiofeatures",getSpotifyTrackAudioFeatures);
 router.get("/getrecs", getSpotifyRecs);
 
