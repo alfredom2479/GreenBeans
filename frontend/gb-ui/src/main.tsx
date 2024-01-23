@@ -7,7 +7,6 @@ import {
   RouterProvider
 } from "react-router-dom";
 
-//import HomePage  from "./pages/HomePage";
 import TopPage, {loader as tokensLoader} from "./pages/TopPage";
 import RealTopPage,{loader as spotifyDataLoader} from "./pages/RealTopPage"
 import TopOf, {loader as topDataLoader} from './components/TopOf';
@@ -17,8 +16,6 @@ import SavedPage from './pages/SavedPage';
 import SavedTrackList,{loader as savedTracksLoader} from './components/SavedTrackList';
 import LinkSearchPage, {action as searchLinkAction} from './pages/LinkSearchPage';
 import NavBar, {loader as loggedInCheckerLoader} from './components/NavBar';
-//import RecsSection, {loader as recsDataLoader} from './components/RecsSecion';
-
 
 const router = createBrowserRouter([
   {
@@ -76,7 +73,6 @@ const router = createBrowserRouter([
       },
       {
         path: "/track",
-        //element: <TrackPage/>,
         children: [
         {
           path: ":trackid",

@@ -11,19 +11,13 @@ export async function loader(){
 
   try{
     const data = await requestMySpotifyAccount(access_token);
-    console.log(data);
-    const display_name:string = data.display_name;
-    return display_name;
+    if(data && data.display_name){
+      return data.display_name;
+    }
   }catch(err){
-    console.log("No user is logged in");
-    console.log(err);
+    console.log("No user is logged in:"+err);
     return "";
   }
-  
-}
-
-export async function action(){
-  console.log("an action has occured");
 }
 
 export default function NavBar(){
@@ -47,7 +41,6 @@ export default function NavBar(){
 
 
   function handleLogOut(){
-    console.log("u clicked yeh bruh");
     setShowLogOutModal(false);
     localStorage.clear();
     navigate("/");
@@ -110,7 +103,6 @@ export default function NavBar(){
           </div>
         :
         null
-
       }
     </div>
   )
