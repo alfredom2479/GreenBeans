@@ -9,9 +9,7 @@ const constructorMethod = (app:Application) =>{
     
     app.use("/api/auth", authRoutes);
     app.use("/api/spotify",spotifyRoutes);
-
-    console.log('this should run');
-    app.use("*", (req,res)=>{res.send("<h1>Welcome Home</h1>")});
+    app.use("*", (req,res)=>{res.status(400).json({Error: "Bad Request"})});
 }
 
 export default constructorMethod;
