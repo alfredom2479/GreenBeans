@@ -44,7 +44,7 @@ const getInitialTokens = asyncHandler(async (req, res) => {
         else {
             console.log("There was an error getting the initial mcTokens");
             res.status(500);
-            res.json({ error: 'no tokens :(' });
+            res.json({ error: 'no tokens uwu :(' });
         }
     }
 });
@@ -67,7 +67,9 @@ const refreshToken = asyncHandler(async (req, res) => {
         }
     }
     catch (error) {
+        console.log("Error refreshing token");
         console.log(error);
+        res.status(500).json({ error: "Sever cannot refresh token" });
     }
 });
 export { spotifyLoginUser, getInitialTokens, refreshToken };
