@@ -11,7 +11,6 @@ const stateKey:string = "spotify_auth_state";
 
 const spotifyLoginUser =  (req:Request,res:Response)
   :void=>{
-
   //Protection against CSRF
   const state:string = generateRandomString(16);
 
@@ -69,7 +68,7 @@ const getInitialTokens = asyncHandler( async (req:Request,res:Response): Promise
     else{
       console.log("There was an error getting the initial mcTokens");
       res.status(500);
-      res.json({error: 'no tokens :('});
+      res.json({error: 'no tokens uwu :('});
     }
   }
 });
@@ -85,22 +84,23 @@ const refreshToken = asyncHandler(async (req:Request, res:Response)=>{
     ':'+process.env.SPOTIFY_CLIENT_SECRET, "utf-8").toString('base64'));
 
   try{
-  const {data,status,statusText} = await axios.post(
-    "https://accounts.spotify.com/api/token",
-    authData,
-    {headers: {"Authorization": authHeaderString, "Content-Type": "application/x-www-form-urlencoded"}}
-  );
+    const {data,status,statusText} = await axios.post(
+      "https://accounts.spotify.com/api/token",
+      authData,
+      {headers: {"Authorization": authHeaderString, "Content-Type": "application/x-www-form-urlencoded"}}
+    );
   
-  if(statusText==='OK' && status === 200){
-    const access_token = data.access_token;
-    res.json({access_token }).status(200);
-  }
-  else{
-    res.json({error: "no new tokens :("}).status(500);
-  }
-
-}catch(error){
+    if(statusText==='OK' && status === 200){
+      const access_token = data.access_token;
+      res.json({access_token }).status(200);
+    }
+    else{
+      res.json({error: "no new tokens :("}).status(500);
+    }
+  }catch(error){
+    console.log("Error refreshing token")
     console.log(error)
+    res.status(500).json({error: "Sever cannot refresh token"})
   }
 })
 
