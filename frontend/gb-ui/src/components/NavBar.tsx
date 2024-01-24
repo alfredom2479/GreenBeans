@@ -33,7 +33,7 @@ export default function NavBar(){
   useEffect(()=>{
     if(typeof loaderData ==="string" && loaderData !== ""){
       setCurrUser(loaderData);
-      navigate("real-top");
+      navigate("top");
     }
     else{
       navigate("/link-search");
@@ -46,7 +46,7 @@ export default function NavBar(){
       <Outlet/>
       <div className="flex fixed bottom-0 left-0 right-0 h-16 border-t-2 border-white">
         <NavLink 
-          to="/real-top/month"
+          to="/top/month"
           className="flex basis-32 items-center justify-center  bg-stone-900 hover:text-purple-600 text-purple-200 text-xl font-bold  mb-0 text-center border-white border-r-2 hover:border-purple-600"
           >Top
         </NavLink>

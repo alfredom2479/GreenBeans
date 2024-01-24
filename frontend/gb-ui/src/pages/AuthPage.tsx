@@ -17,20 +17,18 @@ export async function loader({request}:FetchRequest){
     
     localStorage.setItem('access_token', access_token);
     localStorage.setItem('refresh_token',refresh_token);
-    return redirect("/real-top");
+    return redirect("/top");
   }catch(err){
     console.log("there was an error in the loader");
     console.log(err);
     return redirect("/");
   }
 }
-export default function TopPage(){
-  console.log("in top page");
-  console.log(localStorage)
+export default function AuthPage(){
 
   return(
     <>
-      <h1>This is the top page</h1>
+      <h1>Authenticating...</h1>
     </>
   )
   

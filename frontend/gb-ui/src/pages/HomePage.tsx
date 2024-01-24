@@ -8,7 +8,7 @@ export async function loader(){
   if(!access_token || access_token == ""){
     return redirect("/link-search")
   }
-  return redirect("/real-top")
+  return redirect("/top")
 }
 
 export default function HomePage(){

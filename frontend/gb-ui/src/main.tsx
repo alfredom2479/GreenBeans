@@ -7,7 +7,7 @@ import {
   RouterProvider
 } from "react-router-dom";
 
-import TopPage, {loader as tokensLoader} from "./pages/TopPage";
+import AuthPage, {loader as tokensLoader} from "./pages/AuthPage";
 import RealTopPage,{loader as spotifyDataLoader} from "./pages/RealTopPage"
 import TopOf, {loader as topDataLoader} from './components/TopOf';
 import TrackPage,{loader as trackDataLoader} from './pages/TrackPage';
@@ -22,19 +22,19 @@ const router = createBrowserRouter([
     path: "/",
     element: <NavBar/>,
     loader: loggedInCheckerLoader,
-    errorElement: <h1>A big oopsies has occured</h1>,
+    errorElement: <h1>Error. Try reloading.</h1>,
     children: [
       {
         path:"/",
         element: <div className='text-white text-2xl'><h1>This is home page</h1><h2>under construction</h2></div>
       },
       {
-        path: "/top",
-        element: <TopPage/>,
+        path: "/auth",
+        element: <AuthPage/>,
         loader: tokensLoader
       },
       {
-        path: "real-top",
+        path: "top",
         element: <RealTopPage/>,
         loader: spotifyDataLoader,
         children: [
