@@ -18,7 +18,7 @@ export async function loader(){
     return null;
   }catch(err){
     console.log("No user is logged in:"+err);
-    return "";
+    return null;
   }
 }
 
