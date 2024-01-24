@@ -8,7 +8,7 @@ import {
 } from "react-router-dom";
 
 import AuthPage, {loader as tokensLoader} from "./pages/AuthPage";
-import TopPage,{loader as spotifyDataLoader} from "./pages/TopPage"
+import TopPage from "./pages/TopPage"
 import TopOf, {loader as topDataLoader} from './components/TopOf';
 import TrackPage,{loader as trackDataLoader} from './pages/TrackPage';
 import {action as getRecsAction} from './components/RecOptionsSection';
@@ -36,7 +36,6 @@ const router = createBrowserRouter([
       {
         path: "top",
         element: <TopPage/>,
-        loader: spotifyDataLoader,
         children: [
           {
             path: ":range",

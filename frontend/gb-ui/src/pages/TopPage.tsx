@@ -1,42 +1,7 @@
-//import { useState } from "react";
-import {NavLink, Outlet, redirect, useLoaderData} from "react-router-dom";
-
-
-import { requestMySpotifyAccount } from "../api";
-
-
-export async function loader(){
-
-  const access_token:string|null = localStorage.getItem("access_token");
-
-  if(!access_token || access_token===""){
-    return redirect("/link-search");
-  }
-
-  try{
-    const data = await requestMySpotifyAccount(access_token);
-    console.log(data);
-    const display_name:string = data.display_name;
-    return display_name;
-  }catch(err){
-    console.log("error in loader");
-    console.log(err);
-    return err;
-  }
-}
+import {NavLink, Outlet} from "react-router-dom";
 
 
 export default function RealTopPage(){
-
-  //const [range, setRange] = useState(0);
-
-  const accountData = useLoaderData();
-  let display_name:string = "???"
-  if(typeof accountData === "string"){
-    display_name = accountData
-  }
-
-  console.log(display_name);
 
   return(
     <div className="h-full pb-16 flex flex-col">
