@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import { Outlet, useLoaderData,  NavLink, useNavigate} from "react-router-dom";
+import { Outlet, useLoaderData, useNavigate} from "react-router-dom";
 import { requestMySpotifyAccount } from "../api";
 import LogOutModal from "./LogOutModal";
+import NavbarItem from "./NavBarItem";
 
 export async function loader(){
   const access_token:string|null = localStorage.getItem("access_token");
@@ -28,8 +29,11 @@ export default function NavBar(){
   const [showLogOutModal, setShowLogOutModal] = useState<boolean>(false);
 
   const loaderData = useLoaderData();
-
   const navigate = useNavigate();
+
+  const accountStatusStyleString = "flex justify-center items-center basis-32 "+
+    "grow text-center font-bold text-lg bg-green-900 text-white border-white "+
+    "border-l-2 border-t-2"
 
   useEffect(()=>{
     if(typeof loaderData ==="string" && loaderData !== ""){
@@ -45,35 +49,34 @@ export default function NavBar(){
   return (
     <div className="max-h-screen h-screen flex flex-col items-center justify-center">
       <Outlet/>
-      <div className="flex fixed bottom-0 left-0 right-0 h-16 border-t-2 border-white">
-        <NavLink 
-          to="/top/month"
-          className="flex basis-32 items-center justify-center  bg-stone-900 hover:text-purple-600 text-purple-200 text-xl font-bold  mb-0 text-center border-white border-r-2 hover:border-purple-600"
-          >Top
-        </NavLink>
-        <NavLink 
-          to="/saved/0"
-          className="flex basis-32 items-center justify-center bg-stone-900 hover:text-purple-600 text-purple-200 text-xl font-bold  mb-0 text-center border-white hover:border-purple-600"
-          >Saved
-        </NavLink>
-        <NavLink 
-          to="/link-search"
-          className="flex basis-32 items-center justify-center bg-stone-900 hover:text-purple-600 text-purple-200 border-r-2 text-xl font-bold  mb-0 text-center border-white border-l-2 hover:border-purple-600"
-          >search
-        </NavLink>
+      <div className="flex fixed bottom-0 left-0 right-0 h-16 border-white">
+        <NavbarItem 
+          name="top"
+          path="/top/month" 
+          extraStyle="border-r-2 border-t-2"
+        />
+        <NavbarItem 
+          name="saved"
+          path="/saved/0" 
+          extraStyle="border-2 border-b-0"
+        />
+        <NavbarItem 
+          name="search"
+          path="/link-search" 
+          extraStyle="border-2 border-b-0"
+        />
         {
           !currUser || currUser==="" ?
-            <a className="flex justify-center items-center basis-32 grow texxt-center font-bold text-lg bg-green-900 text-white border-white "
+            <a className={accountStatusStyleString}
             href="api/auth/requestauth">
               Log In
             </a>
           :
-            <button className="flex justify-center items-center basis-32 grow text-center font-bold text-lg bg-green-900 text-white border-white"
+            <button className={accountStatusStyleString}
               onClick={()=>{setShowLogOutModal(true)}}>
               {currUser}
             </button>
         }
-        
       </div>
       { showLogOutModal ? <LogOutModal setShowModal={setShowLogOutModal}/> : null }
     </div>
