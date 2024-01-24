@@ -18,7 +18,6 @@ export async function loader(){
     }
     return null;
   }catch(err){
-    console.log("No user is logged in:"+err);
     return null;
   }
 }
@@ -49,7 +48,7 @@ export default function NavBar(){
   return (
     <div className="max-h-screen h-screen flex flex-col items-center justify-center">
       <Outlet/>
-      <div className="flex fixed bottom-0 left-0 right-0 h-16 border-white">
+      <div className="flex fixed bottom-0 left-0 right-0 h-16">
         <NavbarItem 
           name="top"
           path="/top/month" 
