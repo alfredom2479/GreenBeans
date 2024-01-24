@@ -15,6 +15,7 @@ export async function loader(){
     if(data && data.display_name){
       return data.display_name;
     }
+    return null;
   }catch(err){
     console.log("No user is logged in:"+err);
     return "";
