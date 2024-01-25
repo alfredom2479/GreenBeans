@@ -1,4 +1,5 @@
-import {NavLink, Outlet} from "react-router-dom";
+import {Outlet} from "react-router-dom";
+import TopNavItem from "../components/TopNavItem";
 
 
 export default function RealTopPage(){
@@ -11,27 +12,9 @@ export default function RealTopPage(){
       </h1> 
       <nav className=" basis-1/2 font-bold bg-stone-800 ">
         <ul className={`flex text-white`}>
-          <li className={`flex-1  flex justify-center content-center `}>
-          {/* u have to define string with default style and add
-          to it if isActive is true with the appropriate styles */}
-          
-            <NavLink to="month" 
-            className={({isActive})=>isActive ? "text-green-200 text-center w-full text-2xl align-middle truncate" : "text-center w-full text-2xl align-middle truncate"}>
-              Month
-            </NavLink>
-          </li>
-          <li className={`flex-1  flex justify-center `}>
-            <NavLink to="sixmonths" 
-            className={({isActive})=>isActive ? "text-green-200 text-center w-full text-2xl truncate" : "text-center w-full text-2xl truncate"}>
-              Six Months
-            </NavLink>
-          </li>
-          <li className={`flex-1  flex justify-center` }>
-            <NavLink to="alltime"
-            className={({isActive})=> isActive ? "text-green-200 text-center w-full text-2xl" : "text-center w-full text-2xl"}>
-              Years+
-            </NavLink>
-          </li>
+          <TopNavItem path="month" name="month"/>
+          <TopNavItem path="sixmonths" name="six months"/>
+          <TopNavItem path="alltime" name="years+"/>
         </ul>
       </nav>
       </div>
