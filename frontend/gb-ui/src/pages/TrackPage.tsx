@@ -37,6 +37,7 @@ export async function loader({params}:IURLParams){
     //should be fine. Pretty simple return object
     //yolo
     //it got a little more complicated
+    console.log(trackLoaderData);
     return {trackLoaderData,audioFeatureLoaderData};
 
   }catch(err){

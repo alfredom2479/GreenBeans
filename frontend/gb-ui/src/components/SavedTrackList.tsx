@@ -104,6 +104,7 @@ export default function SavedTrackList(){
           if(Array.isArray(loaderData[i].track.album.images) && 
             loaderData[i].track.album.images.length > 0){
               tempTrackInfo.image = loaderData[i].track.album.images[loaderData[i].track.album.images.length-1].url;
+              console.log(loaderData[i].track.album.images);
             }
         }
         if(loaderData[i].track.preview_url){
@@ -114,7 +115,6 @@ export default function SavedTrackList(){
         }
         tempTrackList.push(tempTrackInfo);
       }
-      console.log(tempTrackList);
       setSavedTracksList(tempTrackList);
     }
   },[loaderData]);
