@@ -7,6 +7,7 @@ import { ITrack } from "../interfaces";
 
 import { requestTopTracks } from '../api';
 import { isTrack } from "../utils";
+import { useHandleListenOnClick } from "../interfaces";
 
 interface TopParams{
   params:Params
@@ -40,7 +41,7 @@ export async function loader({params}:TopParams){
     }
     
     //need to return error to be handled by error element
-    return [];
+    return null;
   }catch(err){
     console.log("there has been an error");
     console.log(err);
@@ -51,8 +52,7 @@ export async function loader({params}:TopParams){
 
 export default function TopOf(){
 
-  const [showModal, setShowModal] = useState(false);
-  const [modalSongPreviewUrl, setModalSongPreviewUrl] = useState<string>("")
+ const {handleListenOnClick} = useHandleListenOnClick();
 
   const [topTracksList,setTopTracksList] = useState<ITrack[]>([]);
 
@@ -60,11 +60,9 @@ export default function TopOf(){
 
   useEffect(()=>{
     let loaderItems = [];
-
     const newTracks:ITrack[] = [];
 
     if(Array.isArray(loadedData)){
-
       loaderItems = loadedData;
       let possibleTrack:ITrack|null = null;
 
@@ -75,22 +73,8 @@ export default function TopOf(){
          }
       }
     }
-
     setTopTracksList(newTracks)
-    console.log(newTracks);
   },[loadedData])
-
-  function handleListenOnClick(songPreviewUrl:string|undefined){
-    if(songPreviewUrl === undefined){
-      console.log("Song preview url is undefined");
-      return
-    }
-    setModalSongPreviewUrl(songPreviewUrl);
-    setShowModal(true);
-    return;
-  }
-
-  //console.log(topTracksList);
 
   return(
       <div className="overflow-y-scroll">
@@ -109,18 +93,6 @@ export default function TopOf(){
             </li>)
           })}
         </ul>
-      {showModal ?
-      <div className="z-10 fixed h-full w-full left-0 top-0 pt-48 bg-[rgba(0,0,0,.4)]"
-      onClick={()=>{setShowModal(false)}}>
-        <div className="bg-gray-50 m-auto w-10/12 flex justify-center">
-          <iframe className="m-2" src={modalSongPreviewUrl}/>
         </div>
-    
-      </div>
-      :
-      null
-    }
-      </div>
-
   )
 }

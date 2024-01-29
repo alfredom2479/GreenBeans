@@ -50,11 +50,15 @@ export default function TrackCard({id,name,artist,image,url,isRec=false,popModal
             target="_blank"
           >Listen
           </a>*/}
-          <button
-            onClick={()=>popModal(url)}
-            className="bg-green-900 text-white basis-1/6 flex p-1 text-center items-center justify-center font-bold text-lg"
-          >Listen
-          </button>
+          {url!==null && url !==undefined && url !=="" && url !==" " ?
+            <button
+              onClick={()=>popModal(url)}
+              className="bg-green-900 text-white basis-1/6 flex p-1 text-center items-center justify-center font-bold text-lg"
+            >Listen
+            </button>
+          :
+            null
+          }
           {/** Maybe directly call the api function from here 
            * since u don't need to know what it returns... bc it doesn't return anything.
            * I guess print something on screen on if the request was succesful or not.

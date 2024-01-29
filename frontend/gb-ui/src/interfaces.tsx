@@ -1,3 +1,4 @@
+import { useOutletContext } from "react-router-dom"
 
 export interface ITrack{
   id: string,
@@ -21,6 +22,14 @@ export interface AudioFeatures{
   instrumentalness?: number,
   key?: number,
   mode?: number
+}
+
+export type ListenOnClickContextType = {
+  handleListenOnClick:(songPreviewUrl:string|undefined) =>void
+}
+
+export function useHandleListenOnClick(){
+  return useOutletContext<ListenOnClickContextType>();
 }
 /*
 acousticness": 0.00242,
