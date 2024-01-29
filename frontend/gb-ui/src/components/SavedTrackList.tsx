@@ -12,7 +12,6 @@ interface URLParams{
 }
 
 export async function loader({params}:URLParams){
-  console.log(params);
 
   const accessToken:string|null = localStorage.getItem("access_token");
   if(!accessToken || accessToken === ""){
@@ -35,7 +34,10 @@ export async function loader({params}:URLParams){
     
     if(data && data.items && Array.isArray(data.items)){
       if(data.items.length === 0){
-        return redirect("/saved/0")
+        if(pageNumber !== 0 ){
+          return redirect("/saved/0")
+        }
+        return redirect("/link-search");
       }
       return data.items;
     }
