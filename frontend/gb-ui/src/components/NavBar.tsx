@@ -35,9 +35,13 @@ export default function NavBar(){
     "border-l-2 border-t-2"
 
   useEffect(()=>{
+    console.log("nav useEffect loaderData: "+loaderData)
     if(typeof loaderData ==="string" && loaderData !== ""){
+      //dont navigate to top bc this will navigate on every fresh load
+      //of any page
       setCurrUser(loaderData);
-      navigate("top");
+      //navigate("top");
+      
     }
     else{
       navigate("/link-search");

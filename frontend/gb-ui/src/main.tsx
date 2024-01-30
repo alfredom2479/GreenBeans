@@ -54,11 +54,6 @@ const router = createBrowserRouter([
         element:<SavedPage/>,
         children:[
           {
-            path: "",
-            element: <SavedTrackList/>,
-            loader: savedTracksLoader
-          },
-          {
             path:":page",
             element: <SavedTrackList/>,
             loader: savedTracksLoader

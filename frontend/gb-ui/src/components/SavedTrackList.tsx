@@ -28,11 +28,13 @@ export async function loader({params}:URLParams){
       pageNumber = 0
     }
   }
-
+  console.log(pageNumber);
   try{
     const data = await requestSavedTracks(pageNumber,50,accessToken);
+    console.log(data)
     
     if(data && data.items && Array.isArray(data.items)){
+      console.log("made it to if");
       if(data.items.length === 0){
         if(pageNumber !== 0 ){
           return redirect("/saved/0")
@@ -76,7 +78,6 @@ export default function SavedTrackList(){
     }
       nextPageNumber = pageNumber +1;
 
-    console.log(pageNumber);
   }
 
   useEffect(()=>{
@@ -106,7 +107,6 @@ export default function SavedTrackList(){
           if(Array.isArray(loaderData[i].track.album.images) && 
             loaderData[i].track.album.images.length > 0){
               tempTrackInfo.image = loaderData[i].track.album.images[loaderData[i].track.album.images.length-1].url;
-              console.log(loaderData[i].track.album.images);
             }
         }
         if(loaderData[i].track.preview_url){
