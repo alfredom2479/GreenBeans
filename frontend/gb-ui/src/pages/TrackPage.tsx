@@ -5,6 +5,7 @@ import type {Params} from "react-router-dom";
 import RecOptionsSection from "../components/RecOptionsSection";
 import { ITrack, AudioFeatures } from "../interfaces";
 import TrackCard from "../components/TrackCard";
+import { isTrack } from "../utils";
 //import RecOptionsSection from "../components/RecOptionsSection";
 
 interface IURLParams{
@@ -26,24 +27,18 @@ export async function loader({params}:IURLParams){
   if(!access_token || access_token===""){
     isLoggedIn = false;
     access_token = "";
-    //return redirect("/");
   }
 
   try{
     const trackLoaderData = await requestSpotifyTrack(access_token, trackId, isLoggedIn);
-
     const audioFeatureLoaderData = await requestSpotifyTrackAudioFeatures(access_token,trackId, isLoggedIn);
-    //dont check anything about the data.
-    //should be fine. Pretty simple return object
-    //yolo
-    //it got a little more complicated
-    console.log(trackLoaderData);
     return {trackLoaderData,audioFeatureLoaderData};
 
   }catch(err){
     console.log("there has been a get-trackId error");
     console.log(err);
     throw(err);
+    //throw error to be handled by errorElement
   }
 
 }
@@ -67,45 +62,45 @@ export default function TrackPage(){
 
     let trackLoaderData: object|null = {};
     let audioFeatureLoaderData: object|null = {};
+    /*
     let tempName:string="";
     let tempArtist:string="";
     let tempImageUrl:string="";
+    */
 
-    //Split loaderData into trackLoaderData and audioFeatureLoaderData
     if(typeof loaderData === 'object' && loaderData) { 
       if('trackLoaderData' in loaderData  &&
-        typeof loaderData.trackLoaderData==='object'){
+        typeof loaderData.trackLoaderData==='object' &&
+        'audioFeatureLoaderData' in loaderData &&
+        typeof loaderData.audioFeatureLoaderData === 'object'
+        ){
           trackLoaderData = loaderData.trackLoaderData;
-      }
-      if('audioFeatureLoaderData' in loaderData &&
-        typeof loaderData.audioFeatureLoaderData === 'object'){
           audioFeatureLoaderData = loaderData.audioFeatureLoaderData
-        }
+      }
+      else{
+        throw("Big error. this needs to be caught by errorElement")
+      }
     }
+    else{
+        throw("Big error. this needs to be caught by errorElement")
+    }
+
     
     //Construct current ITrack object
     if(typeof trackLoaderData === 'object' && trackLoaderData ){
-      if('name' in trackLoaderData && typeof trackLoaderData.name === "string"){
-        tempName = trackLoaderData.name;
+
+      const possibleTrack: ITrack|null = isTrack(trackLoaderData);
+      if(possibleTrack != null){
+        setTrackData(possibleTrack)
       }
-      if('artists' in trackLoaderData && Array.isArray(trackLoaderData.artists) ){
-        if(trackLoaderData.artists.length >0 && trackLoaderData.artists[0].name){
-          tempArtist = trackLoaderData.artists[0].name
-        }
+      else{
+        throw("Big error. this needs to be caught by errorElement")
       }
-      if('album' in trackLoaderData && typeof trackLoaderData.album === 'object' && trackLoaderData.album){
-        
-        if('images' in trackLoaderData.album && Array.isArray(trackLoaderData.album.images)){
-          if(trackLoaderData.album.images.length > 0 && trackLoaderData.album.images[trackLoaderData.album.images.length-1].url){
-            tempImageUrl = trackLoaderData.album.images[trackLoaderData.album.images.length-2].url;
-          }
-        }
-      }
-      setTrackData({name: tempName, artist: tempArtist, image: tempImageUrl});
-    
+
       if(typeof audioFeatureLoaderData === 'object' && audioFeatureLoaderData){
         console.log("audio feature data shape:");
         const tempAudioFeatures:AudioFeatures = {}
+
         if('acousticness' in audioFeatureLoaderData && typeof audioFeatureLoaderData.acousticness === "number"){
           tempAudioFeatures.acousticness = audioFeatureLoaderData.acousticness
         }

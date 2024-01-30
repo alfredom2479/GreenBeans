@@ -9,8 +9,6 @@ export default  function SavedPage(){
   const [showModal, setShowModal] = useState(false);
   const [modalSongPreviewUrl, setModalSongPreviewUrl] = useState<string>("");
 
-
-
   function handleListenOnClick(songPreviewUrl:string|undefined){
     if(songPreviewUrl === undefined){
       console.log("Song preview url is undefined");

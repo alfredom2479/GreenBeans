@@ -1,4 +1,5 @@
-import { AudioFeatures } from "./interfaces";
+import { AudioFeatures, audioFeatureNames } from "./interfaces";
+
 
 //INITIAL AUTH FUNC
 export async function requestAuth(){
@@ -225,9 +226,6 @@ export async function requestSpotifyTrack(accessToken:string, trackId:string, is
   }
 }
 
-//Selected options - The features that the user has selected
-//audioFeatures - the numerical values for the fesatures of the current track
-
 export async function requestSpotifyRec(accessToken:string, trackId:string, selectedOptions: string[],audioFeatures:AudioFeatures, isLoggedIn: boolean){
 
   //NOTE
@@ -239,19 +237,6 @@ export async function requestSpotifyRec(accessToken:string, trackId:string, sele
   //You have to make this a universal value so that there are no
   //inconsistencies between different variables that are supposed to 
   //represent this same thing
-  const audioFeatureNames: (keyof AudioFeatures)[] = [
-    'acousticness' ,
-    'danceability' ,
-    'energy' ,
-    'liveness' ,
-    'valence' ,
-    'tempo',
-    'duration_ms',
-    'time_signature',
-    'instrumentalness',
-    'key',
-    'mode'
-  ]
 
   let queryOptionSuffix:string = trackId;
 
@@ -301,8 +286,6 @@ export async function requestSpotifyRec(accessToken:string, trackId:string, sele
       
   }
 
-
-  //Here is where u decide what u do if logged in or not
 
   if(isLoggedIn){
     try{
