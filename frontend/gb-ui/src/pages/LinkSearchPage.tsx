@@ -10,18 +10,12 @@ interface ActionParams{
 export async function action({request}:ActionParams){
 
   let isLoggedIn = true;
-  console.log("link search action activated");
 
   let access_token:string|null = localStorage.getItem("access_token");
-  console.log("go past getting local storage access token");
   if(!access_token || access_token === ""){
-    //return redirect("/");
     isLoggedIn = false;
     access_token = "";
   }
-
-  //Example share link:
-  //https://open.spotify.com/track/2GiMMdSlSiVNR0aPTqVJ11?si=dc9fe620df834426
 
   const formData = await request.formData();
   const spotifyLink = formData.get("spotify-link");
@@ -46,17 +40,16 @@ export async function action({request}:ActionParams){
     console.log(data);
     if(!data || data === undefined){
       console.log("Track not found")
+    //Throw track not found error that will be caught by the errorElement
       return null
     }
     return redirect(`/track/${trackId}`);
   }catch(err){
     console.log(err);
+    //Throw track not found error that will be caught by the errorElement
     console.log("track was not found")
     return null;
   }
-  console.log(trackId);
-
-  return trackId;
 }
 
 export default function LinkSearchPage(){
@@ -79,14 +72,14 @@ export default function LinkSearchPage(){
             search
           </button>
         </Form>
-        
       </div>
       <div className="flex flex-col justify-center items-center">
+        {/*mayba implement search history functionality using redux
         <h3 className="text-purple-300 font-bold text-2xl pt-4">Search History</h3>
         <br/>
         <h4 className="text-purple-300 font-bold text-xl pt-2">(Under Construction)</h4>
+        */}
       </div>
-      
     </div>
   )
 }
