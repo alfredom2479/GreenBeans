@@ -3,7 +3,7 @@ import {useActionData, useLoaderData} from "react-router-dom";
 import { requestSpotifyTrack,requestSpotifyTrackAudioFeatures } from "../api";
 import type {Params} from "react-router-dom";
 import RecOptionsSection from "../components/RecOptionsSection";
-import { ITrack, AudioFeatures } from "../interfaces";
+import { ITrack, AudioFeatures, } from "../interfaces";
 import TrackCard from "../components/TrackCard";
 import { isTrack } from "../utils";
 //import RecOptionsSection from "../components/RecOptionsSection";
@@ -62,11 +62,6 @@ export default function TrackPage(){
 
     let trackLoaderData: object|null = {};
     let audioFeatureLoaderData: object|null = {};
-    /*
-    let tempName:string="";
-    let tempArtist:string="";
-    let tempImageUrl:string="";
-    */
 
     if(typeof loaderData === 'object' && loaderData) { 
       if('trackLoaderData' in loaderData  &&
@@ -85,8 +80,6 @@ export default function TrackPage(){
         throw("Big error. this needs to be caught by errorElement")
     }
 
-    
-    //Construct current ITrack object
     if(typeof trackLoaderData === 'object' && trackLoaderData ){
 
       const possibleTrack: ITrack|null = isTrack(trackLoaderData);
@@ -101,7 +94,7 @@ export default function TrackPage(){
         console.log("audio feature data shape:");
         const tempAudioFeatures:AudioFeatures = {}
 
-        if('acousticness' in audioFeatureLoaderData && typeof audioFeatureLoaderData.acousticness === "number"){
+        if('acousticness' in audioFeatureLoaderData && typeof audioFeatureLoaderData['acousticness'] === "number"){
           tempAudioFeatures.acousticness = audioFeatureLoaderData.acousticness
         }
         if('danceability' in audioFeatureLoaderData && typeof audioFeatureLoaderData.danceability === "number"){
@@ -136,6 +129,9 @@ export default function TrackPage(){
         }
         setCurrAudioFeatures(tempAudioFeatures);
       }
+      else{
+        throw("This big error should be caught by errorElement")
+      }
     }
     
   },[loaderData])
@@ -143,32 +139,14 @@ export default function TrackPage(){
   useEffect(()=>{
    if(Array.isArray(actionData)){
     const tempTrackList:ITrack[] = [];
+    let possibleTrack:ITrack|null = null
+
     for(let i=0; i < actionData.length;i++){
-      const tempTrackInfo:ITrack = {id:"",name:"",artist:"",image:""}
-      if(actionData[i].id){
-        tempTrackInfo.id= actionData[i].id
+      //const tempTrackInfo:ITrack = {id:"",name:"",artist:"",image:""}
+      possibleTrack = isTrack(actionData[i]);
+      if(possibleTrack != null){
+        tempTrackList.push(possibleTrack)
       }
-      if(actionData[i].name){
-        tempTrackInfo.name = actionData[i].name;
-      }
-      if(actionData[i].artists){
-        if(Array.isArray(actionData[i].artists) && actionData[i].artists.length > 0){
-          tempTrackInfo.artist = actionData[i].artists[0].name
-        }
-      }
-      if(actionData[i].album && actionData[i].album.images){
-        if(Array.isArray(actionData[i].album.images)
-          && actionData[i].album.images.length > 0){
-            tempTrackInfo.image = actionData[i].album.images[actionData[i].album.images.length-1].url;
-          }
-      }
-      if(actionData[i].preview_url){
-        tempTrackInfo.url = actionData[i].preview_url;
-      }
-      else if(actionData[i].external_urls && actionData[i].external_urls.spotify){
-        tempTrackInfo.url = actionData[i].external_urls.spotify
-      }
-      tempTrackList.push(tempTrackInfo);
     }
     setRecList(tempTrackList);
    } 
@@ -194,39 +172,42 @@ export default function TrackPage(){
 
   return(
     <div className="flex flex-col h-full pb-16 w-full">
+
       <div className=" flex flex-col basis-32 grow-0 max-h-[25%] max-w-full">
-      <div className=" bg-stone-900 text-purple-200 flex max-h-[95%]">
-        <div className="basis-5/12 flex items-center h-full">
-           <img src={trackData.image} 
-          className="flex-1 object-cover h-full">
-          </img>
-        </div>
-        <div className="basis-7/12">
-          <div className="text-2xl">
-            {trackData.name}
+        <div className=" bg-stone-900 text-purple-200 flex max-h-[95%]">
+          <div className="basis-5/12 flex items-center h-full">
+            <img src={trackData.image} 
+              className="flex-1 object-cover h-full">
+            </img>
           </div>
-          <div className="text-purple-300">
-            <i>{trackData.artist}</i>
+          <div className="basis-7/12">
+            <div className="text-2xl">
+              {trackData.name}
+            </div>
+            <div className="text-purple-300">
+              <i>{trackData.artist}</i>
+            </div>
           </div>
-        </div>
-      </div> 
-      <nav className=" font-bold bg-purple-200 h-14">
-        <ul className={`flex text-stone-900 h-full`}>
-          <li className={`flex-1 flex justify-center `}>
-            <button onClick={()=>setIsSelectingOptions(true)}  
-            className={isSelectingOptions ? "text-stone-950 bg-purple-600 text-center w-full" : "text-center w-full"}>
-              Options
-            </button>
-          </li>
-          <li className={`flex-1 flex justify-center `}>
-            <button onClick={()=>setIsSelectingOptions(false)}
-            className={!isSelectingOptions ? "text-stone-950 bg-purple-600 text-center w-full" : "text-center w-full"}>
-              Recommendations
-            </button>
-          </li>
-        </ul>
-      </nav>
+        </div> 
+
+        <nav className=" font-bold bg-purple-200 h-14">
+          <ul className={`flex text-stone-900 h-full`}>
+            <li className={`flex-1 flex justify-center `}>
+              <button onClick={()=>setIsSelectingOptions(true)}  
+                className={isSelectingOptions ? "text-stone-950 bg-purple-600 text-center w-full" : "text-center w-full"}>
+                Options
+              </button>
+            </li>
+            <li className={`flex-1 flex justify-center `}>
+              <button onClick={()=>setIsSelectingOptions(false)}
+                className={!isSelectingOptions ? "text-stone-950 bg-purple-600 text-center w-full" : "text-center w-full"}>
+                Recommendations
+              </button>
+            </li>
+          </ul>
+        </nav>
       </div>
+
       { isSelectingOptions 
         ? <RecOptionsSection 
             checkedBoxes={checkedBoxes} 
