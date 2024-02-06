@@ -16,17 +16,16 @@ export async function action({params,request}:IURLParams){
 
   let trackId:string = "default_track_id";
 
-  if(!access_token || access_token === ""){
-    //return redirect("/")
+  if(!access_token || access_token === undefined){
     access_token = "";
     isLoggedIn = false;
   }
 
-  if(typeof params.trackid === "string"){
+  if(params.trackid && typeof params.trackid === "string"){
     trackId = params.trackid;
   }
   else{
-    redirect("/");
+    redirect("/link-search");
   }
   let audioFeatures:AudioFeatures = {};
   let settings:string[] = [];
@@ -48,6 +47,7 @@ export async function action({params,request}:IURLParams){
   }catch(err){
     console.log("There has been a rec action error");
     console.log(err);
+    //throw something to be caught by error element
     throw err;
   }
 }
@@ -63,12 +63,12 @@ export default function RecOptionsSection({checkedBoxes,setCheckedBoxes, audioFe
 
   const submit = useSubmit();
 
-  const vibeFeatures: string[] = [
-    "acousticness",
-    "danceability",
-    "energy",
-    "liveness",
-    "valence"
+  const vibeFeatures: string[][] = [
+    ["acousticness", "Acousticness"],
+    ["danceability","Danceability"],
+    ["energy","Energy"],
+    ["liveness","Liveness"],
+    ["valence","Valence"]
   ]
 
   const techFeatures: string[][] = [
@@ -107,15 +107,15 @@ export default function RecOptionsSection({checkedBoxes,setCheckedBoxes, audioFe
       <div className="text-2xl font-bold text-white">Vibe Features</div>
       {vibeFeatures.map((feature)=>{
         return (
-          <div key={feature} className="m-2">
+          <div key={feature[0]} className="m-2">
             <input 
-              onClick={()=>handleToggleSettingBox(feature)} 
-              defaultChecked={isSettingPicked(feature)} 
-              name={feature} 
-              id={feature} 
+              onClick={()=>handleToggleSettingBox(feature[0])} 
+              defaultChecked={isSettingPicked(feature[0])} 
+              name={feature[0]} 
+              id={feature[0]} 
               type="checkbox">
             </input>
-            <label className="text-lg text-green-50"htmlFor={feature}> {feature}</label>
+            <label className="text-lg text-green-50" htmlFor={feature[0]}> {feature[1]}</label>
             <br/>
           </div>
         )
