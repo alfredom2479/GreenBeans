@@ -6,6 +6,7 @@ import RecOptionsSection from "../components/RecOptionsSection";
 import { ITrack, AudioFeatures, } from "../interfaces";
 import TrackCard from "../components/TrackCard";
 import { isTrack } from "../utils";
+import SongPreviewModal from "../components/SongPreviewModal";
 //import RecOptionsSection from "../components/RecOptionsSection";
 
 interface IURLParams{
@@ -236,13 +237,10 @@ export default function TrackPage(){
           </div>
       }
      {showModal ?
-      <div className="z-10 fixed h-full w-full left-0 top-0 pt-48 bg-[rgba(0,0,0,.4)]"
-      onClick={()=>{setShowModal(false)}}>
-        <div className="bg-gray-50 m-auto w-10/12 flex justify-center">
-          <iframe className="m-2" src={modalSongPreviewUrl}/>
-        </div>
-    
-      </div>
+     <SongPreviewModal 
+      setShowModal={setShowModal} 
+      songPreviewUrl={modalSongPreviewUrl}
+      />
       :
       null
     }
