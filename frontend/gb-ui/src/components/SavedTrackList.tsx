@@ -29,7 +29,6 @@ export async function loader({params}:URLParams){
       pageNumber = 0
     }
   }
-  try{
     const data = await requestSavedTracks(pageNumber,50,accessToken);
     console.log(data)
     
@@ -44,11 +43,6 @@ export async function loader({params}:URLParams){
     else{
       return [];
     }
-  }catch(err){
-    //throw an error that will be caught by errorElement
-    console.log("Thre has been an error while loading the saved tracks data");
-    console.log(err);
-  }
 }
 
 export default function SavedTrackList(){

@@ -30,17 +30,10 @@ export async function loader({params}:IURLParams){
     access_token = "";
   }
 
-  try{
-    const trackLoaderData = await requestSpotifyTrack(access_token, trackId, isLoggedIn);
-    const audioFeatureLoaderData = await requestSpotifyTrackAudioFeatures(access_token,trackId, isLoggedIn);
-    return {trackLoaderData,audioFeatureLoaderData};
+  const trackLoaderData = await requestSpotifyTrack(access_token, trackId, isLoggedIn);
+  const audioFeatureLoaderData = await requestSpotifyTrackAudioFeatures(access_token,trackId, isLoggedIn);
+  return {trackLoaderData,audioFeatureLoaderData};
 
-  }catch(err){
-    console.log("there has been a get-trackId error");
-    console.log(err);
-    throw(err);
-    //throw error to be handled by errorElement
-  }
 
 }
 
@@ -92,7 +85,6 @@ export default function TrackPage(){
       }
 
       if(typeof audioFeatureLoaderData === 'object' && audioFeatureLoaderData){
-        console.log("audio feature data shape:");
         const tempAudioFeatures:AudioFeatures = {}
 
         if('acousticness' in audioFeatureLoaderData && typeof audioFeatureLoaderData['acousticness'] === "number"){

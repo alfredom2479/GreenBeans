@@ -1,4 +1,5 @@
-import {Form, redirect} from 'react-router-dom';
+import {useEffect, useRef} from "react";
+import {Form, redirect, useActionData} from 'react-router-dom';
 import { requestSpotifyTrack } from '../api';
 
 //import type {Params} from "react-router-dom";
@@ -20,13 +21,14 @@ export async function action({request}:ActionParams){
   const formData = await request.formData();
   const spotifyLink = formData.get("spotify-link");
 
+  //PARSE input
+
   if(spotifyLink === null || typeof spotifyLink !== "string"){
     return null;
   }
 
   let trackId:string|null = null;
 
-  //maybe use a regex instead ???
   const spotifyUrlIndex = spotifyLink.indexOf("spotify.com/track/");
 
   if(spotifyUrlIndex <0){
@@ -35,25 +37,35 @@ export async function action({request}:ActionParams){
 
   trackId = spotifyLink.substring(spotifyUrlIndex+18,spotifyUrlIndex+40);
 
+  //need try catch bc if not, Response will be uncaught
   try{
     const data = await requestSpotifyTrack(access_token,trackId,isLoggedIn);
     console.log(data);
     if(!data || data === undefined){
       console.log("Track not found")
     //Throw track not found error that will be caught by the errorElement
-      return null
+      return "track not found"
     }
     return redirect(`/track/${trackId}`);
   }catch(err){
-    console.log(err);
     //Throw track not found error that will be caught by the errorElement
-    console.log("track was not found")
-    return null;
+    return "track not found";
   }
 }
 
 export default function LinkSearchPage(){
 
+  const searchInputRef = useRef<HTMLInputElement | null>(null);
+  const actionData = useActionData();
+
+  useEffect(()=>{
+    if(actionData === "track not found" && searchInputRef.current !== null){
+      searchInputRef.current.value = "TRACK NOT FOUND"
+    }
+  },[actionData])
+
+  //console.log(actionData)
+  
 
   return (
     <div className="h-full pb-16 flex flex-col ">
@@ -66,7 +78,7 @@ export default function LinkSearchPage(){
         <Form method='post'
           className='flex flex-col justify-center items-center w-full'>
           <label htmlFor="spotify-link"></label>
-          <input type="text" name="spotify-link" 
+          <input ref={searchInputRef} type="text" name="spotify-link" 
           className="h-8 w-10/12 px-1 "/>
           <button type='submit' className="w-40 h-12 mt-4 bg-green-900 font-bold text-xl rounded-lg hover:bg-green-800">
             search

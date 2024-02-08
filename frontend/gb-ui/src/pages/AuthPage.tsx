@@ -12,17 +12,11 @@ export async function loader({request}:FetchRequest){
   const authCode = url.searchParams.get("code");
   const authState = url.searchParams.get("state");
 
-  try{
     const {access_token, refresh_token} = await  requestTokens(authCode,authState);
     
     localStorage.setItem('access_token', access_token);
     localStorage.setItem('refresh_token',refresh_token);
     return redirect("/top");
-  }catch(err){
-    console.log("there was an error in the loader");
-    console.log(err);
-    return redirect("/");
-  }
 }
 export default function AuthPage(){
 
