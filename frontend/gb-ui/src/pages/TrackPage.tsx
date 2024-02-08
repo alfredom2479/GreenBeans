@@ -67,11 +67,13 @@ export default function TrackPage(){
           audioFeatureLoaderData = loaderData.audioFeatureLoaderData
       }
       else{
-        throw("Big error. this needs to be caught by errorElement")
+        trackLoaderData = {};
+        audioFeatureLoaderData = {};
       }
     }
     else{
-        throw("Big error. this needs to be caught by errorElement")
+        trackLoaderData = {};
+        audioFeatureLoaderData = {};
     }
 
     if(typeof trackLoaderData === 'object' && trackLoaderData ){
@@ -79,9 +81,6 @@ export default function TrackPage(){
       const possibleTrack: ITrack|null = isTrack(trackLoaderData);
       if(possibleTrack != null){
         setTrackData(possibleTrack)
-      }
-      else{
-        throw("Big error. this needs to be caught by errorElement")
       }
 
       if(typeof audioFeatureLoaderData === 'object' && audioFeatureLoaderData){
@@ -122,9 +121,6 @@ export default function TrackPage(){
         }
         setCurrAudioFeatures(tempAudioFeatures);
       }
-      else{
-        throw("This big error should be caught by errorElement")
-      }
     }
     
   },[loaderData])
@@ -135,7 +131,6 @@ export default function TrackPage(){
     let possibleTrack:ITrack|null = null
 
     for(let i=0; i < actionData.length;i++){
-      //const tempTrackInfo:ITrack = {id:"",name:"",artist:"",image:""}
       possibleTrack = isTrack(actionData[i]);
       if(possibleTrack != null){
         tempTrackList.push(possibleTrack)

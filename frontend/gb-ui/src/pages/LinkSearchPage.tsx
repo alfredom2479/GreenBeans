@@ -43,12 +43,10 @@ export async function action({request}:ActionParams){
     console.log(data);
     if(!data || data === undefined){
       console.log("Track not found")
-    //Throw track not found error that will be caught by the errorElement
       return "track not found"
     }
     return redirect(`/track/${trackId}`);
   }catch(err){
-    //Throw track not found error that will be caught by the errorElement
     return "track not found";
   }
 }
@@ -63,9 +61,6 @@ export default function LinkSearchPage(){
       searchInputRef.current.value = "TRACK NOT FOUND"
     }
   },[actionData])
-
-  //console.log(actionData)
-  
 
   return (
     <div className="h-full pb-16 flex flex-col ">

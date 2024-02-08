@@ -8,17 +8,15 @@ export async function loader(){
   const access_token:string|null = localStorage.getItem("access_token");
 
   if(!access_token || access_token===""){
-    return "";
+    return "[ERROR]";
   }
-
   try{
     const data = await requestMySpotifyAccount(access_token);
     if(data && data.display_name){
       return data.display_name;
     }
-    console.log(data);
   }catch(err){
-    console.log(err);
+    return "[ERROR]";
   }
   return "[ERROR]";
 }
@@ -37,7 +35,7 @@ export default function NavBar(){
 
   useEffect(()=>{
 
-    if(typeof loaderData ==="string" && loaderData !== ""){
+    if(typeof loaderData ==="string" && loaderData !== "[ERROR]"){
       setCurrUser(loaderData);
     }
     else{

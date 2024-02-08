@@ -35,7 +35,6 @@ export async function action({params,request}:IURLParams){
 
   settings = requestJson.settings;
 
-  try{
     const data = await requestSpotifyRec(access_token,trackId,settings,audioFeatures, isLoggedIn);
     console.log(data);
 
@@ -44,12 +43,6 @@ export async function action({params,request}:IURLParams){
     }
 
     return [];
-  }catch(err){
-    console.log("There has been a rec action error");
-    console.log(err);
-    //throw something to be caught by error element
-    throw err;
-  }
 }
 
 interface RecOptionsSectionProps{
