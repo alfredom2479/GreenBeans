@@ -62,30 +62,25 @@ export async function requestTokens(code:string|null, state:string|null){
 
   if (code===null || state===null){
     console.log("code or state is null");
-    throw(new Error("Code or state are null"));
+    throw new Response("Missing code and/or state in request", {status:400});
   }
 
   let res:Response|null = null
 
   const authParams = new URLSearchParams({code,state});
 
-  try{
     res = await fetch("/api/auth/gettokens?"+authParams.toString(),{
       method: "GET",
     });
-  }catch(err){
-    console.log(err)
-    throw{err}
-  }
 
   const data = await res.json();
+
   if(!res.ok){
-    throw{
-      message: data.message,
-      statusText: data.statusText,
-      status: data.status
-    };
+    const errorMessage = data.error.message ? data.error.message : "Server Error";
+    const errorStatus = data.error.status? data.error.status : "500";
+    throw new Response(errorMessage,{status: errorStatus});
   }
+  
   return data;
 }
 
@@ -111,11 +106,11 @@ export async function requestTopTracks(accessToken:string, range:number ){
 
   const inputRange:string = rangeEnum(range);
 
-    const data = await sendRequest(
-      `https://api.spotify.com/v1/me/top/tracks?time_range=${inputRange}&limit=50`, 
-      accessToken
-    )
-    return data;
+  const data = await sendRequest(
+    `https://api.spotify.com/v1/me/top/tracks?time_range=${inputRange}&limit=50`, 
+    accessToken
+  )
+  return data;
 }
 
 export async function requestSavedTracks(pageNumber:number,tracksPerPage:number,accessToken:string){
@@ -126,13 +121,8 @@ export async function requestSavedTracks(pageNumber:number,tracksPerPage:number,
     totalOffset = 99999999;
   }
   
-  try{
-    const data = await sendRequest(`https://api.spotify.com/v1/me/tracks?limit=${tracksPerPage}&offset=${totalOffset}`,accessToken);
-    return data;
-  }catch(err){
-    console.log("There has been a saved tracks api oopsie");
-    console.log(err);
-  }
+  const data = await sendRequest(`https://api.spotify.com/v1/me/tracks?limit=${tracksPerPage}&offset=${totalOffset}`,accessToken);
+  return data;
 }
 
 export async function saveSpotifyTrack( trackId:string) :Promise<Response|null>{
@@ -142,7 +132,6 @@ export async function saveSpotifyTrack( trackId:string) :Promise<Response|null>{
   accessToken = localStorage.getItem("access_token");
   
   if(!accessToken || accessToken === ""){
-    console.log("unable to save track, bad token")
     return null;
   }
 
@@ -152,12 +141,8 @@ export async function saveSpotifyTrack( trackId:string) :Promise<Response|null>{
       Authorization: 'Bearer ' + accessToken
     }
   });
-  //console.log(res);
-  //const data = await res.json();
   if(!res.ok){
-    throw{
-      error: "Oopsies in save track put request"
-    };
+    return null;
   }
 
   return res;
@@ -166,35 +151,23 @@ export async function saveSpotifyTrack( trackId:string) :Promise<Response|null>{
 export async function requestSpotifyTrack(accessToken:string, trackId:string, isLoggedIn:boolean ){
 
   if(isLoggedIn){
-    try{
       const data = await sendRequest(`https://api.spotify.com/v1/tracks/${trackId}`,accessToken);
       return data;
-    }catch(err){
-      console.log("There has been a req top tracks oopsie");
-      console.log(err);
-    }
   }
   else{
-    console.log("ur not logged in foo");
-    try{
-      const res = await fetch(`/api/spotify/gettrack?id=${trackId}`,{
-        method: "GET"
-      });
-      const data = await res.json();
-      if(!res.ok){
-        throw Error("Response is not ok");
-      }
-      console.log(data);
-      if(data.result){
-        return data.result;
-      }
-      else{
-        throw Error("Incorrect data was received")
-      }
-    }catch(err){
-      console.log("Error getting track info (w/o track info)"+err);
-      return null
-    } 
+    const res = await fetch(`/api/spotify/gettrack?id=${trackId}`,{
+      method: "GET"
+    });
+    const data = await res.json();
+    if(!res.ok){
+      throw new Response("Request failed", {status:res.status})
+    }
+    if(data.result){
+      return data.result;
+    }
+    else{
+      throw new Response("Bad data returned", {status: 500})
+    }
   }
 }
 
@@ -250,69 +223,48 @@ export async function requestSpotifyRec(accessToken:string, trackId:string, sele
 
 
   if(isLoggedIn){
-    try{
       const data = await sendRequest(
         `https://api.spotify.com/v1/recommendations?limit=99&seed_tracks=${queryOptionSuffix}`,
         accessToken);
       return data;
-    }catch(err){
-      console.log("there has been a request recommendation oopsie");
-      console.log(err);
-    }
   }
   else{
-    try{
       const res = await fetch(`/api/spotify/getrecs?querysuffix=${encodeURIComponent(queryOptionSuffix)}`,{
         method: "GET"
       });
       const data = await res.json();
       if(!res.ok){
-        throw Error("Response is not OK :(");
+        throw new Response("Request failed",{status:res.status});
       }
       if(data.result){
         return data.result;
       }
       else{
-        throw Error("Wrong data was returned");
+        throw new Response("Server returned bad data",{status:500})
       }
-    }catch(err){
-      console.log("Error getting recs (w/o log in)"+ err)
-      return null;
-
-    }
   }
 }
 
 export async function requestSpotifyTrackAudioFeatures(accessToken:string, trackId:string, isLoggedIn: boolean){
 
   if(isLoggedIn){
-    try{
       const data = await sendRequest(`https://api.spotify.com/v1/audio-features/${trackId}`, accessToken)
       return data;
-    }catch(err){
-      console.log("there has been an api oopsie");
-      console.log(err);
-    }
   }
   else{
-    try{
       const res = await fetch(`api/spotify/getaudiofeatures?id=${trackId}`,{
         method: "GET"
       });
       const data = await res.json();
       if(!res.ok){
-        throw Error("Response is not OK (audio features w/o log in)");
+        throw new Response("Request failed",{status:res.status})
       }
       if(data.result){
         return data.result;
       }
       else{
-        throw Error("Wrong data was returned")
+        throw new Response("Bad data returned",{status:500})
       }
-    }catch(err){
-      console.log("Error getting audio features (w/o log in): "+err);
-      return null;
-    }
   }
   
 }
