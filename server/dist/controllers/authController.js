@@ -24,7 +24,7 @@ const getInitialTokens = asyncHandler(async (req, res) => {
     const storedState = req.cookies ? req.cookies[stateKey] : null;
     if (authState === null || authState !== storedState) {
         res.status(500);
-        res.json({ error: 'state_mismatch' });
+        res.json({ error: { message: 'state_mismatch', state: 500 } });
     }
     else {
         res.clearCookie[stateKey];
@@ -44,7 +44,7 @@ const getInitialTokens = asyncHandler(async (req, res) => {
         else {
             console.log("There was an error getting the initial mcTokens");
             res.status(500);
-            res.json({ error: 'no tokens uwu :(' });
+            res.json({ error: { message: 'no tokens uwu :(', status: 500 } });
         }
     }
 });
@@ -63,13 +63,13 @@ const refreshToken = asyncHandler(async (req, res) => {
             res.json({ access_token }).status(200);
         }
         else {
-            res.json({ error: "no new tokens :(" }).status(500);
+            res.json({ error: { message: "no new tokens :(", status: 500 } }).status(500);
         }
     }
     catch (error) {
         console.log("Error refreshing token");
         console.log(error);
-        res.status(500).json({ error: "Sever cannot refresh token" });
+        res.status(500).json({ error: { message: "Sever cannot refresh token", status: 500 } });
     }
 });
 export { spotifyLoginUser, getInitialTokens, refreshToken };

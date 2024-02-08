@@ -16,10 +16,11 @@ export async function loader(){
     if(data && data.display_name){
       return data.display_name;
     }
-    return null;
+    console.log(data);
   }catch(err){
-    return null;
+    console.log(err);
   }
+  return "[ERROR]";
 }
 
 export default function NavBar(){
@@ -35,13 +36,9 @@ export default function NavBar(){
     "border-l-2 border-t-2"
 
   useEffect(()=>{
-    console.log("nav useEffect loaderData: "+loaderData)
+
     if(typeof loaderData ==="string" && loaderData !== ""){
-      //dont navigate to top bc this will navigate on every fresh load
-      //of any page
       setCurrUser(loaderData);
-      //navigate("top");
-      
     }
     else{
       navigate("/link-search");

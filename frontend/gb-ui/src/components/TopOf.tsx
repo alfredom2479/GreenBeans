@@ -33,20 +33,14 @@ export async function loader({params}:TopParams){
     return redirect("/link-search");
   }
 
-  try{
     const data = await requestTopTracks(access_token,rangeNum);
-
+  console.log(data)
     if(data.items && Array.isArray(data.items)){
       return data.items
     }
     
     //need to return error to be handled by error element
     return null;
-  }catch(err){
-    console.log("there has been an error");
-    console.log(err);
-    throw err;
-  }
     
 }
 

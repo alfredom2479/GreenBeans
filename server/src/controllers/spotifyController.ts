@@ -15,7 +15,7 @@ const getSpotifyTrackInfo = asyncHandler(async (req:Request,res:Response)=>{
 
   if(id === null || id === undefined || id === ""){
     console.log("Error getting track info: no id was provided");
-    res.status(400).json({error: "Bad Request: missing id param"});
+    res.status(400).json({error: {message: "Bad Request: missing id param",status:400}});
     return;
   }
 
@@ -25,7 +25,7 @@ const getSpotifyTrackInfo = asyncHandler(async (req:Request,res:Response)=>{
   )
 
   if(data === null){
-    res.status(500).json({error:"Server could not make succesful request to spotify api"});
+    res.status(500).json({error:{message:"Server could not make succesful request to spotify api",status:500}});
   }
   res.status(200).json({result:data});
 })
@@ -36,7 +36,7 @@ const getSpotifyTrackAudioFeatures = asyncHandler(async (req:Request,res:Respons
 
   if(id === null || id === undefined || id === ""){
     console.log("Error getting track audio features: no id was provided");
-    res.status(400).json({error: "Bad Request: missing id param"});
+    res.status(400).json({error: {message: "Bad Request: missing id param", status: 400}});
     return;
   }
 
@@ -46,7 +46,7 @@ const getSpotifyTrackAudioFeatures = asyncHandler(async (req:Request,res:Respons
   );
 
   if(data === null){
-    res.status(500).json({error: "Server could not make a succesful request to spotify track audio features"});
+    res.status(500).json({error: {message:"Server could not make a succesful request to spotify track audio features", status: 500}});
   }
   res.status(200).json({result:data});
 })
@@ -59,7 +59,7 @@ const getSpotifyRecs = asyncHandler(async (req:Request,res:Response)=>{
 
     if(querysuffix === null || querysuffix === undefined || typeof querysuffix !== "string" || querysuffix === "" ){
       res.status(400);
-      res.json({error: "missing querysuffix param"});
+      res.json({error: {message:"missing querysuffix param", status: 400}});
       return;
     }
 
@@ -71,13 +71,12 @@ const getSpotifyRecs = asyncHandler(async (req:Request,res:Response)=>{
     )
 
     if(data === null){
-      res.status(500).json({error:"Server could not make a succesful request to spotify recommendations"});
+      res.status(500).json({error:{message:"Server could not make a succesful request to spotify recommendations",status:500}});
     }
     res.status(200).json({result:data});
     
     }
 )
-
 
 const sendRequest = async (requestName: string, completeEndpoint:string, ) =>{
   try{
@@ -104,7 +103,7 @@ const sendRequest = async (requestName: string, completeEndpoint:string, ) =>{
       throw Error("Returned status of second request attempt was "+status)
     }catch(err){
       console.log("Error making second request attempt to "+requestName+": "+err);
-      return null
+      return null;
     }
   }
 }
@@ -118,15 +117,11 @@ const authHeaderString = 'Basic '+ (Buffer.from(process.env.SPOTIFY_CLIENT_ID+
   }
   
   try{
-  const {data, status, statusText} = await axios.post(
+  const {data, status} = await axios.post(
     "https://accounts.spotify.com/api/token",
     authData,
     {headers: {"Authorization": authHeaderString, "Content-Type":"application/x-www-form-urlencoded"}}
   )
-  console.log(status);
-  console.log("DA DATA:");
-  console.log(data);
-  console.log(data.access_token)
   clientCredsAuthToken = data.access_token;
   return data.access_token;
   }catch(err){

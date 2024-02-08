@@ -16,13 +16,14 @@ import SavedPage from './pages/SavedPage';
 import SavedTrackList,{loader as savedTracksLoader} from './components/SavedTrackList';
 import LinkSearchPage, {action as searchLinkAction} from './pages/LinkSearchPage';
 import NavBar, {loader as loggedInCheckerLoader} from './components/NavBar';
+import RootErrorBoundary from './components/error-components/RootErrorBoundary';
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <NavBar/>,
     loader: loggedInCheckerLoader,
-    errorElement: <h1>Error. Try reloading.</h1>,
+    errorElement: <RootErrorBoundary/>,
     children: [
       {
         path:"/",

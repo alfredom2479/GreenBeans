@@ -1,56 +1,43 @@
 import { AudioFeatures, audioFeatureNames } from "./interfaces";
 
-
-//INITIAL AUTH FUNC
 export async function requestAuth(){
 
-  let res:Response|null = null
-
-  try{
-    res = await fetch("/api/auth/requestauth",{
+  const res:Response|null = await fetch("/api/auth/requestauth",{
       method: "GET",
     });
-  }catch(err){
-    console.log(err)
-    throw{err}
+
+
+  if(res === null){
+    throw new Response("Server error",{status:500})
   }
 
   const data = await res.json();
+
   if(!res.ok){
-    throw{
-      message: data.message,
-      statusText: data.statusText,
-      status: data.status
-    };
+    const errorMessage = data.error.message ? data.error.message : "Server Error";
+    const errorStatus = data.error.status? data.error.status : "500";
+    throw new Response(errorMessage,{status: errorStatus});
   }
 
   return data;
 }
 
-//TOKEN HANDLERS
-
 function handleNewTokens(newAccessToken:string):boolean{
 
-  console.log("new at: "+newAccessToken);
   if(!newAccessToken){
     console.log("There was an error parsing new tokens")
     return false;
   }
-
   localStorage.setItem('access_token', newAccessToken);
-  console.log("local storage after success:")
-  console.log(localStorage);
   return true;
-
 }
 
 export async function refreshTokens(refresh_token:string|null){
 
   if(refresh_token ===null){
-    console.log("Refresh token is null");
-    throw(new Error("Refresh token is null fam"));
+    return {access_token:null};
   }
-  let res:Response|null = null
+  let res:Response|null = null;
 
   const authParams = new URLSearchParams({refresh_token});
 
@@ -59,17 +46,14 @@ export async function refreshTokens(refresh_token:string|null){
       method:"GET"
     });
   }catch(err){
-    console.log(err);
-    throw(err)
+    return {access_token: null};
   }
 
   const data  = await res.json();
   if(!res.ok){
-    throw{
-      message:data.message,
-      statusText: data.statusText,
-      status: data.status
-    };
+    const errorMessage = data.error.message ? data.error.message : "Server Error";
+    const errorStatus = data.error.status? data.error.status : "500";
+    throw new Response(errorMessage,{status: errorStatus});
   }
   return data;
 }
@@ -108,15 +92,8 @@ export async function requestTokens(code:string|null, state:string|null){
 //SPOTIFY DATA REQUEST FUNCTIONS
 
 export async function requestMySpotifyAccount(accessToken:string){
-
-  try{
     const data = await sendRequest("https://api.spotify.com/v1/me", accessToken);
     return data;
-  }catch(err){
-    console.log("There has been a req spotify account oopsie");
-    console.log(err);
-  }
-  
 }
 
 const rangeEnum =(rangeNum:number):string=> {
@@ -134,16 +111,11 @@ export async function requestTopTracks(accessToken:string, range:number ){
 
   const inputRange:string = rangeEnum(range);
 
-  try{
     const data = await sendRequest(
       `https://api.spotify.com/v1/me/top/tracks?time_range=${inputRange}&limit=50`, 
       accessToken
     )
     return data;
-  }catch(err){
-      console.log("There has been an api top tracks oopsie");
-      console.log(err);
-  }
 }
 
 export async function requestSavedTracks(pageNumber:number,tracksPerPage:number,accessToken:string){
@@ -227,16 +199,6 @@ export async function requestSpotifyTrack(accessToken:string, trackId:string, is
 }
 
 export async function requestSpotifyRec(accessToken:string, trackId:string, selectedOptions: string[],audioFeatures:AudioFeatures, isLoggedIn: boolean){
-
-  //NOTE
-  //u might have to organize the results in best match to worse match
-  //Audio Features is the actual data for the given track
-  //Options selected is the features that the user has selected
-  //to filter by
-  
-  //You have to make this a universal value so that there are no
-  //inconsistencies between different variables that are supposed to 
-  //represent this same thing
 
   let queryOptionSuffix:string = trackId;
 
@@ -355,52 +317,54 @@ export async function requestSpotifyTrackAudioFeatures(accessToken:string, track
   
 }
 
-//MAIN SEND REQUEST function
-//u might be able to abstract this further
 async function sendRequest(endpoint:string, accessToken:string){
-  console.log("endpoing: "+endpoint);
   let res:Response|null = null
 
-  try{
   res = await fetch(endpoint,{
     method: "GET",
     headers: {
       Authorization:  'Bearer '+ accessToken
+      //Authorization:  'Bearer e'+ accessToken
     }
   });
-}catch(err){
-  console.log(err);
-  console.log('fauled GET '+endpoint);
-}
 
   if(res === null){
-    throw {err: "big request oopsies"};
-
+    throw new Response("Server error", {status:500}) ;
   }
 
   if( res.status === 401){
     const {access_token} = await refreshTokens(localStorage.getItem('refresh_token'));
+    console.log("refreshed access token: "+access_token);
+    if (access_token== null){
+      throw new Response("Error refreshing tokens",{status:500})
+    }
     const tokensHandled:boolean = handleNewTokens(access_token);
 
     if(!tokensHandled){
       console.log("token refresh unsuccessful");
     }
+
     res = await fetch(endpoint, {
       method: "GET", 
       headers: {
         Authorization: 'Bearer ' + access_token
+        // Authorization: 'Bearer 69' + access_token
       }
     })
   }
 
-  const data = await res.json();
-  if(!res.ok){
-    throw{
-      message: data.message,
-      statusText: data.statusText,
-      status: data.status
-    };
+  let data = null;
+  try{
+    data = await res.json();
+  }catch(err){
+    throw new Response("Could not parse json",{status:409})
   }
-
-  return data
+  
+    if(!res.ok || data === null){
+      const errorMessage = data.error.message ? data.error.message : "Server Error";
+      const errorStatus = data.error.status? data.error.status : "500";
+      throw new Response(errorMessage,{status: errorStatus})
+      //throw {errorMessage,errorStatus}
+    }
+    return data
 }
