@@ -27,7 +27,8 @@ const router = createBrowserRouter([
     children: [
       {
         path:"/",
-        element: <div className='text-white text-2xl'><h1>This is home page</h1><h2>under construction</h2></div>
+        element: <div className='text-white text-2xl'><h1>This is home page</h1><h2>under construction</h2></div>,
+        errorElement: <RootErrorBoundary/>
       },
       {
         path: "/auth",
@@ -37,16 +38,19 @@ const router = createBrowserRouter([
       {
         path: "top",
         element: <TopPage/>,
+        errorElement:<RootErrorBoundary/>,
         children: [
           {
             path: ":range",
             element: <TopOf/>,
-            loader: topDataLoader
+            loader: topDataLoader,
+            errorElement: <RootErrorBoundary/>
           },
           {
             path:"",
             element: <TopOf/>,
-            loader: topDataLoader
+            loader: topDataLoader,
+            errorElement: <RootErrorBoundary/>
           }
         ]
       },
@@ -57,21 +61,25 @@ const router = createBrowserRouter([
           {
             path:":page",
             element: <SavedTrackList/>,
-            loader: savedTracksLoader
+            loader: savedTracksLoader,
+            errorElement: <RootErrorBoundary/>
           }
         ]
       },
       {
         path: "link-search",
         element: <LinkSearchPage/>,
-        action:searchLinkAction
+        action:searchLinkAction,
+        errorElement: <RootErrorBoundary/>
       },
       {
         path: "/track",
+        errorElement: <RootErrorBoundary/>,
         children: [
         {
           path: ":trackid",
           element: <TrackPage/>,
+          errorElement: <RootErrorBoundary/>,
           loader: trackDataLoader,
           action: getRecsAction,
           shouldRevalidate: ({formMethod}) => {
