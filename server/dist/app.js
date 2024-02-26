@@ -6,6 +6,7 @@ import configureRoutes from "./routes/index.js";
 const port = process.env.PORT || 6000;
 const app = express();
 app.use(cors());
+app.disable('x-powered-by');
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
