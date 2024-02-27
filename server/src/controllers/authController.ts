@@ -22,7 +22,7 @@ const spotifyLoginUser =  (req:Request,res:Response)
     response_type: 'code',
     client_id: process.env.SPOTIFY_CLIENT_ID,
     scope: authScope,
-    redirect_uri: "http://localhost:3000/auth",
+    redirect_uri: "http://64.225.60.124:3000/auth",
     state: state,
     show_dialog: "true"
   })
@@ -48,7 +48,7 @@ const getInitialTokens = asyncHandler( async (req:Request,res:Response): Promise
 
     const authData = {
       code: authCode,
-      redirect_uri: "http://localhost:3000/auth",
+      redirect_uri: "http://64.225.60.124:3000/auth",
       grant_type: 'authorization_code'
     }
 
