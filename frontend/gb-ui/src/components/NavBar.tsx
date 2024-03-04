@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Outlet, useLoaderData, useNavigate} from "react-router-dom";
-import { requestMySpotifyAccount } from "../api";
+import {  requestMySpotifyAccount } from "../api";
 import LogOutModal from "./LogOutModal";
 import NavbarItem from "./NavBarItem";
 
@@ -65,10 +65,17 @@ export default function NavBar(){
         />
         {
           !currUser || currUser==="" ?
+            
             <a className={accountStatusStyleString}
-            href="api/auth/requestauth">
+            href="/api/auth/requestauth">
               Log In
             </a>
+           /* 
+           <button className={accountStatusStyleString}
+           onClick={()=>requestAuth()}>
+            Log In
+           </button>
+           */
           :
             <button className={accountStatusStyleString}
               onClick={()=>{setShowLogOutModal(true)}}>
