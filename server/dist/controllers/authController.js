@@ -11,7 +11,7 @@ const spotifyLoginUser = (req, res) => {
         response_type: 'code',
         client_id: process.env.SPOTIFY_CLIENT_ID,
         scope: authScope,
-        redirect_uri: "http://localhost:3000/auth",
+        redirect_uri: process.env.ORIGIN + "/auth",
         state: state,
         show_dialog: "true"
     });
@@ -32,7 +32,7 @@ const getInitialTokens = asyncHandler(async (req, res) => {
             ":" + process.env.SPOTIFY_CLIENT_SECRET, "utf-8").toString('base64'));
         const authData = {
             code: authCode,
-            redirect_uri: "http://localhost:3000/auth",
+            redirect_uri: process.env.ORIGIN + "/auth",
             grant_type: 'authorization_code'
         };
         const { data, status, statusText } = await axios.post("https://accounts.spotify.com/api/token", authData, { headers: { "Authorization": authHeaderStr, "Content-Type": "application/x-www-form-urlencoded" } });

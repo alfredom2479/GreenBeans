@@ -65,17 +65,10 @@ export default function NavBar(){
         />
         {
           !currUser || currUser==="" ?
-            
             <a className={accountStatusStyleString}
             href="/api/auth/requestauth">
               Log In
             </a>
-           /* 
-           <button className={accountStatusStyleString}
-           onClick={()=>requestAuth()}>
-            Log In
-           </button>
-           */
           :
             <button className={accountStatusStyleString}
               onClick={()=>{setShowLogOutModal(true)}}>
