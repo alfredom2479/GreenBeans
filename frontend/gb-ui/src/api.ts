@@ -4,12 +4,6 @@ export async function requestAuth(){
 
   const res:Response|null = await fetch("/api/auth/requestauth",{
       method: "GET",
-      headers: {
-       //Sec-Fetch-Site: cross-site
-        "Sec-Fetch-Mode": "navigate",
-        "Sec-Fetch-User": "?1",
-        "Sec-Fetch-Dest": "document"
-      }
     });
 
 
