@@ -1,7 +1,4 @@
 node_modules
 server/node_modules
 .env
-vite.config.ts
 frontend/gb-ui/vite.config.ts
-frontend/gb-ui/test.txt
-test2.txt
