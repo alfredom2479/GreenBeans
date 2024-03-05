@@ -66,7 +66,7 @@ export default function NavBar(){
         {
           !currUser || currUser==="" ?
             <a className={accountStatusStyleString}
-            href="api/auth/requestauth">
+            href="/api/auth/requestauth">
               Log In
             </a>
           :
