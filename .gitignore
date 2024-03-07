@@ -2,4 +2,3 @@ node_modules
 server/node_modules
 .env
 server/dist
-frontend/gb-ui/vite.config.ts
