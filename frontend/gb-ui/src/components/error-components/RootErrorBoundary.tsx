@@ -21,6 +21,9 @@ export default function RootErrorBoundary(){
         Something has gone horribly wrong.
       </div>
     }
+    <div className="flex justify-center m-48">
+    <a  className="flex bg-green-800 text-5xl font-medium p-2 rounded-3xl shadow-lg shadow-black-900" href="/">Home</a>
+    </div>
     </>
   )
 }

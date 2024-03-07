@@ -39,7 +39,7 @@ export default function NavBar(){
       setCurrUser(loaderData);
     }
     else{
-      navigate("/link-search");
+      navigate("/");
     } 
   },[loaderData,navigate])
 
@@ -60,7 +60,7 @@ export default function NavBar(){
         />
         <NavbarItem 
           name="search"
-          path="/link-search" 
+          path="/" 
           extraStyle="border-2 border-b-0"
         />
         {

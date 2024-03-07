@@ -30,7 +30,7 @@ export async function loader({params}:TopParams){
   const access_token:string|null = localStorage.getItem("access_token");
 
   if(!access_token || access_token===""){
-    return redirect("/link-search");
+    return redirect("/");
   }
 
     const data = await requestTopTracks(access_token,rangeNum);
