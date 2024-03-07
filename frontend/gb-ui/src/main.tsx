@@ -27,8 +27,11 @@ const router = createBrowserRouter([
     children: [
       {
         path:"/",
-        element: <div className='text-white text-2xl'><h1>This is home page</h1><h2>under construction</h2></div>,
+        element: <LinkSearchPage/>,
+        action:searchLinkAction,
         errorElement: <RootErrorBoundary/>
+        //element: <div className='text-white text-2xl'><h1>This is home page</h1><h2>under construction</h2></div>,
+        //errorElement: <RootErrorBoundary/>
       },
       {
         path: "/auth",

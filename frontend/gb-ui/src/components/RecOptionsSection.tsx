@@ -25,7 +25,7 @@ export async function action({params,request}:IURLParams){
     trackId = params.trackid;
   }
   else{
-    redirect("/link-search");
+    redirect("/");
   }
   let audioFeatures:AudioFeatures = {};
   let settings:string[] = [];
