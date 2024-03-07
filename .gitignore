@@ -1,5 +1,5 @@
 node_modules
 server/node_modules
 .env
-dist
+server/dist
 frontend/gb-ui/vite.config.ts
