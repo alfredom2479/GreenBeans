@@ -19,9 +19,9 @@ export default  function SavedPage(){
     return;
   }
   return(
-    <div className="h-full pb-16 flex flex-col">
+    <div className="h-full w-full pb-16 flex flex-col">
       <div className="basis-24 p-2 flex flex-col justify-center items-center">
-        <h1 className="basis-1/2 text-purple-200 font-bold text-4xl text-center ">
+        <h1 className="basis-1/2 text-purple-200 font-bold text-5xl text-center ">
           Saved Tracks
         </h1>
         <div className="flex">

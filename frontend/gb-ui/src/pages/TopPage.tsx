@@ -21,7 +21,7 @@ export default function TopPage(){
   }
 
   return(
-    <div className="h-full pb-16 flex flex-col">
+    <div className="h-full w-full pb-16 flex flex-col">
       <div className="basis-1/4 flex flex-col ">
       <h1 className="basis-1/2 text-purple-200 font-bold text-4xl text-center my-5">
         Your Top Songs
