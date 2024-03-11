@@ -2,7 +2,6 @@ import {useEffect, useRef} from "react";
 import {Form, redirect, useActionData} from 'react-router-dom';
 import { requestSpotifyTrack } from '../api';
 
-//import type {Params} from "react-router-dom";
 
 interface ActionParams{
   //params: Params,

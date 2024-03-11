@@ -90,22 +90,7 @@ export default function SavedTrackList(){
 
   return(
   <>
-  <div className="flex">
-        {pageNumber !== 0 ?
-          <NavLink 
-          to={`/saved/${prevPageNumber}`}
-          className="flex-1 items-center justify-center bg-stone-900 hover:text-purple-600 text-purple-200 text-xl font-bold p-1  text-center border-white border-2 border-l-0 hover:border-purple-600"
-          >prev
-        </NavLink>
-        : 
-          null
-        }
-        <NavLink 
-          to={`/saved/${nextPageNumber}`}
-          className="flex-1 items-center justify-center bg-stone-900 hover:text-purple-600 text-purple-200 text-xl font-bold p-1  text-center border-white border-2 border-r-0 border-l-2 hover:border-purple-600"
-          >next
-        </NavLink>
-            </div>
+  
     <div className=" overflow-y-scroll">
       <ul>
         {savedTracksList.map((track)=>{
@@ -124,6 +109,22 @@ export default function SavedTrackList(){
           )
         })}
       </ul>
+    </div>
+    <div className="flex">
+        {pageNumber !== 0 ?
+          <NavLink 
+          to={`/saved/${prevPageNumber}`}
+          className="flex-1 items-center justify-center bg-stone-900 hover:text-purple-600 text-purple-200 text-xl font-bold p-1  text-center border-white border-2 border-l-0 hover:border-purple-600"
+          >prev
+        </NavLink>
+        : 
+          null
+        }
+        <NavLink 
+          to={`/saved/${nextPageNumber}`}
+          className="flex-1 items-center justify-center bg-stone-900 hover:text-purple-600 text-purple-200 text-xl font-bold p-1  text-center border-white border-2 border-r-0 border-l-2 hover:border-purple-600"
+          >next
+        </NavLink>
     </div>
     </>
   )
