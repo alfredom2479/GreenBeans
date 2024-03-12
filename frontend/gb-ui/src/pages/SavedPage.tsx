@@ -24,8 +24,6 @@ export default  function SavedPage(){
         <h1 className="basis-1/2 text-white font-bold text-4xl text-center ">
           Saved Tracks
         </h1>
-        <div className="flex">
-        </div>
       </div>
       <Outlet context={{handleListenOnClick} satisfies ListenOnClickContextType}/>
       {showModal ?
