@@ -4,7 +4,7 @@ import { ITrack } from "./interfaces";
 //something like Golang's Unmarshal. Look into this. custom way might be faster.
 
 // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-const isTrack = (possibleTrack: any): ITrack|null=>{
+const isTrack = (possibleTrack: any, size:number=0): ITrack|null=>{
 
   const tempTrack:ITrack = {id: "", name:"",artist:"",image:""} ;
 
@@ -27,6 +27,8 @@ const isTrack = (possibleTrack: any): ITrack|null=>{
   else{
     return null;
   }
+
+  const maxImgSize:number = size === 1 ? 1000 :500;
   
   //deciding that track image is not necessary. Do not return null if cant find one
   if(possibleTrack.album && possibleTrack.album.images &&
@@ -34,11 +36,12 @@ const isTrack = (possibleTrack: any): ITrack|null=>{
       const albumImages = possibleTrack.album.images;
 
       let i = 0 
-      for(i = 1; i < albumImages.length; i++){
-        if(albumImages[i].height < 200){
+      for(i = 0; i < albumImages.length; i++){
+        if(albumImages[i].height < maxImgSize){
           break;
         }
       }
+      
       tempTrack.image = albumImages[i].url; 
   }
 

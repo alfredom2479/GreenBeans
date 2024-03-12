@@ -38,8 +38,8 @@ export default function TrackCard({id,name,artist,image,url,isRec=false,popModal
     <>
     <div className="flex bg-stone-800 my-1 rounded-xl h-14">
         <div 
-        className="w-fit  shrink-0 grow-0">
-        <img className="bg-cover" src={image} />
+        className=" h-14 w-14 shrink-0">
+        <img className="bg-fill" src={image} />
         </div>
 
         <div className="flex basis-7/12 flex-col shrink-1 grow-1 pl-2 overflow-hidden">

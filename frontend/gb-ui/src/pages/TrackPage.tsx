@@ -78,7 +78,7 @@ export default function TrackPage(){
 
     if(typeof trackLoaderData === 'object' && trackLoaderData ){
 
-      const possibleTrack: ITrack|null = isTrack(trackLoaderData);
+      const possibleTrack: ITrack|null = isTrack(trackLoaderData,1);
       if(possibleTrack != null){
         setTrackData(possibleTrack)
       }
@@ -159,7 +159,7 @@ export default function TrackPage(){
   }
 
   return(
-    <div className="flex flex-col h-full pb-16 w-full">
+    <div className=" h-full w-full flex flex-col  pb-16 ">
 
       <div className=" flex flex-col basis-32 grow-0 max-h-[25%] max-w-full">
         <div className=" bg-stone-900 text-purple-200 flex max-h-[95%]">
