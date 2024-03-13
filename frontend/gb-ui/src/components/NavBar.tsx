@@ -35,7 +35,7 @@ export default function NavBar(){
 
   const accountStatusStyleString = "flex justify-center items-center basis-32 "+
     "grow text-center font-bold text-lg bg-green-900 text-white "+
-    "rounded-3xl"
+    "rounded-3xl mr-2"
 
   useEffect(()=>{
 

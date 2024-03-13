@@ -64,7 +64,7 @@ export default function LinkSearchPage(){
   return (
     <div className="h-full pb-16 flex flex-col w-full">
       <div className="basis-1/4 flex flex-col w-full">
-        <h1 className="basis-1/2 text-white font-bold text-5xl text-center py-3">
+        <h1 className="basis-1/2 text-white font-bold text-4xl text-center py-3">
           Link Search
         </h1>
       </div>
