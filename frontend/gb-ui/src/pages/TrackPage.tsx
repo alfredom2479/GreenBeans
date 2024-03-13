@@ -161,13 +161,15 @@ export default function TrackPage(){
   return(
     <div className=" h-full w-full flex flex-col  pb-16 ">
 
-      <div className=" flex flex-col basis-24  w-full">
+      <div className=" flex flex-col basis-1/4 w-full ">
+
         <div className=" bg-stone-900 text-purple-200 flex max-h-[95%]">
           <div className="basis-5/12 flex items-center h-full">
             <img src={trackData.image} 
-              className="flex-1  ">
+              className="flex-1 max-h-[25vh] object-cover">
             </img>
           </div>
+
           <div className="basis-7/12">
             <div className="text-2xl">
               {trackData.name}
@@ -176,6 +178,7 @@ export default function TrackPage(){
               <i>{trackData.artist}</i>
             </div>
           </div>
+
         </div> 
 
         <nav className=" font-bold bg-purple-200 max-h-14">
