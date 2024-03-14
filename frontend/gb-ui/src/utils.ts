@@ -1,4 +1,4 @@
-import { ITrack } from "./interfaces";
+import { ITrack, TrackSaveState } from "./interfaces";
 
 // If parsing like this is too slow, there might be an automatic way to do it.
 //something like Golang's Unmarshal. Look into this. custom way might be faster.
@@ -6,7 +6,7 @@ import { ITrack } from "./interfaces";
 // eslint-disable-next-line  @typescript-eslint/no-explicit-any
 const isTrack = (possibleTrack: any, size:number=0): ITrack|null=>{
 
-  const tempTrack:ITrack = {id: "", name:"",artist:"",image:""} ;
+  const tempTrack:ITrack = {id: "", name:"",artist:"",image:"",trackSaveState:TrackSaveState.CantSave} ;
 
   if(possibleTrack === null && possibleTrack === undefined){
     return null;

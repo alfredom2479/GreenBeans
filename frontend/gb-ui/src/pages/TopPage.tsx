@@ -3,19 +3,19 @@ import {Outlet} from "react-router-dom";
 import TopNavItem from "../components/TopNavItem";
 import SongPreviewModal from "../components/SongPreviewModal";
 
-import { ListenOnClickContextType } from "../interfaces";
+import { ListenOnClickContextType, SongPreviewInfo } from "../interfaces";
 
 export default function TopPage(){
 
   const [showModal, setShowModal] = useState(false);
-  const [modalSongPreviewUrl, setModalSongPreviewUrl] = useState<string>("")
+  const [modalSongPreviewInfo, setModalSongPreviewInfo] = useState<SongPreviewInfo>({name:"",artist:"",url:""});
 
-  function handleListenOnClick(songPreviewUrl:string|undefined){
-    if(songPreviewUrl === undefined || songPreviewUrl === null){
-      console.log("Song preview url is undefined");
+  function handleListenOnClick(songPreviewInfo:SongPreviewInfo|undefined){
+    if(songPreviewInfo === undefined || songPreviewInfo === null){
+      console.log("Song preview is undefined");
       return
     }
-    setModalSongPreviewUrl(songPreviewUrl);
+    setModalSongPreviewInfo(songPreviewInfo);
     setShowModal(true);
     return;
   }
@@ -38,7 +38,7 @@ export default function TopPage(){
       {showModal ?
           <SongPreviewModal 
             setShowModal={setShowModal} 
-            songPreviewUrl={modalSongPreviewUrl}
+            songPreviewInfo={modalSongPreviewInfo}
           />
         :
           null

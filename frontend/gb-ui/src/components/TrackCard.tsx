@@ -1,13 +1,13 @@
 import {Link} from "react-router-dom"
-import { ITrack } from "../interfaces"
+import { ITrack, SongPreviewInfo } from "../interfaces"
 import { saveSpotifyTrack } from "../api"
 
 import listenSvg from '../assets/listen.svg';
 import findRecsSvg from '../assets/search-list.svg';
 import addTrackSvg from '../assets/plus2.svg';
 
-function handleDefaultModalError(prevUrl: string){
-  console.log("no modal was given to handle preview: "+ prevUrl);
+function handleDefaultModalError(prevInfo:SongPreviewInfo ){
+  console.log("no modal was given to handle preview: "+ prevInfo.name+" "+prevInfo+" "+prevInfo.url);
 }
 
 export default function TrackCard({id,name,artist,image,url,isRec=false,popModal=handleDefaultModalError}:ITrack){
@@ -56,9 +56,9 @@ export default function TrackCard({id,name,artist,image,url,isRec=false,popModal
             <img src={findRecsSvg} alt="recs" className="w-8"/>
           </Link>
 
-          {url!==null && url !==undefined && url !=="" && url !==" " ?
+          {url!==null && url !==undefined && name !==null && name !== undefined && artist !== null && name !== undefined ?
             <button
-              onClick={()=>popModal(url)}
+              onClick={()=>popModal({name:name,artist:artist,url:url})}
               className={defaultTrackCardOptionString}
             >
               <img src={listenSvg} alt="listen" className="w-8"/>

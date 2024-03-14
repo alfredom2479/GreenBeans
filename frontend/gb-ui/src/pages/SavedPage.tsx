@@ -2,19 +2,19 @@ import {useState} from 'react';
 import { Outlet } from "react-router-dom";
 
 import SongPreviewModal from "../components/SongPreviewModal";
-import { ListenOnClickContextType } from "../interfaces";
+import { ListenOnClickContextType, SongPreviewInfo } from "../interfaces";
 
 export default  function SavedPage(){
 
   const [showModal, setShowModal] = useState(false);
-  const [modalSongPreviewUrl, setModalSongPreviewUrl] = useState<string>("");
+  const [modalSongPreviewInfo, setModalSongPreviewInfo] = useState<SongPreviewInfo>({name:"",artist:"",url:""});
 
-  function handleListenOnClick(songPreviewUrl:string|undefined){
-    if(songPreviewUrl === undefined){
-      console.log("Song preview url is undefined");
+  function handleListenOnClick(songPreviewInfo:SongPreviewInfo|undefined){
+    if(songPreviewInfo === undefined){
+      console.log("Song preview info is undefined");
       return;
     }
-    setModalSongPreviewUrl(songPreviewUrl);
+    setModalSongPreviewInfo(songPreviewInfo);
     setShowModal(true);
     return;
   }
@@ -29,7 +29,7 @@ export default  function SavedPage(){
       {showModal ?
       <SongPreviewModal
         setShowModal={setShowModal}
-        songPreviewUrl= {modalSongPreviewUrl}
+        songPreviewInfo= {modalSongPreviewInfo}
       />
       :
       null

@@ -3,7 +3,7 @@ import {useActionData, useLoaderData} from "react-router-dom";
 import { requestSpotifyTrack,requestSpotifyTrackAudioFeatures } from "../api";
 import type {Params} from "react-router-dom";
 import RecOptionsSection from "../components/RecOptionsSection";
-import { ITrack, AudioFeatures, } from "../interfaces";
+import { ITrack, AudioFeatures, SongPreviewInfo, } from "../interfaces";
 import TrackCard from "../components/TrackCard";
 import { isTrack } from "../utils";
 import SongPreviewModal from "../components/SongPreviewModal";
@@ -41,7 +41,7 @@ export default function TrackPage(){
 
   const [checkedBoxes,setCheckedBoxes] = useState<string[]>([]);
   const [showModal, setShowModal] = useState(false);
-  const [modalSongPreviewUrl, setModalSongPreviewUrl] = useState<string>("");
+  const [modalSongPreviewInfo, setModalSongPreviewInfo] = useState<SongPreviewInfo>({name:"",artist:"",url:""});
 
   const loaderData = useLoaderData();
   const actionData = useActionData();
@@ -148,12 +148,12 @@ export default function TrackPage(){
   },[trackData]);
 
 
-  function handleListenOnClick(songPreviewUrl:string|undefined) {
-    if(songPreviewUrl === undefined){
-      console.log("Song Preview url is undefined");
+  function handleListenOnClick(songPreviewInfo:SongPreviewInfo|undefined) {
+    if(songPreviewInfo === undefined){
+      console.log("Song Preview info is undefined");
       return;
     }
-    setModalSongPreviewUrl(songPreviewUrl);
+    setModalSongPreviewInfo(songPreviewInfo);
     setShowModal(true);
     return;
   }
@@ -229,7 +229,7 @@ export default function TrackPage(){
      {showModal ?
      <SongPreviewModal 
       setShowModal={setShowModal} 
-      songPreviewUrl={modalSongPreviewUrl}
+      songPreviewInfo={modalSongPreviewInfo}
       />
       :
       null
