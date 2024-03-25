@@ -224,7 +224,7 @@ export async function requestSpotifyRec(accessToken:string, trackId:string, sele
 
   if(isLoggedIn){
       const data = await sendRequest(
-        `https://api.spotify.com/v1/recommendations?limit=99&seed_tracks=${queryOptionSuffix}`,
+        `https://api.spotify.com/v1/recommendations?limit=50&seed_tracks=${queryOptionSuffix}`,
         accessToken);
       return data;
   }

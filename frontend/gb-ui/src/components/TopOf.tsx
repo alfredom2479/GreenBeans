@@ -3,7 +3,7 @@ import { redirect,useLoaderData} from "react-router-dom";
 import type {Params} from 'react-router-dom';
 
 import TrackCard from "./TrackCard";
-import { ITrack } from "../interfaces";
+import { ITrack, TrackSaveState } from "../interfaces";
 
 import { requestTopTracks } from '../api';
 import { isTrack } from "../utils";
@@ -83,6 +83,7 @@ export default function TopOf(){
               image={track.image}
               url={track.url}
               popModal={handleListenOnClick}
+              trackSaveState={TrackSaveState.CantSave}
             />
             </li>)
           })}

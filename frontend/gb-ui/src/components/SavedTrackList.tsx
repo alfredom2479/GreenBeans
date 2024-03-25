@@ -5,7 +5,7 @@ import { requestSavedTracks } from "../api";
 
 import type {Params} from "react-router-dom";
 
-import { ITrack, useHandleListenOnClick } from "../interfaces";
+import { ITrack, useHandleListenOnClick, TrackSaveState } from "../interfaces";
 import { isTrack } from "../utils";
 
 interface URLParams{
@@ -103,6 +103,7 @@ export default function SavedTrackList(){
                 image={track.image}
                 url={track.url}
                 popModal={handleListenOnClick}
+                trackSaveState={TrackSaveState.Saved}
                 />
             </li>
             

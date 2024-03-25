@@ -3,7 +3,7 @@ import {useActionData, useLoaderData} from "react-router-dom";
 import { requestSpotifyTrack,requestSpotifyTrackAudioFeatures } from "../api";
 import type {Params} from "react-router-dom";
 import RecOptionsSection from "../components/RecOptionsSection";
-import { ITrack, AudioFeatures, SongPreviewInfo, } from "../interfaces";
+import { ITrack, AudioFeatures, SongPreviewInfo, TrackSaveState, } from "../interfaces";
 import TrackCard from "../components/TrackCard";
 import { isTrack } from "../utils";
 import SongPreviewModal from "../components/SongPreviewModal";
@@ -219,6 +219,7 @@ export default function TrackPage(){
                       url={track.url}
                       isRec={true}
                       popModal={handleListenOnClick}
+                      trackSaveState={TrackSaveState.Saveable}
                     />
                   </li>
                 )
