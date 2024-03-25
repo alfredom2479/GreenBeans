@@ -4,6 +4,10 @@ import {  requestMySpotifyAccount } from "../api";
 import LogOutModal from "./LogOutModal";
 import NavbarItem from "./NavBarItem";
 
+import linkSvg from '../assets/link.svg';
+import savedSvg from '../assets/saved.svg';
+import topSvg from '../assets/top.svg';
+
 export async function loader(){
   const access_token:string|null = localStorage.getItem("access_token");
 
@@ -30,8 +34,8 @@ export default function NavBar(){
   const navigate = useNavigate();
 
   const accountStatusStyleString = "flex justify-center items-center basis-32 "+
-    "grow text-center font-bold text-lg bg-green-900 text-white border-white "+
-    "border-l-2 border-t-2"
+    "grow text-center font-bold text-lg bg-green-900 text-white "+
+    "rounded-3xl mr-2"
 
   useEffect(()=>{
 
@@ -47,21 +51,24 @@ export default function NavBar(){
   return (
     <div className="max-h-screen h-screen flex flex-col items-center justify-center">
       <Outlet/>
-      <div className="flex fixed bottom-0 left-0 right-0 h-16">
+      <div className="flex fixed bottom-2 left-0 right-0 h-12 justify-between">
         <NavbarItem 
           name="top"
           path="/top/month" 
-          extraStyle="border-r-2 border-t-2"
+          extraStyle=""
+          svgPath={topSvg}
         />
         <NavbarItem 
           name="saved"
           path="/saved/0" 
-          extraStyle="border-2 border-b-0"
+          extraStyle=""
+          svgPath={savedSvg}
         />
         <NavbarItem 
           name="search"
           path="/" 
-          extraStyle="border-2 border-b-0"
+          extraStyle=""
+          svgPath={linkSvg}
         />
         {
           !currUser || currUser==="" ?

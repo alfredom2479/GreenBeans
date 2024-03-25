@@ -3,34 +3,34 @@ import {Outlet} from "react-router-dom";
 import TopNavItem from "../components/TopNavItem";
 import SongPreviewModal from "../components/SongPreviewModal";
 
-import { ListenOnClickContextType } from "../interfaces";
+import { ListenOnClickContextType, SongPreviewInfo } from "../interfaces";
 
 export default function TopPage(){
 
   const [showModal, setShowModal] = useState(false);
-  const [modalSongPreviewUrl, setModalSongPreviewUrl] = useState<string>("")
+  const [modalSongPreviewInfo, setModalSongPreviewInfo] = useState<SongPreviewInfo>({name:"",artist:"",url:""});
 
-  function handleListenOnClick(songPreviewUrl:string|undefined){
-    if(songPreviewUrl === undefined || songPreviewUrl === null){
-      console.log("Song preview url is undefined");
+  function handleListenOnClick(songPreviewInfo:SongPreviewInfo|undefined){
+    if(songPreviewInfo === undefined || songPreviewInfo === null){
+      console.log("Song preview is undefined");
       return
     }
-    setModalSongPreviewUrl(songPreviewUrl);
+    setModalSongPreviewInfo(songPreviewInfo);
     setShowModal(true);
     return;
   }
 
   return(
-    <div className="h-full pb-16 flex flex-col">
-      <div className="basis-1/4 flex flex-col ">
-      <h1 className="basis-1/2 text-purple-200 font-bold text-4xl text-center my-5">
-        Your Top Songs
+    <div className="h-full w-full pb-16 flex flex-col">
+      <div className="basis-1/4 flex flex-col">
+      <h1 className="basis-1/2 text-white font-bold text-4xl text-center p-2">
+        Top Tracks
       </h1> 
-      <nav className=" basis-1/2 font-bold bg-stone-800 ">
+      <nav className="flex flex-col justify-center font-bold bg-black h-16">
         <ul className={`flex text-white`}>
-          <TopNavItem path="month" name="month"/>
-          <TopNavItem path="sixmonths" name="six months"/>
-          <TopNavItem path="alltime" name="years+"/>
+          <TopNavItem path="month" name="30d"/>
+          <TopNavItem path="sixmonths" name="6m"/>
+          <TopNavItem path="alltime" name="y+"/>
         </ul>
       </nav>
       </div>
@@ -38,7 +38,7 @@ export default function TopPage(){
       {showModal ?
           <SongPreviewModal 
             setShowModal={setShowModal} 
-            songPreviewUrl={modalSongPreviewUrl}
+            songPreviewInfo={modalSongPreviewInfo}
           />
         :
           null

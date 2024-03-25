@@ -1,5 +1,11 @@
 import { useOutletContext } from "react-router-dom"
 
+export enum TrackSaveState {
+  CantSave,
+  Saveable,
+  Saved
+}
+
 export interface ITrack{
   id: string,
   name: string,
@@ -7,7 +13,14 @@ export interface ITrack{
   image: string
   url?: string,
   isRec?:boolean
-  popModal?(url:string|undefined):void
+  popModal?(songPreviewInfo:SongPreviewInfo|undefined):void,
+  trackSaveState: TrackSaveState
+}
+
+export interface SongPreviewInfo{
+  name: string,
+  artist: string,
+  url: string
 }
 
 export interface AudioFeatures{
@@ -39,7 +52,7 @@ export const audioFeatureNames: (keyof AudioFeatures)[] = [
   ]
 
 export type ListenOnClickContextType = {
-  handleListenOnClick:(songPreviewUrl:string|undefined) =>void
+  handleListenOnClick:(songPreviewInfo:SongPreviewInfo|undefined) =>void
 }
 
 export function useHandleListenOnClick(){

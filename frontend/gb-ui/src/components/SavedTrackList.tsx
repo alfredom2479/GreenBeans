@@ -5,7 +5,7 @@ import { requestSavedTracks } from "../api";
 
 import type {Params} from "react-router-dom";
 
-import { ITrack, useHandleListenOnClick } from "../interfaces";
+import { ITrack, useHandleListenOnClick, TrackSaveState } from "../interfaces";
 import { isTrack } from "../utils";
 
 interface URLParams{
@@ -90,7 +90,28 @@ export default function SavedTrackList(){
 
   return(
   <>
-  <div className="flex">
+  
+    <div className=" overflow-y-scroll">
+      <ul>
+        {savedTracksList.map((track)=>{
+          return (
+            <li key={track.id}>
+              <TrackCard
+                id={track.id}
+                name={track.name}
+                artist={track.artist}
+                image={track.image}
+                url={track.url}
+                popModal={handleListenOnClick}
+                trackSaveState={TrackSaveState.Saved}
+                />
+            </li>
+            
+          )
+        })}
+      </ul>
+    </div>
+    <div className="flex">
         {pageNumber !== 0 ?
           <NavLink 
           to={`/saved/${prevPageNumber}`}
@@ -105,25 +126,6 @@ export default function SavedTrackList(){
           className="flex-1 items-center justify-center bg-stone-900 hover:text-purple-600 text-purple-200 text-xl font-bold p-1  text-center border-white border-2 border-r-0 border-l-2 hover:border-purple-600"
           >next
         </NavLink>
-            </div>
-    <div className=" overflow-y-scroll">
-      <ul>
-        {savedTracksList.map((track)=>{
-          return (
-            <li key={track.id}>
-              <TrackCard
-                id={track.id}
-                name={track.name}
-                artist={track.artist}
-                image={track.image}
-                url={track.url}
-                popModal={handleListenOnClick}
-                />
-            </li>
-            
-          )
-        })}
-      </ul>
     </div>
     </>
   )
