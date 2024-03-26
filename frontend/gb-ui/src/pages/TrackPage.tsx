@@ -1,12 +1,12 @@
 import {useState, useEffect} from "react";
-import {useActionData, useLoaderData} from "react-router-dom";
+import { Outlet, useLoaderData} from "react-router-dom";
 import { requestSpotifyTrack,requestSpotifyTrackAudioFeatures } from "../api";
 import type {Params} from "react-router-dom";
-import RecOptionsSection from "../components/RecOptionsSection";
-import { ITrack, AudioFeatures, SongPreviewInfo, TrackSaveState, } from "../interfaces";
-import TrackCard from "../components/TrackCard";
+//import RecOptionsSection from "../components/RecOptionsSection";
+import { ITrack, AudioFeatures,  } from "../interfaces";
+//import TrackCard from "../components/TrackCard";
 import { isTrack } from "../utils";
-import SongPreviewModal from "../components/SongPreviewModal";
+//import SongPreviewModal from "../components/SongPreviewModal";
 //import RecOptionsSection from "../components/RecOptionsSection";
 
 interface IURLParams{
@@ -39,17 +39,17 @@ export async function loader({params}:IURLParams){
 
 export default function TrackPage(){
 
-  const [checkedBoxes,setCheckedBoxes] = useState<string[]>([]);
-  const [showModal, setShowModal] = useState(false);
-  const [modalSongPreviewInfo, setModalSongPreviewInfo] = useState<SongPreviewInfo>({name:"",artist:"",url:""});
+  //const [checkedBoxes,setCheckedBoxes] = useState<string[]>([]);
+  //const [showModal, setShowModal] = useState(false);
+  //const [modalSongPreviewInfo, setModalSongPreviewInfo] = useState<SongPreviewInfo>({name:"",artist:"",url:""});
 
   const loaderData = useLoaderData();
-  const actionData = useActionData();
+  //const actionData = useActionData();
 
-  const [isSelectingOptions,setIsSelectingOptions] = useState<boolean>(true);
+  //const [isSelectingOptions,setIsSelectingOptions] = useState<boolean>(true);
 
   const [trackData, setTrackData] = useState({name: "", artist: "", image:""});
-  const [recList,setRecList] = useState<ITrack[]>([]);
+  //const [recList,setRecList] = useState<ITrack[]>([]);
   const [currAudioFeatures,setCurrAudioFeatures] = useState<AudioFeatures>({});
     
   useEffect(()=>{
@@ -125,6 +125,7 @@ export default function TrackPage(){
     
   },[loaderData])
 
+  /*
   useEffect(()=>{
    if(Array.isArray(actionData)){
     const tempTrackList:ITrack[] = [];
@@ -146,8 +147,9 @@ export default function TrackPage(){
     setRecList([]) 
       
   },[trackData]);
+  */
 
-
+/*
   function handleListenOnClick(songPreviewInfo:SongPreviewInfo|undefined) {
     if(songPreviewInfo === undefined){
       console.log("Song Preview info is undefined");
@@ -157,19 +159,17 @@ export default function TrackPage(){
     setShowModal(true);
     return;
   }
+  */
 
   return(
     <div className=" h-full w-full flex flex-col  pb-16 ">
-
       <div className=" flex flex-col basis-1/4 w-full ">
-
-        <div className=" bg-stone-900 text-purple-200 flex max-h-[95%]">
+        <div className=" bg-stone-900 text-purple-200 flex">
           <div className="basis-5/12 flex items-center h-full">
             <img src={trackData.image} 
               className="flex-1 max-h-[25vh] object-cover">
             </img>
           </div>
-
           <div className="basis-7/12">
             <div className="text-2xl">
               {trackData.name}
@@ -178,10 +178,11 @@ export default function TrackPage(){
               <i>{trackData.artist}</i>
             </div>
           </div>
-
         </div> 
-
-        <nav className=" font-bold bg-purple-200 max-h-14">
+      </div>
+      <Outlet context={currAudioFeatures satisfies AudioFeatures } />
+{/*  
+    <nav className=" font-bold bg-purple-200 max-h-14">
           <ul className={`flex text-stone-900 h-full`}>
             <li className={`flex-1 flex justify-center `}>
               <button onClick={()=>setIsSelectingOptions(true)}  
@@ -197,8 +198,6 @@ export default function TrackPage(){
             </li>
           </ul>
         </nav>
-      </div>
-
       { isSelectingOptions 
         ? <RecOptionsSection 
             checkedBoxes={checkedBoxes} 
@@ -235,7 +234,7 @@ export default function TrackPage(){
       :
       null
     }
-
+*/}
     </div>
   )
 }

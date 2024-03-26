@@ -35,14 +35,14 @@ export async function action({params,request}:IURLParams){
 
   settings = requestJson.settings;
 
-    const data = await requestSpotifyRec(access_token,trackId,settings,audioFeatures, isLoggedIn);
-    console.log(data);
+  const data = await requestSpotifyRec(access_token,trackId,settings,audioFeatures, isLoggedIn);
+  console.log(data);
 
-    if(data.tracks && Array.isArray(data.tracks)){
-      return data.tracks;
-    }
+  if(data.tracks && Array.isArray(data.tracks)){
+    return data.tracks;
+  }
 
-    return [];
+  return [];
 }
 
 interface RecOptionsSectionProps{
