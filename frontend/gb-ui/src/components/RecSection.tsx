@@ -72,6 +72,9 @@ export default function RecSection(){
   }, [actionData])
 
   useEffect(()=>{
+
+    setCheckedBoxes([]);
+
     if(Array.isArray(loaderData)){
       const tempTrackList:ITrack[] = [];
       let possibleTrack: ITrack|null = null;
@@ -83,22 +86,6 @@ export default function RecSection(){
       }
       setRecList(tempTrackList);
     }
-  },[loaderData])
-
-  //This shit is wrong
-  //U have to consider that we are now loading recommendations on load
-  //hence, we should not clear the recList
-  //maybe just clear the checkedBoxes when loaderData changes
-  /*
-  useEffect(()=>{
-    //setIsSelectingOptions(true);
-    setCheckedBoxes([]);
-    //setRecList([]);
-  },[currAudioFeatures])
-  */
-
-  useEffect(()=>{
-    setCheckedBoxes([]);
   },[loaderData])
 
   function handleListenOnClick(songPreviewInfo:SongPreviewInfo|undefined){

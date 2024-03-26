@@ -2,12 +2,8 @@ import {useState, useEffect} from "react";
 import { Outlet, useLoaderData} from "react-router-dom";
 import { requestSpotifyTrack,requestSpotifyTrackAudioFeatures } from "../api";
 import type {Params} from "react-router-dom";
-//import RecOptionsSection from "../components/RecOptionsSection";
 import { ITrack, AudioFeatures,  } from "../interfaces";
-//import TrackCard from "../components/TrackCard";
 import { isTrack } from "../utils";
-//import SongPreviewModal from "../components/SongPreviewModal";
-//import RecOptionsSection from "../components/RecOptionsSection";
 
 interface IURLParams{
   params:Params
@@ -39,17 +35,9 @@ export async function loader({params}:IURLParams){
 
 export default function TrackPage(){
 
-  //const [checkedBoxes,setCheckedBoxes] = useState<string[]>([]);
-  //const [showModal, setShowModal] = useState(false);
-  //const [modalSongPreviewInfo, setModalSongPreviewInfo] = useState<SongPreviewInfo>({name:"",artist:"",url:""});
-
   const loaderData = useLoaderData();
-  //const actionData = useActionData();
-
-  //const [isSelectingOptions,setIsSelectingOptions] = useState<boolean>(true);
 
   const [trackData, setTrackData] = useState({name: "", artist: "", image:""});
-  //const [recList,setRecList] = useState<ITrack[]>([]);
   const [currAudioFeatures,setCurrAudioFeatures] = useState<AudioFeatures>({});
     
   useEffect(()=>{
@@ -125,42 +113,6 @@ export default function TrackPage(){
     
   },[loaderData])
 
-  /*
-  useEffect(()=>{
-   if(Array.isArray(actionData)){
-    const tempTrackList:ITrack[] = [];
-    let possibleTrack:ITrack|null = null
-
-    for(let i=0; i < actionData.length;i++){
-      possibleTrack = isTrack(actionData[i]);
-      if(possibleTrack != null){
-        tempTrackList.push(possibleTrack)
-      }
-    }
-    setRecList(tempTrackList);
-   } 
-  },[actionData]);
-
-  useEffect(()=>{
-    setIsSelectingOptions(true)
-    setCheckedBoxes([]);
-    setRecList([]) 
-      
-  },[trackData]);
-  */
-
-/*
-  function handleListenOnClick(songPreviewInfo:SongPreviewInfo|undefined) {
-    if(songPreviewInfo === undefined){
-      console.log("Song Preview info is undefined");
-      return;
-    }
-    setModalSongPreviewInfo(songPreviewInfo);
-    setShowModal(true);
-    return;
-  }
-  */
-
   return(
     <div className=" h-full w-full flex flex-col  pb-16 ">
       <div className=" flex flex-col basis-1/4 w-full ">
@@ -181,60 +133,6 @@ export default function TrackPage(){
         </div> 
       </div>
       <Outlet context={currAudioFeatures satisfies AudioFeatures } />
-{/*  
-    <nav className=" font-bold bg-purple-200 max-h-14">
-          <ul className={`flex text-stone-900 h-full`}>
-            <li className={`flex-1 flex justify-center `}>
-              <button onClick={()=>setIsSelectingOptions(true)}  
-                className={isSelectingOptions ? "text-stone-950 bg-purple-600 text-center w-full" : "text-center w-full"}>
-                Options
-              </button>
-            </li>
-            <li className={`flex-1 flex justify-center `}>
-              <button onClick={()=>setIsSelectingOptions(false)}
-                className={!isSelectingOptions ? "text-stone-950 bg-purple-600 text-center w-full" : "text-center w-full"}>
-                Recommendations
-              </button>
-            </li>
-          </ul>
-        </nav>
-      { isSelectingOptions 
-        ? <RecOptionsSection 
-            checkedBoxes={checkedBoxes} 
-            setCheckedBoxes={setCheckedBoxes} 
-            audioFeatures={currAudioFeatures}
-            setIsSelectingOptions={setIsSelectingOptions}
-          /> 
-        : <div className=" overflow-y-scroll">
-            <ul>
-              {recList.map((track)=>{
-                return (
-                  <li key={track.id}>
-                    <TrackCard
-                      id={track.id}
-                      name={track.name}
-                      artist={track.artist}
-                      image={track.image}
-                      url={track.url}
-                      isRec={true}
-                      popModal={handleListenOnClick}
-                      trackSaveState={TrackSaveState.Saveable}
-                    />
-                  </li>
-                )
-              })}
-            </ul>
-          </div>
-      }
-     {showModal ?
-     <SongPreviewModal 
-      setShowModal={setShowModal} 
-      songPreviewInfo={modalSongPreviewInfo}
-      />
-      :
-      null
-    }
-*/}
     </div>
   )
 }
