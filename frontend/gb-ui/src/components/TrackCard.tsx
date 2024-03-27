@@ -22,6 +22,11 @@ export default function TrackCard({id,name,artist,image,url,popModal=handleDefau
   const disabledTrackCardOptionString  = "flex-1 bg-neutral-600 text-black flex p-1 text-center "
     + "items-center justify-center font-bold text-lg rounded-3xl m-2 shrink-0  w-10"
 
+
+  let saveButton = null;
+  
+  console.log(trackSaveState);
+
   async function handleOnClick(){
     console.log("handleing save...")
     try{
@@ -38,7 +43,6 @@ export default function TrackCard({id,name,artist,image,url,popModal=handleDefau
   }
   }
 
-  let saveButton = null;
 
   if(trackSaveState === TrackSaveState.Saveable){
     saveButton = <button
@@ -64,6 +68,7 @@ export default function TrackCard({id,name,artist,image,url,popModal=handleDefau
         <img src={trackSavedSvg} alt="saved" className="w-8"/>
       </button>
   }
+  
 
   return(
     <>
@@ -118,12 +123,12 @@ export default function TrackCard({id,name,artist,image,url,popModal=handleDefau
               <img src={addTrackSvg} alt="save" className="w-8"/>
             </button>
           : 
-            <button
-              className={disabledTrackCardOptionString}
-              disabled
-              >
-                <img src={addTrackSvg} alt="save" className="w-8"/> 
-              </button>
+        <button
+      className={trackSavedCardOptionString}
+      disabled
+      >
+        <img src={trackSavedSvg} alt="saved" className="w-8"/>
+      </button>
           */}
         </div>
       </div> 

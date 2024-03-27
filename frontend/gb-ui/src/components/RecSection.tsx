@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { ITrack, SongPreviewInfo, useAudioFeatures, } from "../interfaces";
+import { ITrack, SongPreviewInfo, useAudioFeatures, TrackSaveState} from "../interfaces";
 import { redirect, useActionData, useLoaderData } from "react-router-dom";
 import RecOptionsSection from "./RecOptionsSection";
 //import TrackCard from "./TrackCard";
@@ -7,7 +7,7 @@ import SongPreviewModal from "./SongPreviewModal";
 import { isTrack } from "../utils";
 
 import type {Params} from "react-router-dom";
-import { requestSpotifyRec } from "../api";
+import { requestSaveStatus, requestSpotifyRec } from "../api";
 import RecList from "./RecList";
 
 interface LoaderParams{
@@ -36,9 +36,45 @@ export async function loader({params}:LoaderParams){
   console.log(data);
 
   if(data.tracks && Array.isArray(data.tracks)){
-    return data.tracks;
-  }
 
+    const trackData = data.tracks;
+    const tempTrackList:ITrack[] = [];
+
+    let possibleTrack: ITrack|null = null;
+
+    for(let i=0; i < trackData.length;i++){
+      possibleTrack = isTrack(trackData[i]);
+      if(possibleTrack != null){
+        tempTrackList.push(possibleTrack);
+      }
+    }
+
+    if(!isLoggedIn){
+      for(let i=0; i < tempTrackList.length;i++){
+       tempTrackList[i].trackSaveState = TrackSaveState.CantSave;
+      }
+    }
+    else{
+      const saveStatusData = await requestSaveStatus(access_token, tempTrackList);
+
+      if(Array.isArray(saveStatusData) && saveStatusData.length === tempTrackList.length){
+        for(let i=0; i< tempTrackList.length; i++){
+          if(saveStatusData[i] === true){
+            tempTrackList[i].trackSaveState = TrackSaveState.Saved;
+          }
+          else {
+            tempTrackList[i].trackSaveState = TrackSaveState.Saveable;
+          }
+        }
+      }
+      else{
+        for(let i=0; i < tempTrackList.length; i++){
+          tempTrackList[i].trackSaveState = TrackSaveState.Saveable;
+        }
+      }
+    }
+    return tempTrackList;
+  }
   return [];
   
 }
@@ -79,8 +115,30 @@ export default function RecSection(){
     if(Array.isArray(loaderData)){
       const tempTrackList:ITrack[] = [];
       let possibleTrack: ITrack|null = null;
+
       for(let i=0; i < loaderData.length;i++){
-        possibleTrack = isTrack(loaderData[i]);
+        possibleTrack = null;
+
+        if(typeof loaderData[i].id === 'string' && 
+        typeof loaderData[i].id === 'string' &&
+        typeof loaderData[i].name === 'string' &&
+        typeof loaderData[i].artist === 'string' &&
+        typeof loaderData[i].image === 'string' && 
+        loaderData[i].trackSaveState){
+
+          possibleTrack = {
+            id:loaderData[i].id,
+            name: loaderData[i].name,
+            artist: loaderData[i].artist,
+            image: loaderData[i].image,
+            url: loaderData[i].url ? loaderData[i].url : null,
+            trackSaveState: loaderData[i].trackSaveState
+          }
+          //console.log(possibleTrack.trackSaveState);
+
+        }
+
+        //possibleTrack = isTrack(loaderData[i]);
         if(possibleTrack != null){
           tempTrackList.push(possibleTrack);
         }
