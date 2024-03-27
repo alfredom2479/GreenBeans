@@ -1,11 +1,14 @@
-import { ITrack } from "../interfaces"
+import { ITrack, SongPreviewInfo, TrackSaveState } from "../interfaces"
 import TrackCard from "./TrackCard"
 
 interface CompParams{
-  listTracks: ITrack[]
+  listTracks: ITrack[],
+  handleOnClick: (songPreviewInfo:SongPreviewInfo|undefined)=>void
 }
 
-export default function RecList({listTracks}:CompParams){
+export default function RecList({listTracks, handleOnClick}:CompParams){
+
+  
   
   return (
     <div className="overflow-y-scroll">
@@ -13,10 +16,17 @@ export default function RecList({listTracks}:CompParams){
         {
           listTracks.map((track)=>{
             return (
+              <li key={track.id}>
               <TrackCard
                 id={track.id}
                 name={track.name}
                 artist={track.artist}
+                image={track.image}
+                url={track.url}
+                popModal={handleOnClick}
+                trackSaveState={TrackSaveState.Saveable}
+              />
+              </li>
             )
           })
         }

@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react"
-import { ITrack, SongPreviewInfo, TrackSaveState, useAudioFeatures, } from "../interfaces";
+import { ITrack, SongPreviewInfo, useAudioFeatures, } from "../interfaces";
 import { redirect, useActionData, useLoaderData } from "react-router-dom";
 import RecOptionsSection from "./RecOptionsSection";
-import TrackCard from "./TrackCard";
+//import TrackCard from "./TrackCard";
 import SongPreviewModal from "./SongPreviewModal";
 import { isTrack } from "../utils";
 
 import type {Params} from "react-router-dom";
 import { requestSpotifyRec } from "../api";
+import RecList from "./RecList";
 
 interface LoaderParams{
   params:Params
@@ -124,25 +125,11 @@ export default function RecSection(){
               audioFeatures={currAudioFeatures}
               setIsSelectingOptions={setIsSelectingOptions}
             />
-          : <div className="overflow-y-scroll">
-            <ul>
-              {recList.map((track)=>{
-                return (
-                  <li key={track.id}>
-                    <TrackCard
-                      id={track.id}
-                      name={track.name}
-                      artist={track.artist}
-                      image={track.image}
-                      url={track.url}
-                      popModal={handleListenOnClick}
-                      trackSaveState={TrackSaveState.Saveable}
-                      />
-                  </li>
-                )
-              })}
-            </ul>
-          </div>
+          : 
+            <RecList
+              listTracks={recList}
+              handleOnClick={handleListenOnClick}
+            />
         }
         {
           showModal 
