@@ -1,11 +1,8 @@
 import {Link} from "react-router-dom"
 import { ITrack, SongPreviewInfo, TrackSaveState } from "../interfaces"
-//import { saveSpotifyTrack } from "../api"
 
 import listenSvg from '../assets/listen.svg';
 import findRecsSvg from '../assets/search-list.svg';
-//import addTrackSvg from '../assets/plus2.svg';
-//import trackSavedSvg from '../assets/check.svg';
 import SaveButton from "./SaveButton";
 
 function handleDefaultModalError(prevInfo:SongPreviewInfo ){
@@ -17,59 +14,9 @@ export default function TrackCard({id,name,artist,image,url,popModal=handleDefau
   const defaultTrackCardOptionString  = "flex-1 bg-purple-200 text-black flex p-1 text-center "
     + "items-center justify-center font-bold text-lg rounded-3xl m-2 shrink-0  w-10"
 
- // const trackSavedCardOptionString  = "flex-1 bg-green-200 text-black flex p-1 text-center "
-    //+ "items-center justify-center font-bold text-lg rounded-3xl m-2 shrink-0  w-10"
-
   const disabledTrackCardOptionString  = "flex-1 bg-neutral-600 text-black flex p-1 text-center "
     + "items-center justify-center font-bold text-lg rounded-3xl m-2 shrink-0  w-10"
 
-
-    /*
-  let saveButton = null;
-
-  async function handleOnClick(){
-    console.log("handleing save...")
-    try{
-    const responseData = await saveSpotifyTrack(id);
-    if(!responseData){
-      console.log("Button says the put request was poopoo");
-    }
-    else{
-      console.log(`'${name}' saved`);
-    }
-  }catch(err){
-    console.log("save track onClick error occured");
-    console.log(err);
-  }
-  }
-
-
-  if(trackSaveState === TrackSaveState.Saveable){
-    saveButton = <button
-            className={defaultTrackCardOptionString}
-            onClick={()=>handleOnClick()}
-          >
-              <img src={addTrackSvg} alt="save" className="w-8"/>
-            </button>
-  }
-  else if(trackSaveState === TrackSaveState.CantSave){
-    saveButton = <button
-              className={disabledTrackCardOptionString}
-              disabled
-              >
-                <img src={addTrackSvg} alt="unsaveable" className="w-8"/> 
-              </button>
-  }
-  else {
-    saveButton= <button
-      className={trackSavedCardOptionString}
-      disabled
-      >
-        <img src={trackSavedSvg} alt="saved" className="w-8"/>
-      </button>
-  }
-  */
-  
 
   return(
     <>
@@ -109,12 +56,6 @@ export default function TrackCard({id,name,artist,image,url,popModal=handleDefau
               </button>
           }
 
-          {/** Maybe directly call the api function from here 
-           * since u don't need to know what it returns... bc it doesn't return anything.
-           * I guess print something on screen on if the request was succesful or not.
-           */}
-
-           {/* {saveButton} */}
            <SaveButton id={id} trackSaveState={trackSaveState}/>
 
         </div>
