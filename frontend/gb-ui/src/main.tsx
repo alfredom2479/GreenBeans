@@ -17,6 +17,7 @@ import SavedTrackList,{loader as savedTracksLoader} from './components/SavedTrac
 import LinkSearchPage, {action as searchLinkAction} from './pages/LinkSearchPage';
 import NavBar, {loader as loggedInCheckerLoader} from './components/NavBar';
 import RootErrorBoundary from './components/error-components/RootErrorBoundary';
+import RecSection,{loader as recLoader} from './components/RecSection';
 
 const router = createBrowserRouter([
   {
@@ -85,9 +86,18 @@ const router = createBrowserRouter([
           errorElement: <RootErrorBoundary/>,
           loader: trackDataLoader,
           action: getRecsAction,
-          shouldRevalidate: ({formMethod}) => {
-            return formMethod !== "post"
-          }
+          
+          children:[
+            {
+              path: "",
+              element: <RecSection/>,
+              loader:recLoader,
+              action:getRecsAction,
+              shouldRevalidate: ({formMethod}) => {
+                return formMethod !== "post"
+              }
+            }
+          ]
         }
     ]
   },

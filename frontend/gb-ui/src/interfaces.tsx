@@ -58,3 +58,7 @@ export type ListenOnClickContextType = {
 export function useHandleListenOnClick(){
   return useOutletContext<ListenOnClickContextType>();
 }
+
+export function useAudioFeatures(){
+  return useOutletContext<AudioFeatures>();
+}

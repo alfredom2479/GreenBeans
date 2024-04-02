@@ -1,4 +1,4 @@
-import { AudioFeatures, audioFeatureNames } from "./interfaces";
+import { AudioFeatures, ITrack, audioFeatureNames } from "./interfaces";
 
 export async function requestAuth(){
 
@@ -266,7 +266,28 @@ export async function requestSpotifyTrackAudioFeatures(accessToken:string, track
         throw new Response("Bad data returned",{status:500})
       }
   }
-  
+}
+
+export async function requestSaveStatus (accessToken:string|null,tracks: ITrack[] ) {
+    if(accessToken === null ||accessToken === undefined || accessToken === "") {
+      return [];
+    }
+
+    let queryString: string="";
+
+    for(let i=0; i<tracks.length;i++){
+      queryString = queryString + tracks[i].id+","
+    }
+
+    if(queryString.length > 4){
+      queryString = queryString.substring(0, queryString.length-1);
+    }
+
+    console.log("final query string: "+queryString);
+
+    const data = await sendRequest(`https://api.spotify.com/v1/me/tracks/contains?ids=`+queryString,accessToken)
+    console.log(data);
+    return data;
 }
 
 async function sendRequest(endpoint:string, accessToken:string){
@@ -315,8 +336,10 @@ async function sendRequest(endpoint:string, accessToken:string){
     if(!res.ok || data === null){
       const errorMessage = data.error.message ? data.error.message : "Server Error";
       const errorStatus = data.error.status? data.error.status : "500";
-      throw new Response(errorMessage,{status: errorStatus})
+      //u have to log back in everytime app makes an oopsie
+      //localStorage.clear();
+      throw new Response(errorMessage,{status: errorStatus});
       //throw {errorMessage,errorStatus}
     }
-    return data
+    return data;
 }

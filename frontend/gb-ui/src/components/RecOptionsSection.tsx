@@ -1,8 +1,9 @@
 import {  redirect,useSubmit } from "react-router-dom";
 import type {Params} from "react-router-dom";
 
-import { AudioFeatures } from "../interfaces";
-import { requestSpotifyRec } from "../api";
+import { AudioFeatures, ITrack, TrackSaveState } from "../interfaces";
+import { requestSaveStatus, requestSpotifyRec } from "../api";
+import { isTrack } from "../utils";
 
 
 interface IURLParams{
@@ -35,14 +36,51 @@ export async function action({params,request}:IURLParams){
 
   settings = requestJson.settings;
 
-    const data = await requestSpotifyRec(access_token,trackId,settings,audioFeatures, isLoggedIn);
-    console.log(data);
+  const data = await requestSpotifyRec(access_token,trackId,settings,audioFeatures, isLoggedIn);
+  console.log(data);
 
-    if(data.tracks && Array.isArray(data.tracks)){
-      return data.tracks;
+  if(data.tracks && Array.isArray(data.tracks)){
+
+    const trackData = data.tracks;
+    const tempTrackList:ITrack[] =[];
+
+    let possibleTrack: ITrack|null = null;
+
+    for(let i=0; i <trackData.length; i++){
+      possibleTrack = isTrack(trackData[i]);
+      if(possibleTrack != null){
+        tempTrackList.push(possibleTrack);
+      }
     }
 
-    return [];
+    if (!isLoggedIn){
+      for(let i=0; i < tempTrackList.length; i++){
+        tempTrackList[i].trackSaveState = TrackSaveState.CantSave;
+      }
+    }
+    else{
+      const saveStatusData = await requestSaveStatus(access_token,tempTrackList);
+
+      if(Array.isArray(saveStatusData) && saveStatusData.length === tempTrackList.length){
+        for(let i=0; i < tempTrackList.length; i++){
+          if (saveStatusData[i] === true){
+            tempTrackList[i].trackSaveState = TrackSaveState.Saved;
+          }
+          else{
+            tempTrackList[i].trackSaveState = TrackSaveState.Saveable;
+          }
+        }
+      }
+      else{
+        for(let i=0; i < tempTrackList.length; i++){
+          tempTrackList[i].trackSaveState = TrackSaveState.Saveable;
+        }
+      }
+    }
+    return tempTrackList;
+  }
+
+  return [];
 }
 
 interface RecOptionsSectionProps{
