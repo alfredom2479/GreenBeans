@@ -13,7 +13,6 @@ interface SaveButtonParams{
 
 export default function SaveButton({trackSaveState, id}:SaveButtonParams){
 
-  const [saveState, setSaveState]  = useState<TrackSaveState>(trackSaveState);
   const [saveButton,setSaveButton] = useState(
     <button
       className="flex-1 bg-neutral-600 text-black flex p-1 text-center items-center justify-center font-bold text-lg rounded-3xl m-2 shrink-0  w-10"
@@ -37,8 +36,7 @@ export default function SaveButton({trackSaveState, id}:SaveButtonParams){
         console.log("handling save...");
         try{
           const responseData = await saveSpotifyTrack(id);
-          if(!responseData && saveState ){
-            setSaveState(TrackSaveState.Saveable);
+          if(!responseData ){
             setSaveButton(
               <button
                 className="flex-1 bg-purple-200 text-black flex p-1 text-center items-center justify-center font-bold text-lg rounded-3xl m-2 shrink-0  w-10"
@@ -50,7 +48,6 @@ export default function SaveButton({trackSaveState, id}:SaveButtonParams){
             console.log("Save track request FAILED!");
           }
           else{
-            setSaveState(TrackSaveState.Saved);
             setSaveButton(
               <button 
                 className="flex-1 bg-green-200 text-black flex p-1 text-center items-center justify-center font-bold text-lg rounded-3xl m-2 shrink-0  w-10"
@@ -67,7 +64,7 @@ export default function SaveButton({trackSaveState, id}:SaveButtonParams){
         }
     }
 
-    if(saveState === TrackSaveState.Saveable){
+    if(trackSaveState === TrackSaveState.Saveable){
       setSaveButton(
         <button
           className="flex-1 bg-purple-200 text-black flex p-1 text-center items-center justify-center font-bold text-lg rounded-3xl m-2 shrink-0  w-10"
@@ -77,7 +74,7 @@ export default function SaveButton({trackSaveState, id}:SaveButtonParams){
       </button>
       )
     }
-    else if(saveState === TrackSaveState.Saved){
+    else if(trackSaveState === TrackSaveState.Saved){
       setSaveButton(
         <button 
           className="flex-1 bg-green-200 text-black flex p-1 text-center items-center justify-center font-bold text-lg rounded-3xl m-2 shrink-0  w-10"
@@ -88,7 +85,7 @@ export default function SaveButton({trackSaveState, id}:SaveButtonParams){
       )
     }
 
-  },[saveState,id])
+  },[id,trackSaveState])
   return (
     <>
       {saveButton}
