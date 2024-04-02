@@ -1,11 +1,12 @@
 import {Link} from "react-router-dom"
 import { ITrack, SongPreviewInfo, TrackSaveState } from "../interfaces"
-import { saveSpotifyTrack } from "../api"
+//import { saveSpotifyTrack } from "../api"
 
 import listenSvg from '../assets/listen.svg';
 import findRecsSvg from '../assets/search-list.svg';
-import addTrackSvg from '../assets/plus2.svg';
-import trackSavedSvg from '../assets/check.svg';
+//import addTrackSvg from '../assets/plus2.svg';
+//import trackSavedSvg from '../assets/check.svg';
+import SaveButton from "./SaveButton";
 
 function handleDefaultModalError(prevInfo:SongPreviewInfo ){
   console.log("no modal was given to handle preview: "+ prevInfo.name+" "+prevInfo+" "+prevInfo.url);
@@ -16,16 +17,15 @@ export default function TrackCard({id,name,artist,image,url,popModal=handleDefau
   const defaultTrackCardOptionString  = "flex-1 bg-purple-200 text-black flex p-1 text-center "
     + "items-center justify-center font-bold text-lg rounded-3xl m-2 shrink-0  w-10"
 
-  const trackSavedCardOptionString  = "flex-1 bg-green-200 text-black flex p-1 text-center "
-    + "items-center justify-center font-bold text-lg rounded-3xl m-2 shrink-0  w-10"
+ // const trackSavedCardOptionString  = "flex-1 bg-green-200 text-black flex p-1 text-center "
+    //+ "items-center justify-center font-bold text-lg rounded-3xl m-2 shrink-0  w-10"
 
   const disabledTrackCardOptionString  = "flex-1 bg-neutral-600 text-black flex p-1 text-center "
     + "items-center justify-center font-bold text-lg rounded-3xl m-2 shrink-0  w-10"
 
 
+    /*
   let saveButton = null;
-  
-  console.log(trackSaveState);
 
   async function handleOnClick(){
     console.log("handleing save...")
@@ -68,6 +68,7 @@ export default function TrackCard({id,name,artist,image,url,popModal=handleDefau
         <img src={trackSavedSvg} alt="saved" className="w-8"/>
       </button>
   }
+  */
   
 
   return(
@@ -113,23 +114,9 @@ export default function TrackCard({id,name,artist,image,url,popModal=handleDefau
            * I guess print something on screen on if the request was succesful or not.
            */}
 
-           {saveButton}
+           {/* {saveButton} */}
+           <SaveButton id={id} trackSaveState={trackSaveState}/>
 
-          {/*trackSaveState=== TrackSaveState.Saveable?
-            <button
-            className={defaultTrackCardOptionString}
-            onClick={()=>handleOnClick()}
-          >
-              <img src={addTrackSvg} alt="save" className="w-8"/>
-            </button>
-          : 
-        <button
-      className={trackSavedCardOptionString}
-      disabled
-      >
-        <img src={trackSavedSvg} alt="saved" className="w-8"/>
-      </button>
-          */}
         </div>
       </div> 
     </>
