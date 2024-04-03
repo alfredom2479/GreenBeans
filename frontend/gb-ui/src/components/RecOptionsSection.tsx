@@ -37,7 +37,6 @@ export async function action({params,request}:IURLParams){
   settings = requestJson.settings;
 
   const data = await requestSpotifyRec(access_token,trackId,settings,audioFeatures, isLoggedIn);
-  console.log(data);
 
   if(data.tracks && Array.isArray(data.tracks)){
 

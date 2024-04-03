@@ -283,10 +283,7 @@ export async function requestSaveStatus (accessToken:string|null,tracks: ITrack[
       queryString = queryString.substring(0, queryString.length-1);
     }
 
-    console.log("final query string: "+queryString);
-
     const data = await sendRequest(`https://api.spotify.com/v1/me/tracks/contains?ids=`+queryString,accessToken)
-    console.log(data);
     return data;
 }
 
