@@ -63,12 +63,13 @@ const getSpotifyRecs = asyncHandler(async (req:Request,res:Response)=>{
       return;
     }
 
-    const requestURI: string = "https://api.spotify.com/v1/recommendations?limit=99&seed_tracks="+decodeURI(querysuffix)
+    const requestURI: string = "https://api.spotify.com/v1/recommendations?limit=50&seed_tracks="+decodeURI(querysuffix)
 
     const data = await sendRequest(
       "Spotify Recommendations",
       requestURI
     )
+
 
     if(data === null){
       res.status(500).json({error:{message:"Server could not make a succesful request to spotify recommendations",status:500}});

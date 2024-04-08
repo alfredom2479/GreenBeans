@@ -26,10 +26,19 @@ export async function loader({params}:IURLParams){
   if(!access_token || access_token===""){
     isLoggedIn = false;
     access_token = "";
+    console.log("U R NOT logged in m8");
+
   }
 
+  console.log("right before the track page requests");
+
   const trackLoaderData = await requestSpotifyTrack(access_token, trackId, isLoggedIn);
+  console.log("past track loader data api call");
+  console.log(trackLoaderData);
   const audioFeatureLoaderData = await requestSpotifyTrackAudioFeatures(access_token,trackId, isLoggedIn);
+  console.log("past audio feature loader data api call")
+
+  console.log(audioFeatureLoaderData);
   return {trackLoaderData,audioFeatureLoaderData};
 
 
@@ -72,7 +81,6 @@ export default function TrackPage(){
       //some golang influence lol
       if(possibleTrack != null){
         setTrackData(possibleTrack)
-        console.log(possibleTrack.spotify_url);
       }
 
       if(typeof audioFeatureLoaderData === 'object' && audioFeatureLoaderData){

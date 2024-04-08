@@ -34,7 +34,6 @@ export async function loader({params}:LoaderParams){
   const data = await requestSpotifyRec(access_token,trackId,[],{},isLoggedIn);
 
   if(data.tracks && Array.isArray(data.tracks)){
-
     const trackData = data.tracks;
     const tempTrackList:ITrack[] = [];
 
@@ -105,7 +104,7 @@ export default function RecSection(){
         typeof actionData[i].name === 'string' &&
         typeof actionData[i].artist === 'string' &&
         typeof actionData[i].image === 'string' && 
-        actionData[i].trackSaveState){
+        actionData[i].trackSaveState !== null){
 
           possibleTrack = {
             id:actionData[i].id,
@@ -135,13 +134,11 @@ export default function RecSection(){
       for(let i=0; i < loaderData.length;i++){
         possibleTrack = null;
 
-        if(typeof loaderData[i].id === 'string' && 
-        typeof loaderData[i].id === 'string' &&
+        if(typeof loaderData[i].id === 'string'  &&
         typeof loaderData[i].name === 'string' &&
         typeof loaderData[i].artist === 'string' &&
         typeof loaderData[i].image === 'string' && 
-        loaderData[i].trackSaveState){
-
+        loaderData[i].trackSaveState !== null){
           possibleTrack = {
             id:loaderData[i].id,
             name: loaderData[i].name,
