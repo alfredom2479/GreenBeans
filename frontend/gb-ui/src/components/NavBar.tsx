@@ -27,7 +27,7 @@ export async function loader(){
 
 export default function NavBar(){
 
-  const [currUser, setCurrUser] = useState<string>("")
+  const [currUser, setCurrUser] = useState<string|null>("")
   const [showLogOutModal, setShowLogOutModal] = useState<boolean>(false);
 
   const loaderData = useLoaderData();
@@ -37,33 +37,39 @@ export default function NavBar(){
     "grow text-center font-bold text-lg bg-green-900 text-white "+
     "rounded-3xl mr-2"
 
+
   useEffect(()=>{
 
     if(typeof loaderData ==="string" && loaderData !== "[ERROR]"){
       setCurrUser(loaderData);
     }
     else{
-      navigate("/");
+      localStorage.clear()
+      setCurrUser(null);
+      //navigate("/");
     } 
   },[loaderData,navigate])
-
 
   return (
     <div className="max-h-screen h-screen flex flex-col items-center justify-center">
       <Outlet/>
       <div className="flex fixed bottom-2 left-0 right-0 h-12 justify-between">
-        <NavbarItem 
-          name="top"
-          path="/top/month" 
-          extraStyle=""
-          svgPath={topSvg}
+        {currUser === null ? null :
+          <NavbarItem 
+            name="top"
+            path="/top/month" 
+            extraStyle=""
+            svgPath={topSvg}
         />
-        <NavbarItem 
-          name="saved"
-          path="/saved/0" 
-          extraStyle=""
-          svgPath={savedSvg}
-        />
+        }
+        {currUser === null ? null :
+          <NavbarItem 
+            name="saved"
+            path="/saved/0" 
+            extraStyle=""
+            svgPath={savedSvg}
+          />
+        }
         <NavbarItem 
           name="search"
           path="/" 

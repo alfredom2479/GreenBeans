@@ -14,7 +14,6 @@ const getSpotifyTrackInfo = asyncHandler(async (req:Request,res:Response)=>{
   const {id} = req.query
 
   if(id === null || id === undefined || id === ""){
-    console.log("Error getting track info: no id was provided");
     res.status(400).json({error: {message: "Bad Request: missing id param",status:400}});
     return;
   }
@@ -31,11 +30,9 @@ const getSpotifyTrackInfo = asyncHandler(async (req:Request,res:Response)=>{
 })
 
 const getSpotifyTrackAudioFeatures = asyncHandler(async (req:Request,res:Response)=>{
-
   const {id} = req.query
 
   if(id === null || id === undefined || id === ""){
-    console.log("Error getting track audio features: no id was provided");
     res.status(400).json({error: {message: "Bad Request: missing id param", status: 400}});
     return;
   }
@@ -45,7 +42,7 @@ const getSpotifyTrackAudioFeatures = asyncHandler(async (req:Request,res:Respons
     "https://api.spotify.com/v1/audio-features/"+id
   );
 
-  if(data === null){
+  if(data === null ){
     res.status(500).json({error: {message:"Server could not make a succesful request to spotify track audio features", status: 500}});
   }
   res.status(200).json({result:data});
@@ -53,8 +50,6 @@ const getSpotifyTrackAudioFeatures = asyncHandler(async (req:Request,res:Respons
 
 const getSpotifyRecs = asyncHandler(async (req:Request,res:Response)=>{
     
-    console.log(req.query);
-
     const {querysuffix} = req.query
 
     if(querysuffix === null || querysuffix === undefined || typeof querysuffix !== "string" || querysuffix === "" ){
@@ -63,12 +58,13 @@ const getSpotifyRecs = asyncHandler(async (req:Request,res:Response)=>{
       return;
     }
 
-    const requestURI: string = "https://api.spotify.com/v1/recommendations?limit=99&seed_tracks="+decodeURI(querysuffix)
+    const requestURI: string = "https://api.spotify.com/v1/recommendations?limit=50&seed_tracks="+decodeURI(querysuffix)
 
     const data = await sendRequest(
       "Spotify Recommendations",
       requestURI
     )
+
 
     if(data === null){
       res.status(500).json({error:{message:"Server could not make a succesful request to spotify recommendations",status:500}});
@@ -77,6 +73,7 @@ const getSpotifyRecs = asyncHandler(async (req:Request,res:Response)=>{
     
     }
 )
+
 
 const sendRequest = async (requestName: string, completeEndpoint:string, ) =>{
   try{
@@ -89,7 +86,6 @@ const sendRequest = async (requestName: string, completeEndpoint:string, ) =>{
     }
     throw Error("The returned status of first attempt was "+status);
   }catch(err){
-    console.log("Error making first attempt request to spotify track info: "+err);
     await getNewSpotifyTokenPrivate();
 
     try{

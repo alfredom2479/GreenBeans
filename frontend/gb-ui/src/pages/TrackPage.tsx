@@ -2,15 +2,16 @@ import {useState, useEffect} from "react";
 import { Outlet, useLoaderData} from "react-router-dom";
 import { requestSpotifyTrack,requestSpotifyTrackAudioFeatures } from "../api";
 import type {Params} from "react-router-dom";
-import { ITrack, AudioFeatures,  } from "../interfaces";
+import { ITrack, AudioFeatures, TrackSaveState,  } from "../interfaces";
 import { isTrack } from "../utils";
+
+import spotifyLogo from "../assets/spotify_logo.png";
 
 interface IURLParams{
   params:Params
 }
 
 export async function loader({params}:IURLParams){
-  console.log(params);
   
   let trackId:string = "bad_track_id";
   let isLoggedIn = true;
@@ -26,8 +27,8 @@ export async function loader({params}:IURLParams){
     access_token = "";
   }
 
-  const trackLoaderData = await requestSpotifyTrack(access_token, trackId, isLoggedIn);
-  const audioFeatureLoaderData = await requestSpotifyTrackAudioFeatures(access_token,trackId, isLoggedIn);
+  const [trackLoaderData,audioFeatureLoaderData] = await Promise.all([requestSpotifyTrack(access_token, trackId, isLoggedIn),requestSpotifyTrackAudioFeatures(access_token,trackId, isLoggedIn)])
+  //const audioFeatureLoaderData = await requestSpotifyTrackAudioFeatures(access_token,trackId, isLoggedIn);
   return {trackLoaderData,audioFeatureLoaderData};
 
 
@@ -37,7 +38,7 @@ export default function TrackPage(){
 
   const loaderData = useLoaderData();
 
-  const [trackData, setTrackData] = useState({name: "", artist: "", image:""});
+  const [trackData, setTrackData] = useState<ITrack>({id:"",name: "", artist: "", image:"",trackSaveState:TrackSaveState.CantSave});
   const [currAudioFeatures,setCurrAudioFeatures] = useState<AudioFeatures>({});
     
   useEffect(()=>{
@@ -67,6 +68,7 @@ export default function TrackPage(){
     if(typeof trackLoaderData === 'object' && trackLoaderData ){
 
       const possibleTrack: ITrack|null = isTrack(trackLoaderData,1);
+      //some golang influence lol
       if(possibleTrack != null){
         setTrackData(possibleTrack)
       }
@@ -122,13 +124,16 @@ export default function TrackPage(){
               className="flex-1 max-h-[25vh] object-cover">
             </img>
           </div>
-          <div className="basis-7/12">
+          <div className="basis-7/12 m-2">
             <div className="text-2xl">
               {trackData.name}
             </div>
             <div className="text-purple-300">
               <i>{trackData.artist}</i>
             </div>
+            <a href={trackData.spotify_url} target="_blank">
+              <img src={spotifyLogo} className="h-8 mt-2"/>
+            </a>
           </div>
         </div> 
       </div>

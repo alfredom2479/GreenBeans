@@ -2,7 +2,6 @@ import { useEffect, useState } from "react"
 import { ITrack, SongPreviewInfo, TrackSaveState, useAudioFeatures, } from "../interfaces";
 import { redirect, useActionData, useLoaderData } from "react-router-dom";
 import RecOptionsSection from "./RecOptionsSection";
-//import TrackCard from "./TrackCard";
 import SongPreviewModal from "./SongPreviewModal";
 import { isTrack } from "../utils";
 
@@ -33,12 +32,8 @@ export async function loader({params}:LoaderParams){
   }
 
   const data = await requestSpotifyRec(access_token,trackId,[],{},isLoggedIn);
-  console.log(data);
-
-  //return data.tracks;
 
   if(data.tracks && Array.isArray(data.tracks)){
-
     const trackData = data.tracks;
     const tempTrackList:ITrack[] = [];
 
@@ -97,19 +92,6 @@ export default function RecSection(){
   const currAudioFeatures = useAudioFeatures();
 
   useEffect(()=>{
-    /*
-    if(Array.isArray(actionData)){
-      const tempTrackList:ITrack[] = [];
-      let possibleTrack: ITrack|null = null;
-       for (let i=0; i< actionData.length;i++){
-        possibleTrack = isTrack(actionData[i]);
-        if(possibleTrack != null){
-          tempTrackList.push(possibleTrack);
-        }
-       }
-       setRecList(tempTrackList);
-    }
-    */
   if(Array.isArray(actionData)){
       const tempTrackList:ITrack[] = [];
       let possibleTrack: ITrack|null = null;
@@ -122,7 +104,7 @@ export default function RecSection(){
         typeof actionData[i].name === 'string' &&
         typeof actionData[i].artist === 'string' &&
         typeof actionData[i].image === 'string' && 
-        actionData[i].trackSaveState){
+        actionData[i].trackSaveState !== null){
 
           possibleTrack = {
             id:actionData[i].id,
@@ -132,11 +114,7 @@ export default function RecSection(){
             url: actionData[i].url ? actionData[i].url : null,
             trackSaveState: actionData[i].trackSaveState
           }
-          //console.log(possibleTrack.trackSaveState);
-
         }
-
-        //possibleTrack = isTrack(loaderData[i]);
         if(possibleTrack != null){
           tempTrackList.push(possibleTrack);
         }
@@ -149,21 +127,6 @@ export default function RecSection(){
 
     setCheckedBoxes([]);
     
-    /*
-    if(Array.isArray(loaderData)){
-      const tempTrackList:ITrack[] = [];
-      let possibleTrack: ITrack|null = null;
-       for (let i=0; i< loaderData.length;i++){
-        possibleTrack = isTrack(loaderData[i]);
-        if(possibleTrack != null){
-          tempTrackList.push(possibleTrack);
-        }
-       }
-       setRecList(tempTrackList);
-    }
-    */
-
-
     if(Array.isArray(loaderData)){
       const tempTrackList:ITrack[] = [];
       let possibleTrack: ITrack|null = null;
@@ -171,13 +134,11 @@ export default function RecSection(){
       for(let i=0; i < loaderData.length;i++){
         possibleTrack = null;
 
-        if(typeof loaderData[i].id === 'string' && 
-        typeof loaderData[i].id === 'string' &&
+        if(typeof loaderData[i].id === 'string'  &&
         typeof loaderData[i].name === 'string' &&
         typeof loaderData[i].artist === 'string' &&
         typeof loaderData[i].image === 'string' && 
-        loaderData[i].trackSaveState){
-
+        loaderData[i].trackSaveState !== null){
           possibleTrack = {
             id:loaderData[i].id,
             name: loaderData[i].name,
@@ -186,11 +147,7 @@ export default function RecSection(){
             url: loaderData[i].url ? loaderData[i].url : null,
             trackSaveState: loaderData[i].trackSaveState
           }
-          //console.log(possibleTrack.trackSaveState);
-
         }
-
-        //possibleTrack = isTrack(loaderData[i]);
         if(possibleTrack != null){
           tempTrackList.push(possibleTrack);
         }
@@ -201,7 +158,6 @@ export default function RecSection(){
 
   function handleListenOnClick(songPreviewInfo:SongPreviewInfo|undefined){
     if(songPreviewInfo === undefined){
-      console.log("Song preview info is undefined");
       return;
     }
     setModalSongPreviewInfo(songPreviewInfo);

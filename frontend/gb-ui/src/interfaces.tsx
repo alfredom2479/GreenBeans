@@ -12,6 +12,7 @@ export interface ITrack{
   artist: string,
   image: string
   url?: string,
+  spotify_url?:string,
   isRec?:boolean
   popModal?(songPreviewInfo:SongPreviewInfo|undefined):void,
   trackSaveState: TrackSaveState

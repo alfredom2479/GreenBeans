@@ -18,7 +18,8 @@ export default function NavbarItem({name,path, extraStyle,svgPath}:componenetPar
   return(
     <NavLink 
       to={path}
-      className= {styleString+" "+extraStyle}
+      className={({isActive})=> !isActive? styleString+" "+extraStyle : styleString+" "+extraStyle+" bg-purple-900"}
+       
     >
       <img src={svgPath} alt={name} className="w-8 text-white"/>
     </NavLink>

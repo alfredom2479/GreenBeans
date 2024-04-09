@@ -9,6 +9,6 @@ import {
 
 router.get("/gettrack", getSpotifyTrackInfo);
 router.get("/getaudiofeatures",getSpotifyTrackAudioFeatures);
-router.get("/getrecs", getSpotifyRecs);
+router.get("/getrecs" ,getSpotifyRecs);
 
 export default router;

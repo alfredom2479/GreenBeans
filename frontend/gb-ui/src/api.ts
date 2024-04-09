@@ -232,6 +232,7 @@ export async function requestSpotifyRec(accessToken:string, trackId:string, sele
       const res = await fetch(`/api/spotify/getrecs?querysuffix=${encodeURIComponent(queryOptionSuffix)}`,{
         method: "GET"
       });
+      //console.log(res);
       const data = await res.json();
       if(!res.ok){
         throw new Response("Request failed",{status:res.status});
@@ -252,10 +253,13 @@ export async function requestSpotifyTrackAudioFeatures(accessToken:string, track
       return data;
   }
   else{
-      const res = await fetch(`api/spotify/getaudiofeatures?id=${trackId}`,{
+
+      const res = await fetch(`/api/spotify/getaudiofeatures?id=${trackId}`,{
         method: "GET"
       });
+
       const data = await res.json();
+
       if(!res.ok){
         throw new Response("Request failed",{status:res.status})
       }
@@ -283,10 +287,7 @@ export async function requestSaveStatus (accessToken:string|null,tracks: ITrack[
       queryString = queryString.substring(0, queryString.length-1);
     }
 
-    console.log("final query string: "+queryString);
-
     const data = await sendRequest(`https://api.spotify.com/v1/me/tracks/contains?ids=`+queryString,accessToken)
-    console.log(data);
     return data;
 }
 

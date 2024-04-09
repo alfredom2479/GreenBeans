@@ -51,6 +51,10 @@ const isTrack = (possibleTrack: any, size:number=0): ITrack|null=>{
     //just show that preview is not available in the UI
   }
 
+  if(possibleTrack.external_urls && possibleTrack.external_urls.spotify){
+    tempTrack.spotify_url = possibleTrack.external_urls.spotify;
+  }
+
   return tempTrack;
 }
 
