@@ -12,7 +12,6 @@ interface IURLParams{
 }
 
 export async function loader({params}:IURLParams){
-  console.log(params);
   
   let trackId:string = "bad_track_id";
   let isLoggedIn = true;
@@ -26,19 +25,10 @@ export async function loader({params}:IURLParams){
   if(!access_token || access_token===""){
     isLoggedIn = false;
     access_token = "";
-    console.log("U R NOT logged in m8");
-
   }
 
-  console.log("right before the track page requests");
-
-  const trackLoaderData = await requestSpotifyTrack(access_token, trackId, isLoggedIn);
-  console.log("past track loader data api call");
-  console.log(trackLoaderData);
-  const audioFeatureLoaderData = await requestSpotifyTrackAudioFeatures(access_token,trackId, isLoggedIn);
-  console.log("past audio feature loader data api call")
-
-  console.log(audioFeatureLoaderData);
+  const [trackLoaderData,audioFeatureLoaderData] = await Promise.all([requestSpotifyTrack(access_token, trackId, isLoggedIn),requestSpotifyTrackAudioFeatures(access_token,trackId, isLoggedIn)])
+  //const audioFeatureLoaderData = await requestSpotifyTrackAudioFeatures(access_token,trackId, isLoggedIn);
   return {trackLoaderData,audioFeatureLoaderData};
 
 

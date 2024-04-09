@@ -12,7 +12,6 @@ export async function loader(){
   const access_token:string|null = localStorage.getItem("access_token");
 
   if(!access_token || access_token===""){
-    console.log("no token");
     return "[ERROR]";
   }
   try{
@@ -21,7 +20,6 @@ export async function loader(){
       return data.display_name;
     }
   }catch(err){
-    //console.log("THIS SHOULD NOT BE RUNNING HOE")
     return "[ERROR]";
   }
   return "[ERROR]";
@@ -49,12 +47,8 @@ export default function NavBar(){
       localStorage.clear()
       setCurrUser(null);
       //navigate("/");
-      //console.log("this shit is hitting")
     } 
   },[loaderData,navigate])
-
-  console.log("Got past the useEffect");
-  console.log(currUser);
 
   return (
     <div className="max-h-screen h-screen flex flex-col items-center justify-center">

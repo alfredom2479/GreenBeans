@@ -238,7 +238,6 @@ export async function requestSpotifyRec(accessToken:string, trackId:string, sele
         throw new Response("Request failed",{status:res.status});
       }
       if(data.result){
-        console.log(data.result)
         return data.result;
       }
       else{
@@ -254,11 +253,13 @@ export async function requestSpotifyTrackAudioFeatures(accessToken:string, track
       return data;
   }
   else{
-      const res = await fetch(`api/spotify/getaudiofeatures?id=${trackId}`,{
+
+      const res = await fetch(`/api/spotify/getaudiofeatures?id=${trackId}`,{
         method: "GET"
       });
-      console.log(res.body)
+
       const data = await res.json();
+
       if(!res.ok){
         throw new Response("Request failed",{status:res.status})
       }

@@ -40,7 +40,6 @@ export async function action({request}:ActionParams){
   //need try catch bc if not, Response will be uncaught
   try{
     const data = await requestSpotifyTrack(access_token,trackId,isLoggedIn);
-    console.log(data);
     if(!data || data === undefined){
       console.log("Track not found")
       return "track not found"
