@@ -44,7 +44,7 @@ export default function RecList({listTracks, handleOnClick}:CompParams){
  */
   
   return (
-    <div className="overflow-y-scroll">
+    <div className="h-full overflow-y-scroll">
       <ul>
         {
           listTracks.map((track)=>{

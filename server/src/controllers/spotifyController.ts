@@ -76,6 +76,7 @@ const getSpotifyRecs = asyncHandler(async (req:Request,res:Response)=>{
 
 
 const sendRequest = async (requestName: string, completeEndpoint:string, ) =>{
+  console.log(clientCredsAuthToken)
   try{
     const {data, status} = await axios.get(
       completeEndpoint,

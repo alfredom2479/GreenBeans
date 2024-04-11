@@ -131,7 +131,7 @@ export default function RecOptionsSection({checkedBoxes,setCheckedBoxes, audioFe
   
   return(
     <>
-    <div className="flex flex-col justify-between max-w-full h-full py-2  overflow-y-scroll">
+    <div className="flex flex-col justify-between max-w-full h-full py-2 overflow-y-scroll">
       <div className="flex justify-items-center">
       <div className="w-full">
       {vibeFeatures.map((feature)=>{
