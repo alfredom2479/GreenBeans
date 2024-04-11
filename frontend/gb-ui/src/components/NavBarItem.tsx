@@ -17,10 +17,10 @@ export default function NavbarItem({name,path,svgPath}:componenetParams){
   return(
     <NavLink 
       to={path}
-      className={({isActive})=> !isActive? styleString : styleString+" bg-purple-900"}
+      className={({isActive})=> !isActive? styleString : styleString+" bg-purple-800"}
        
     >
-      <img src={svgPath} alt={name} className="w-8 text-white"/>
+      <img src={svgPath} alt={name} className="w-8 text-white "/>
     </NavLink>
   )
 }
