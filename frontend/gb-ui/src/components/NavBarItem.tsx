@@ -4,12 +4,11 @@ import { NavLink } from "react-router-dom"
 interface componenetParams {
   name: string,
   path: string,
-  extraStyle: string,
   svgPath: string
 
 }
 
-export default function NavbarItem({name,path, extraStyle,svgPath}:componenetParams){
+export default function NavbarItem({name,path,svgPath}:componenetParams){
 
   const styleString = "flex basis-32 items-center justify-center bg-stone-900 "
   +"text-xl font-bold text-purple-200 hover:text-purple-600 m-1 mx-2 "
@@ -18,7 +17,7 @@ export default function NavbarItem({name,path, extraStyle,svgPath}:componenetPar
   return(
     <NavLink 
       to={path}
-      className={({isActive})=> !isActive? styleString+" "+extraStyle : styleString+" "+extraStyle+" bg-purple-900"}
+      className={({isActive})=> !isActive? styleString : styleString+" bg-purple-900"}
        
     >
       <img src={svgPath} alt={name} className="w-8 text-white"/>

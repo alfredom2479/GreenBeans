@@ -58,7 +58,6 @@ export default function NavBar(){
           <NavbarItem 
             name="top"
             path="/top/month" 
-            extraStyle=""
             svgPath={topSvg}
         />
         }
@@ -66,14 +65,12 @@ export default function NavBar(){
           <NavbarItem 
             name="saved"
             path="/saved/0" 
-            extraStyle=""
             svgPath={savedSvg}
           />
         }
         <NavbarItem 
           name="search"
           path="/" 
-          extraStyle=""
           svgPath={linkSvg}
         />
         {
