@@ -12,7 +12,7 @@ import TopPage from "./pages/TopPage"
 import TopOf, {loader as topDataLoader} from './components/TopOf';
 import TrackPage,{loader as trackDataLoader} from './pages/TrackPage';
 import {action as getRecsAction} from './components/RecOptionsSection';
-import SavedPage from './pages/SavedPage';
+import SavedPage,{loader as savedPageLoader} from './pages/SavedPage';
 import SavedTrackList,{loader as savedTracksLoader} from './components/SavedTrackList';
 import LinkSearchPage, {action as searchLinkAction} from './pages/LinkSearchPage';
 import NavBar, {loader as loggedInCheckerLoader} from './components/NavBar';
@@ -61,6 +61,7 @@ const router = createBrowserRouter([
       {
         path: "/saved",
         element:<SavedPage/>,
+        loader: savedPageLoader,
         children:[
           {
             path:":page",

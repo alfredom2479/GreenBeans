@@ -1,11 +1,25 @@
 import {useState} from 'react';
-import { Outlet } from "react-router-dom";
+import { Outlet, redirect } from "react-router-dom";
 
 import SongPreviewModal from "../components/SongPreviewModal";
 import { ListenOnClickContextType, SongPreviewInfo } from "../interfaces";
 
-//import spotifyIcon from "../assets/spotify_icon.png";
+import type {Params} from "react-router-dom";
+
 import spotifyLogo from "../assets/spotify_logo.png";
+
+interface URLParams{
+  params:Params
+}
+
+export async function loader({params}:URLParams){
+
+  if(!params.page){
+    return redirect("/saved/0");
+  }
+
+  return null;
+}
 
 export default  function SavedPage(){
 

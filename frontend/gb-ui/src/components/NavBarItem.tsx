@@ -10,8 +10,8 @@ interface componenetParams {
 
 export default function NavbarItem({name,path,svgPath}:componenetParams){
 
-  const styleString = "flex basis-32 items-center justify-center bg-stone-900 "
-  +"text-xl font-bold text-purple-200 hover:text-purple-600 m-1 mx-2 "
+  const styleString = "flex basis-32 items-center justify-center "
+  +"text-xl font-bold hover:text-purple-600 m-1 mx-2 "
   +" rounded-3xl"
 
   return(

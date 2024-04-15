@@ -53,18 +53,18 @@ export default function NavBar(){
   return (
     <div className="max-h-screen h-screen flex flex-col items-center justify-center">
       <Outlet/>
-      <div className="flex fixed bottom-2 left-0 right-0 h-12 justify-between">
+      <nav className="flex fixed bottom-2 left-0 right-0 h-12 justify-between">
         {currUser === null ? null :
           <NavbarItem 
             name="top"
-            path="/top/month" 
+            path="/top" 
             svgPath={topSvg}
         />
         }
         {currUser === null ? null :
           <NavbarItem 
             name="saved"
-            path="/saved/0" 
+            path="/saved" 
             svgPath={savedSvg}
           />
         }
@@ -85,7 +85,7 @@ export default function NavBar(){
               {currUser}
             </button>
         }
-      </div>
+      </nav>
       { showLogOutModal ? <LogOutModal setShowModal={setShowLogOutModal}/> : null }
     </div>
   )

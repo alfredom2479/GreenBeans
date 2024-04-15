@@ -87,7 +87,7 @@ export async function requestTokens(code:string|null, state:string|null){
 //SPOTIFY DATA REQUEST FUNCTIONS
 
 export async function requestMySpotifyAccount(accessToken:string){
-    console.log("req to /me");
+    //console.log("req to /me");
     const data = await sendRequest("https://api.spotify.com/v1/me", accessToken);
     return data;
 }
@@ -293,6 +293,8 @@ export async function requestSaveStatus (accessToken:string|null,tracks: ITrack[
 }
 
 async function sendRequest(endpoint:string, accessToken:string){
+
+  console.log('request to '+endpoint)
   let res:Response|null = null
 
   res = await fetch(endpoint,{

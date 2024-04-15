@@ -135,9 +135,12 @@ export default function TrackPage(){
             <div className="flex-1 text-xl text-purple-300  overflow-y-scroll">
               <i>{trackData.artist}</i>
             </div>
-            <a href={trackData.spotify_url} target="_blank" className="flex-1 ">
-              <img src={spotifyLogo} className="h-8 mt-2"/>
+            <div>
+            <a href={trackData.spotify_url} target="_blank" className="flex-1 max-h-8 w-8 ">
+              <img src={spotifyLogo} className="h-8"/>
             </a>
+            </div>
+            
           </div>
 
         </div> 
