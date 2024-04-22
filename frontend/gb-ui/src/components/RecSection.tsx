@@ -82,6 +82,7 @@ export default function RecSection(){
         }
       }
       setRecList(tempTrackList);
+      setIsLoadingRecs(false);
     }
   }, [actionData])
   
@@ -192,6 +193,7 @@ export default function RecSection(){
               setCheckedBoxes={setCheckedBoxes}
               audioFeatures={currAudioFeatures}
               setIsSelectingOptions={setIsSelectingOptions}
+              setIsLoadingRecs={setIsLoadingRecs}
             />
           :
               <RecList

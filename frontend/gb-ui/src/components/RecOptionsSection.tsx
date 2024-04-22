@@ -87,9 +87,10 @@ interface RecOptionsSectionProps{
   setCheckedBoxes: React.Dispatch<string[]>,
   audioFeatures: AudioFeatures,
   setIsSelectingOptions: React.Dispatch<boolean>
+  setIsLoadingRecs: React.Dispatch<boolean>
 }
 
-export default function RecOptionsSection({checkedBoxes,setCheckedBoxes, audioFeatures, setIsSelectingOptions}:RecOptionsSectionProps){
+export default function RecOptionsSection({checkedBoxes,setCheckedBoxes, audioFeatures, setIsSelectingOptions, setIsLoadingRecs}:RecOptionsSectionProps){
 
   const submit = useSubmit();
 
@@ -179,6 +180,7 @@ export default function RecOptionsSection({checkedBoxes,setCheckedBoxes, audioFe
             { method: "post", encType: "application/json" }
           );
           setIsSelectingOptions(false)
+          setIsLoadingRecs(true)
         }}
         className=" max-h-[10vh] bg-green-50 hover:bg-green-200 text-stone-900 text-xl rounded-xl font-bold p-2 w-1/2 text-center flex justify-center items-center"
         >Recommend!
