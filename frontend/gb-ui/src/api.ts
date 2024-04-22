@@ -340,10 +340,7 @@ async function sendRequest(endpoint:string, accessToken:string){
     if(!res.ok || data === null){
       const errorMessage = data.error.message ? data.error.message : "Server Error";
       const errorStatus = data.error.status? data.error.status : "500";
-      //u have to log back in everytime app makes an oopsie
-      //localStorage.clear();
       throw new Response(errorMessage,{status: errorStatus});
-      //throw {errorMessage,errorStatus}
     }
     return data;
 }
