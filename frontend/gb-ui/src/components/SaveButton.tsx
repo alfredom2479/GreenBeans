@@ -33,7 +33,6 @@ export default function SaveButton({trackSaveState, id}:SaveButtonParams){
           </button>
         )
 
-        console.log("handling save...");
         try{
           const responseData = await saveSpotifyTrack(id);
           if(!responseData ){
@@ -56,7 +55,6 @@ export default function SaveButton({trackSaveState, id}:SaveButtonParams){
                 <img src={trackSavedSvg} alt="saved" className="w-8"/>
               </button>
             )
-            console.log("track saved");
           }
         }catch(err){
           console.log("Error saving track");

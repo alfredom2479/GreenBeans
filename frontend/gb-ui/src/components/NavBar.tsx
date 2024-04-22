@@ -14,10 +14,18 @@ export async function loader(){
   if(!access_token || access_token===""){
     return "[ERROR]";
   }
+
+  const username = localStorage.getItem("greenbeans_user");
+  if(username !== null && username !== ""){
+    return username;
+  }
+
   try{
     const data = await requestMySpotifyAccount(access_token);
     if(data && data.display_name){
+      localStorage.setItem("greenbeans_user",data.display_name);
       return data.display_name;
+
     }
   }catch(err){
     return "[ERROR]";
@@ -53,27 +61,24 @@ export default function NavBar(){
   return (
     <div className="max-h-screen h-screen flex flex-col items-center justify-center">
       <Outlet/>
-      <div className="flex fixed bottom-2 left-0 right-0 h-12 justify-between">
+      <nav className="flex fixed bottom-2 left-0 right-0 h-12 justify-between">
         {currUser === null ? null :
           <NavbarItem 
             name="top"
-            path="/top/month" 
-            extraStyle=""
+            path="/top" 
             svgPath={topSvg}
         />
         }
         {currUser === null ? null :
           <NavbarItem 
             name="saved"
-            path="/saved/0" 
-            extraStyle=""
+            path="/saved" 
             svgPath={savedSvg}
           />
         }
         <NavbarItem 
           name="search"
           path="/" 
-          extraStyle=""
           svgPath={linkSvg}
         />
         {
@@ -88,7 +93,7 @@ export default function NavBar(){
               {currUser}
             </button>
         }
-      </div>
+      </nav>
       { showLogOutModal ? <LogOutModal setShowModal={setShowLogOutModal}/> : null }
     </div>
   )

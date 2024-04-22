@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import { redirect,useLoaderData} from "react-router-dom";
 import type {Params} from 'react-router-dom';
 
@@ -34,7 +34,6 @@ export async function loader({params}:TopParams){
   }
 
     const data = await requestTopTracks(access_token,rangeNum);
-  console.log(data)
     if(data.items && Array.isArray(data.items)){
       return data.items
     }
@@ -52,6 +51,8 @@ export default function TopOf(){
 
   const loadedData= useLoaderData();
 
+  const listRef = useRef<HTMLDivElement | null>(null);
+
   useEffect(()=>{
     let loaderItems = [];
     const newTracks:ITrack[] = [];
@@ -68,10 +69,13 @@ export default function TopOf(){
       }
     }
     setTopTracksList(newTracks)
+    if(listRef.current !== null){
+      listRef.current.scrollTo(0,0);
+    }
   },[loadedData])
 
   return(
-      <div className="overflow-y-scroll">
+      <div className="overflow-y-scroll" ref={listRef}>
         <ul>
           {topTracksList.map((track)=>{
             return (

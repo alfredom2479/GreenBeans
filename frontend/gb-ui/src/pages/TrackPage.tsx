@@ -1,4 +1,4 @@
-import {useState, useEffect} from "react";
+import {useState, useEffect } from "react";
 import { Outlet, useLoaderData} from "react-router-dom";
 import { requestSpotifyTrack,requestSpotifyTrackAudioFeatures } from "../api";
 import type {Params} from "react-router-dom";
@@ -20,6 +20,7 @@ export async function loader({params}:IURLParams){
     trackId = params.trackid;
   }
 
+
   let access_token:string|null = localStorage.getItem("access_token");
 
   if(!access_token || access_token===""){
@@ -28,9 +29,7 @@ export async function loader({params}:IURLParams){
   }
 
   const [trackLoaderData,audioFeatureLoaderData] = await Promise.all([requestSpotifyTrack(access_token, trackId, isLoggedIn),requestSpotifyTrackAudioFeatures(access_token,trackId, isLoggedIn)])
-  //const audioFeatureLoaderData = await requestSpotifyTrackAudioFeatures(access_token,trackId, isLoggedIn);
   return {trackLoaderData,audioFeatureLoaderData};
-
 
 }
 
@@ -116,29 +115,34 @@ export default function TrackPage(){
   },[loaderData])
 
   return(
-    <div className=" h-full w-full flex flex-col  pb-16 ">
-      <div className=" flex flex-col basis-1/4 w-full ">
-        <div className=" bg-stone-900 text-purple-200 flex">
-          <div className="basis-5/12 flex items-center h-full">
+    <>
+    <div className=" h-full w-full flex flex-col pb-16 ">
+        <div className=" bg-stone-900 text-purple-200 flex h-[25vh] w-full ">
+
+          <div className=" shrink-0 flex items-center w-[25vh] h-full">
             <img src={trackData.image} 
-              className="flex-1 max-h-[25vh] object-cover">
+              className="flex-1 h-[25vh] object-cover ">
             </img>
           </div>
-          <div className="basis-7/12 m-2">
-            <div className="text-2xl">
+
+          <div className="flex flex-col p-1 w-full overflow-y-scroll overflow-x-hidden">
+            <div className="flex-1 text-xl overflow-hidden overflow-y-scroll text-ellipsis">
               {trackData.name}
             </div>
-            <div className="text-purple-300">
+            <div className="flex-1 text-xl text-purple-300  overflow-y-scroll">
               <i>{trackData.artist}</i>
             </div>
-            <a href={trackData.spotify_url} target="_blank">
-              <img src={spotifyLogo} className="h-8 mt-2"/>
+            <div>
+            <a href={trackData.spotify_url} target="_blank" className="flex-1 max-h-8 w-8 ">
+              <img src={spotifyLogo} className="h-8"/>
             </a>
+            </div>
+            
           </div>
         </div> 
-      </div>
-      <Outlet context={currAudioFeatures satisfies AudioFeatures } />
+            <Outlet context={currAudioFeatures satisfies AudioFeatures } />
     </div>
+      </>
   )
 }
 

@@ -1,50 +1,17 @@
-//import { useEffect } from "react"
 import { ITrack, SongPreviewInfo, } from "../interfaces"
 import TrackCard from "./TrackCard"
-//import { requestSaveStatus } from "../api"
 
 interface CompParams{
   listTracks: ITrack[],
-  handleOnClick: (songPreviewInfo:SongPreviewInfo|undefined)=>void
+  handleOnClick: (songPreviewInfo:SongPreviewInfo|undefined)=>void,
+  isLoadingRecs: boolean
 }
 
-export default function RecList({listTracks, handleOnClick}:CompParams){
+export default function RecList({listTracks,handleOnClick,isLoadingRecs}:CompParams){
 
-  /*
- useEffect(()=>{
-
-  const access_token: string|null = localStorage.getItem("access_token");
-
-  const checkSavedStatus = async ()=>{
-    const saveStatusData =  await requestSaveStatus(access_token, listTracks);
-    console.log(saveStatusData);
-    
-    if(Array.isArray(saveStatusData) &&  saveStatusData.length === listTracks.length){
-    console.log("it is an array!");
-     for(let i=0; i <listTracks.length; i++){
-      //u need to change this 
-      if(saveStatusData[i] === false){
-        listTracks[i].trackSaveState= TrackSaveState.Saveable;
-      }
-      else{
-        listTracks[i].trackSaveState = TrackSaveState.Saved;
-        console.log(listTracks[i]);
-      }
-     } 
-    }
-    else{
-      for(let i=0; i <listTracks.length; i++){
-        listTracks[i].trackSaveState= TrackSaveState.Saveable;
-      }
-    }
-  }
-
-  checkSavedStatus();
- },[listTracks]) 
- */
-  
   return (
-    <div className="overflow-y-scroll">
+    <div className="h-full overflow-y-scroll">
+      {isLoadingRecs  ? <p className="text-white">Loading...</p> :
       <ul>
         {
           listTracks.map((track)=>{
@@ -64,6 +31,7 @@ export default function RecList({listTracks, handleOnClick}:CompParams){
           })
         }
       </ul>
+      }
     </div>
   )
 }

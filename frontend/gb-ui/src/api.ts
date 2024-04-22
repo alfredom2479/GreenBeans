@@ -87,6 +87,7 @@ export async function requestTokens(code:string|null, state:string|null){
 //SPOTIFY DATA REQUEST FUNCTIONS
 
 export async function requestMySpotifyAccount(accessToken:string){
+    //console.log("req to /me");
     const data = await sendRequest("https://api.spotify.com/v1/me", accessToken);
     return data;
 }
@@ -292,6 +293,8 @@ export async function requestSaveStatus (accessToken:string|null,tracks: ITrack[
 }
 
 async function sendRequest(endpoint:string, accessToken:string){
+
+  //console.log('request to '+endpoint)
   let res:Response|null = null
 
   res = await fetch(endpoint,{
@@ -337,10 +340,7 @@ async function sendRequest(endpoint:string, accessToken:string){
     if(!res.ok || data === null){
       const errorMessage = data.error.message ? data.error.message : "Server Error";
       const errorStatus = data.error.status? data.error.status : "500";
-      //u have to log back in everytime app makes an oopsie
-      //localStorage.clear();
       throw new Response(errorMessage,{status: errorStatus});
-      //throw {errorMessage,errorStatus}
     }
     return data;
 }

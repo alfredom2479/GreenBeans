@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { ITrack, SongPreviewInfo, TrackSaveState, useAudioFeatures, } from "../interfaces";
-import { redirect, useActionData, useLoaderData } from "react-router-dom";
+import {  redirect, useActionData, useLoaderData } from "react-router-dom";
 import RecOptionsSection from "./RecOptionsSection";
 import SongPreviewModal from "./SongPreviewModal";
 import { isTrack } from "../utils";
@@ -14,13 +14,13 @@ interface LoaderParams{
 }
 
 export async function loader({params}:LoaderParams){
-  let access_token: string|null = localStorage.getItem("access_token");
+  const access_token_original: string|null = localStorage.getItem("access_token");
+  const access_token:string = access_token_original === null || access_token_original === undefined ? "" :access_token_original
   let isLoggedIn = true;
 
   let trackId:string = "";
   
-  if(!access_token || access_token == undefined){
-    access_token = "";
+  if(access_token === ""){
     isLoggedIn = false;
   }
 
@@ -31,48 +31,7 @@ export async function loader({params}:LoaderParams){
     redirect("/");
   }
 
-  const data = await requestSpotifyRec(access_token,trackId,[],{},isLoggedIn);
-
-  if(data.tracks && Array.isArray(data.tracks)){
-    const trackData = data.tracks;
-    const tempTrackList:ITrack[] = [];
-
-    let possibleTrack: ITrack|null = null;
-
-    for(let i=0; i < trackData.length;i++){
-      possibleTrack = isTrack(trackData[i]);
-      if(possibleTrack != null){
-        tempTrackList.push(possibleTrack);
-      }
-    }
-
-    if(!isLoggedIn){
-      for(let i=0; i < tempTrackList.length;i++){
-       tempTrackList[i].trackSaveState = TrackSaveState.CantSave;
-      }
-    }
-    else{
-      const saveStatusData = await requestSaveStatus(access_token, tempTrackList);
-
-      if(Array.isArray(saveStatusData) && saveStatusData.length === tempTrackList.length){
-        for(let i=0; i< tempTrackList.length; i++){
-          if(saveStatusData[i] === true){
-            tempTrackList[i].trackSaveState = TrackSaveState.Saved;
-          }
-          else {
-            tempTrackList[i].trackSaveState = TrackSaveState.Saveable;
-          }
-        }
-      }
-      else{
-        for(let i=0; i < tempTrackList.length; i++){
-          tempTrackList[i].trackSaveState = TrackSaveState.Saveable;
-        }
-      }
-    }
-    return tempTrackList;
-  }
-  return [];
+  return {trackId,isLoggedIn,access_token}
   
 }
 
@@ -80,6 +39,8 @@ export default function RecSection(){
 
   const [checkedBoxes,setCheckedBoxes] = useState<string[]>([]);
   const [showModal,setShowModal] = useState(false);
+  const [isLoadingRecs, setIsLoadingRecs] = useState(true);
+  
   const [modalSongPreviewInfo, setModalSongPreviewInfo] = useState<SongPreviewInfo>({name:"",artist:"",url:""});
   
   const loaderData = useLoaderData();
@@ -91,6 +52,7 @@ export default function RecSection(){
 
   const currAudioFeatures = useAudioFeatures();
 
+  
   useEffect(()=>{
   if(Array.isArray(actionData)){
       const tempTrackList:ITrack[] = [];
@@ -122,39 +84,78 @@ export default function RecSection(){
       setRecList(tempTrackList);
     }
   }, [actionData])
-
+  
   useEffect(()=>{
 
-    setCheckedBoxes([]);
-    
-    if(Array.isArray(loaderData)){
-      const tempTrackList:ITrack[] = [];
-      let possibleTrack: ITrack|null = null;
-
-      for(let i=0; i < loaderData.length;i++){
-        possibleTrack = null;
-
-        if(typeof loaderData[i].id === 'string'  &&
-        typeof loaderData[i].name === 'string' &&
-        typeof loaderData[i].artist === 'string' &&
-        typeof loaderData[i].image === 'string' && 
-        loaderData[i].trackSaveState !== null){
-          possibleTrack = {
-            id:loaderData[i].id,
-            name: loaderData[i].name,
-            artist: loaderData[i].artist,
-            image: loaderData[i].image,
-            url: loaderData[i].url ? loaderData[i].url : null,
-            trackSaveState: loaderData[i].trackSaveState
-          }
-        }
-        if(possibleTrack != null){
-          tempTrackList.push(possibleTrack);
-        }
+    const testFunc = async (token:string,id:string,isLoggedIn:boolean)=>{
+      if(!ignore){
+        setIsLoadingRecs(true);
       }
-      setRecList(tempTrackList);
+      const data = await requestSpotifyRec(token,id,[],{},isLoggedIn);
+
+      if(data.tracks && Array.isArray(data.tracks)){
+        const trackData = data.tracks;
+        const tempTrackList:ITrack[] = [];
+        
+        let possibleTrack:ITrack|null = null;
+
+         for(let i=0; i <trackData.length;i++){
+          possibleTrack = isTrack(trackData[i]);
+          if(possibleTrack != null){
+            tempTrackList.push(possibleTrack);
+          }
+         }
+
+         if(!isLoggedIn){
+          for(let i=0; i <tempTrackList.length; i++){
+            tempTrackList[i].trackSaveState = TrackSaveState.CantSave;
+          }
+         }
+         else{
+          const saveStatusData = await requestSaveStatus(token,tempTrackList);
+
+          if(Array.isArray(saveStatusData) && saveStatusData.length === tempTrackList.length){
+            for(let i=0; i <tempTrackList.length;i++){
+              if(saveStatusData[i] === true){
+                tempTrackList[i].trackSaveState = TrackSaveState.Saved;
+              }
+              else{
+                tempTrackList[i].trackSaveState = TrackSaveState.Saveable;
+              }
+            }
+          }
+          else{
+            for(let i=0; i <tempTrackList.length; i++){
+              tempTrackList[i].trackSaveState = TrackSaveState.CantSave;
+            }
+          }
+         }
+        if(!ignore){
+          setRecList(tempTrackList);
+          setIsLoadingRecs(false);
+       }
+      }
+     
+
     }
+    
+    let ignore = false;
+    if(typeof loaderData == 'object' && loaderData){
+      if('trackId' in loaderData && typeof loaderData.trackId === "string" && loaderData.trackId.length > 0){
+        if('access_token' in loaderData && typeof loaderData.access_token === "string" &&
+          'isLoggedIn' in loaderData && typeof loaderData.isLoggedIn === "boolean"){
+            testFunc(loaderData.access_token,loaderData.trackId,loaderData.isLoggedIn);
+            return () =>{
+              ignore = true; 
+            }
+          }
+      }
+    }
+
+   
+    
   },[loaderData])
+
 
   function handleListenOnClick(songPreviewInfo:SongPreviewInfo|undefined){
     if(songPreviewInfo === undefined){
@@ -164,6 +165,7 @@ export default function RecSection(){
     setShowModal(true);
     return;
   }
+
 
   return(
     <>
@@ -184,19 +186,20 @@ export default function RecSection(){
             
           </ul>
         </nav>
-        {isSelectingOptions
+  {isSelectingOptions
           ? <RecOptionsSection
               checkedBoxes={checkedBoxes}
               setCheckedBoxes={setCheckedBoxes}
               audioFeatures={currAudioFeatures}
               setIsSelectingOptions={setIsSelectingOptions}
             />
-          : 
-            <RecList
-              listTracks={recList}
-              handleOnClick={handleListenOnClick}
-            />
-        }
+          :
+              <RecList
+                listTracks={recList}
+                handleOnClick={handleListenOnClick}
+                isLoadingRecs={isLoadingRecs}
+              />
+}
         {
           showModal 
             ? 
