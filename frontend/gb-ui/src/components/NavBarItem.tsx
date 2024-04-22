@@ -17,7 +17,12 @@ export default function NavbarItem({name,path,svgPath}:componenetParams){
   return(
     <NavLink 
       to={path}
-      className={({isActive})=> !isActive? styleString : styleString+" bg-purple-800"}
+      className={({isActive,isPending,isTransitioning})=> [
+        !isActive? styleString : styleString+" bg-purple-800 pointer-events-none",
+        isPending ? "pointer-events-none" : "",
+        isTransitioning ? "pointer-events-none": ""
+      ].join(" ")
+    }
        
     >
       <img src={svgPath} alt={name} className="w-8 text-white "/>

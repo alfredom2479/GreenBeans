@@ -1,4 +1,4 @@
-import {useState, useEffect} from "react";
+import {useState, useEffect } from "react";
 import { Outlet, useLoaderData} from "react-router-dom";
 import { requestSpotifyTrack,requestSpotifyTrackAudioFeatures } from "../api";
 import type {Params} from "react-router-dom";
@@ -22,7 +22,6 @@ export async function loader({params}:IURLParams){
 
 
   let access_token:string|null = localStorage.getItem("access_token");
-  console.log(access_token);
 
   if(!access_token || access_token===""){
     isLoggedIn = false;
@@ -117,9 +116,11 @@ export default function TrackPage(){
     
   },[loaderData])
 
+  //console.log("This is a test : TrackPage")
+
   return(
+    <>
     <div className=" h-full w-full flex flex-col pb-16 ">
-      {/* <div className="  "> */}
         <div className=" bg-stone-900 text-purple-200 flex h-[25vh] w-full ">
 
           <div className=" shrink-0 flex items-center w-[25vh] h-full">
@@ -142,11 +143,10 @@ export default function TrackPage(){
             </div>
             
           </div>
-
         </div> 
-      {/* </div> */}
-      <Outlet context={currAudioFeatures satisfies AudioFeatures } />
+            <Outlet context={currAudioFeatures satisfies AudioFeatures } />
     </div>
+      </>
   )
 }
 

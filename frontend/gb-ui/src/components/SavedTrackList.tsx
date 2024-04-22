@@ -30,7 +30,6 @@ export async function loader({params}:URLParams){
     }
   }
     const data = await requestSavedTracks(pageNumber,50,accessToken);
-    console.log(data)
     
     if(data && data.items && Array.isArray(data.items)){
       if(data.items.length === 0){

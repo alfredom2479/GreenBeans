@@ -34,7 +34,6 @@ export async function loader({params}:TopParams){
   }
 
     const data = await requestTopTracks(access_token,rangeNum);
-  console.log(data)
     if(data.items && Array.isArray(data.items)){
       return data.items
     }
