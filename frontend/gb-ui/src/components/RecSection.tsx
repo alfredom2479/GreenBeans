@@ -87,14 +87,14 @@ export default function RecSection(){
   
   useEffect(()=>{
 
-    let ignore = false;
+    console.log("Start of UseEffect!")
 
-    if(!ignore){
-      setIsLoadingRecs(true);
-    }
+    
 
     const testFunc = async (token:string,id:string,isLoggedIn:boolean)=>{
-
+      if(!ignore){
+        setIsLoadingRecs(true);
+      }
       const data = await requestSpotifyRec(token,id,[],{},isLoggedIn);
       console.log(data);
 
@@ -141,17 +141,19 @@ export default function RecSection(){
           setIsLoadingRecs(false);
        }
       }
-     return () =>{
-      ignore = true;
-     }
+     
 
     }
     
+    let ignore = false;
     if(typeof loaderData == 'object' && loaderData){
       if('trackId' in loaderData && typeof loaderData.trackId === "string" && loaderData.trackId.length > 0){
         if('access_token' in loaderData && typeof loaderData.access_token === "string" &&
           'isLoggedIn' in loaderData && typeof loaderData.isLoggedIn === "boolean"){
             testFunc(loaderData.access_token,loaderData.trackId,loaderData.isLoggedIn);
+            return () =>{
+              ignore = true; 
+            }
           }
       }
     }
