@@ -1,4 +1,4 @@
-import {useState, useEffect} from "react"
+import {useState, useEffect, useRef} from "react"
 import { redirect, useLoaderData, useParams, NavLink } from "react-router-dom";
 import TrackCard from "./TrackCard";
 import { requestSavedTracks } from "../api";
@@ -52,6 +52,8 @@ export default function SavedTrackList(){
 
   const loaderData = useLoaderData();
 
+  const listRef = useRef<HTMLDivElement | null>(null);
+
   const prevNextDefaultStyle = "flex-1 items-center justify-center bg-stone-900 hover:text-purple-600 text-purple-200 text-xl font-bold p-1  text-center border-white border-2 border-l-0 hover:border-purple-600"
 
   const {page} = useParams();
@@ -74,6 +76,7 @@ export default function SavedTrackList(){
   }
 
   useEffect(()=>{
+    console.log("in dat use effect");
     if(Array.isArray(loaderData)){
 
       const tempTrackList:ITrack[] = [];
@@ -86,13 +89,16 @@ export default function SavedTrackList(){
         }
       }
       setSavedTracksList(tempTrackList);
+      if(listRef.current !== null){
+        listRef.current.scrollTo(0,0);
+      }
     }
   },[loaderData]);
 
   return(
   <div className="flex flex-col h-full pb-16">
   
-    <div className=" overflow-y-scroll">
+    <div className=" overflow-y-scroll" ref={listRef}>
       <ul>
         {savedTracksList.map((track)=>{
           return (
