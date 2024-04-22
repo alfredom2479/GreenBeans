@@ -32,51 +32,6 @@ export async function loader({params}:LoaderParams){
   }
 
   return {trackId,isLoggedIn,access_token}
-
-  /*
-  const data = await requestSpotifyRec(access_token,trackId,[],{},isLoggedIn);
-
-  if(data.tracks && Array.isArray(data.tracks)){
-    const trackData = data.tracks;
-    const tempTrackList:ITrack[] = [];
-
-    let possibleTrack: ITrack|null = null;
-
-    for(let i=0; i < trackData.length;i++){
-      possibleTrack = isTrack(trackData[i]);
-      if(possibleTrack != null){
-        tempTrackList.push(possibleTrack);
-      }
-    }
-
-    if(!isLoggedIn){
-      for(let i=0; i < tempTrackList.length;i++){
-       tempTrackList[i].trackSaveState = TrackSaveState.CantSave;
-      }
-    }
-    else{
-      const saveStatusData = await requestSaveStatus(access_token, tempTrackList);
-
-      if(Array.isArray(saveStatusData) && saveStatusData.length === tempTrackList.length){
-        for(let i=0; i< tempTrackList.length; i++){
-          if(saveStatusData[i] === true){
-            tempTrackList[i].trackSaveState = TrackSaveState.Saved;
-          }
-          else {
-            tempTrackList[i].trackSaveState = TrackSaveState.Saveable;
-          }
-        }
-      }
-      else{
-        for(let i=0; i < tempTrackList.length; i++){
-          tempTrackList[i].trackSaveState = TrackSaveState.Saveable;
-        }
-      }
-    }
-    return defer( {tempTrackList});
-  }
-  return [];
-  */
   
 }
 
