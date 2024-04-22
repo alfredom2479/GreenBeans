@@ -29,9 +29,7 @@ export async function loader({params}:IURLParams){
   }
 
   const [trackLoaderData,audioFeatureLoaderData] = await Promise.all([requestSpotifyTrack(access_token, trackId, isLoggedIn),requestSpotifyTrackAudioFeatures(access_token,trackId, isLoggedIn)])
-  //const audioFeatureLoaderData = await requestSpotifyTrackAudioFeatures(access_token,trackId, isLoggedIn);
   return {trackLoaderData,audioFeatureLoaderData};
-
 
 }
 
@@ -115,8 +113,6 @@ export default function TrackPage(){
     }
     
   },[loaderData])
-
-  //console.log("This is a test : TrackPage")
 
   return(
     <>
