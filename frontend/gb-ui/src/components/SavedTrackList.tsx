@@ -76,7 +76,6 @@ export default function SavedTrackList(){
   }
 
   useEffect(()=>{
-    console.log("in dat use effect");
     if(Array.isArray(loaderData)){
 
       const tempTrackList:ITrack[] = [];

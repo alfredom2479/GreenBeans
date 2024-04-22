@@ -87,16 +87,11 @@ export default function RecSection(){
   
   useEffect(()=>{
 
-    console.log("Start of UseEffect!")
-
-    
-
     const testFunc = async (token:string,id:string,isLoggedIn:boolean)=>{
       if(!ignore){
         setIsLoadingRecs(true);
       }
       const data = await requestSpotifyRec(token,id,[],{},isLoggedIn);
-      console.log(data);
 
       if(data.tracks && Array.isArray(data.tracks)){
         const trackData = data.tracks;
@@ -132,7 +127,6 @@ export default function RecSection(){
           else{
             for(let i=0; i <tempTrackList.length; i++){
               tempTrackList[i].trackSaveState = TrackSaveState.CantSave;
-              console.log("landed here")
             }
           }
          }

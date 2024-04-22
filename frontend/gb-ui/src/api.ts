@@ -294,7 +294,7 @@ export async function requestSaveStatus (accessToken:string|null,tracks: ITrack[
 
 async function sendRequest(endpoint:string, accessToken:string){
 
-  console.log('request to '+endpoint)
+  //console.log('request to '+endpoint)
   let res:Response|null = null
 
   res = await fetch(endpoint,{
