@@ -12,11 +12,6 @@ interface CompParams{
 
 export default function RecList({listTracks,handleOnClick,isLoadingRecs}:CompParams){
 
-  /*
-*/
-
-console.log(isLoadingRecs);
-  
   return (
     <div className="h-full overflow-y-scroll">
       {isLoadingRecs  ? <p className="text-white">Loading...</p> :

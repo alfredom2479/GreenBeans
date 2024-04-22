@@ -14,10 +14,18 @@ export async function loader(){
   if(!access_token || access_token===""){
     return "[ERROR]";
   }
+
+  const username = localStorage.getItem("greenbeans_user");
+  if(username !== null && username !== ""){
+    return username;
+  }
+
   try{
     const data = await requestMySpotifyAccount(access_token);
     if(data && data.display_name){
+      localStorage.setItem("greenbeans_user",data.display_name);
       return data.display_name;
+
     }
   }catch(err){
     return "[ERROR]";
