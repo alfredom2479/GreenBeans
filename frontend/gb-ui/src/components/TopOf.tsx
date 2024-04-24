@@ -32,6 +32,9 @@ export async function loader({params}:TopParams){
   if(!access_token || access_token===""){
     return redirect("/");
   }
+if(!params.range){
+    return redirect("/top/month");
+  }
 
     const data = await requestTopTracks(access_token,rangeNum);
     if(data.items && Array.isArray(data.items)){

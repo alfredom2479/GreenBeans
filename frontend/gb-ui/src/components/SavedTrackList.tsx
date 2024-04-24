@@ -14,9 +14,14 @@ interface URLParams{
 
 export async function loader({params}:URLParams){
 
+  
+
   const accessToken:string|null = localStorage.getItem("access_token");
   if(!accessToken || accessToken === ""){
     return redirect('/');
+  }
+if(!params.page){
+    return redirect("/saved/0");
   }
 
   let pageNumber:number = 0;
