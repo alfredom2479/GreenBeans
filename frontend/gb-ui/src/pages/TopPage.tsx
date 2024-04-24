@@ -1,11 +1,24 @@
 import {useState} from "react"
-import {Outlet} from "react-router-dom";
+import {Outlet, redirect} from "react-router-dom";
 import TopNavItem from "../components/TopNavItem";
 import SongPreviewModal from "../components/SongPreviewModal";
+
+import type {Params} from "react-router-dom";
 
 import { ListenOnClickContextType, SongPreviewInfo } from "../interfaces";
 
 //import spotifyLogo from "../assets/spotify_logo.png";
+
+interface LoaderParams{
+  params:Params
+}
+
+export async function loader({params}:LoaderParams){
+  if(!params.range){
+    return redirect("/top/month");
+  }
+  return null;
+}
 
 export default function TopPage(){
 

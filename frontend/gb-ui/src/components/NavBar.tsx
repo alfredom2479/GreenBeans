@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Outlet, useLoaderData, useLocation, useNavigate} from "react-router-dom";
 import {  requestMySpotifyAccount } from "../api";
 import LogOutModal from "./LogOutModal";
-import NavbarItem from "./NavBarItem";
+//import NavbarItem from "./NavBarItem";
 
 /*
 import linkSvg from '../assets/link.svg';
@@ -16,8 +16,6 @@ import SideBar from "./SideBar";
 
 export async function loader(){
   const access_token:string|null = localStorage.getItem("access_token");
-
-  console.log("The nav bar loader is running");
 
   if(!access_token || access_token===""){
     return "[ERROR]";
@@ -52,13 +50,13 @@ export default function NavBar(){
   const navigate = useNavigate();
   const location = useLocation();
 
-  const accountStatusStyleString = "flex justify-center items-center basis-32 "+
+  /*const accountStatusStyleString = "flex justify-center items-center basis-32 "+
     "grow text-center font-bold text-lg bg-green-900 text-white "+
     "rounded-3xl mr-2"
+    */
 
 
   useEffect(()=>{
-    const pathString = location.pathname;
     if(location.pathname.includes("top")){
       setPageName("Top")
     }
@@ -71,7 +69,6 @@ export default function NavBar(){
     else{
       setPageName("Link")
     }
-    console.log(location);
     
   },[location])
 
