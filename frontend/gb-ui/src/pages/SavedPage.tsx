@@ -6,7 +6,7 @@ import { ListenOnClickContextType, SongPreviewInfo } from "../interfaces";
 
 import type {Params} from "react-router-dom";
 
-import spotifyLogo from "../assets/spotify_logo.png";
+//import spotifyLogo from "../assets/spotify_logo.png";
 
 interface URLParams{
   params:Params
@@ -36,9 +36,10 @@ export default  function SavedPage(){
     return;
   }
   return(
-    <div className="h-full w-full pb-16 flex flex-col">
+    <div className="h-[calc(100%-3.5rem)] w-full flex flex-col">
 
-      <div className="h-14 shrink-0 p-2 flex items-center justify-between text-right mx-2">
+      
+      {/* <div className="h-14 shrink-0 p-2 flex items-center justify-between text-right mx-2">
         <a href='https://spotify.com' target='_blank'>
           <img src={spotifyLogo} className='flex-1 h-10 grow-0' />
         </a>
@@ -46,8 +47,9 @@ export default  function SavedPage(){
           Saved
         </h1>
       </div>
-
+ */}
       <Outlet context={{handleListenOnClick} satisfies ListenOnClickContextType}/>
+
       {showModal ?
       <SongPreviewModal
         setShowModal={setShowModal}

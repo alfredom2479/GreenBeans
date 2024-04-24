@@ -88,6 +88,8 @@ export default function RecSection(){
   
   useEffect(()=>{
 
+    setCheckedBoxes([]);
+
     const testFunc = async (token:string,id:string,isLoggedIn:boolean)=>{
       if(!ignore){
         setIsLoadingRecs(true);
@@ -136,8 +138,6 @@ export default function RecSection(){
           setIsLoadingRecs(false);
        }
       }
-     
-
     }
     
     let ignore = false;
@@ -152,9 +152,6 @@ export default function RecSection(){
           }
       }
     }
-
-   
-    
   },[loaderData])
 
 

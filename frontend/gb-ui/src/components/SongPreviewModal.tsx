@@ -10,7 +10,7 @@ export default function SongPreviewModal({setShowModal,songPreviewInfo}: params)
 
 
   return(
-  <div className="z-10 fixed h-full w-full left-0 top-0 flex justify-center items-center bg-[rgba(0,0,0,.4)]"
+  <div className="z-20 fixed h-full w-full left-0 top-0 flex justify-center items-center bg-[rgba(0,0,0,.4)]"
     onClick={()=>{setShowModal(false)}}>
     <div className=" bg-zinc-600 m-auto w-10/12  min-h-48 flex flex-col justify-center items-center ">
         <h3 className="text-xl font-semibold text-center">{songPreviewInfo.name}</h3>
