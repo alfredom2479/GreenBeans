@@ -174,6 +174,9 @@ export async function requestSpotifyTrack(accessToken:string, trackId:string, is
 
 export async function requestSpotifyRec(accessToken:string, trackId:string, selectedOptions: string[],audioFeatures:AudioFeatures, isLoggedIn: boolean){
 
+  //temp fix while my they free me from quota jail
+  //return "oops"
+
   let queryOptionSuffix:string = trackId;
 
   for(let i =0; i < audioFeatureNames.length; i++ ){
@@ -294,7 +297,7 @@ export async function requestSaveStatus (accessToken:string|null,tracks: ITrack[
 
 async function sendRequest(endpoint:string, accessToken:string){
 
-  //console.log('request to '+endpoint)
+  console.log('request to '+endpoint)
   let res:Response|null = null
 
   res = await fetch(endpoint,{

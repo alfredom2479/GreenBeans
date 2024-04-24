@@ -95,29 +95,8 @@ export default function SavedTrackList(){
   },[loaderData]);
 
   return(
-  <div className="flex flex-col h-full pb-16">
-  
-    <div className=" overflow-y-scroll" ref={listRef}>
-      <ul>
-        {savedTracksList.map((track)=>{
-          return (
-            <li key={track.id}>
-              <TrackCard
-                id={track.id}
-                name={track.name}
-                artist={track.artist}
-                image={track.image}
-                url={track.url}
-                popModal={handleListenOnClick}
-                trackSaveState={TrackSaveState.Saved}
-                />
-            </li>
-            
-          )
-        })}
-      </ul>
-    </div>
-    <div className="flex">
+  <div className="flex flex-col h-full ">
+  <div className="flex ">
         {pageNumber !== 0 ?
           <NavLink 
           to={`/saved/${prevPageNumber}`}
@@ -143,6 +122,27 @@ export default function SavedTrackList(){
           >next
         </NavLink>
     </div>
+    <div className=" overflow-y-scroll" ref={listRef}>
+      <ul>
+        {savedTracksList.map((track)=>{
+          return (
+            <li key={track.id}>
+              <TrackCard
+                id={track.id}
+                name={track.name}
+                artist={track.artist}
+                image={track.image}
+                url={track.url}
+                popModal={handleListenOnClick}
+                trackSaveState={TrackSaveState.Saved}
+                />
+            </li>
+            
+          )
+        })}
+      </ul>
+    </div>
+    
     </div>
   )
 

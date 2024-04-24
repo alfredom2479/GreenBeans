@@ -115,34 +115,32 @@ export default function TrackPage(){
   },[loaderData])
 
   return(
-    <>
-    <div className=" h-full w-full flex flex-col pb-16 ">
-        <div className=" bg-stone-900 text-purple-200 flex h-[25vh] w-full ">
+    <div className=" h-[calc(100%-3.5rem)] w-full flex flex-col ">
+        <div className=" bg-stone-900 text-purple-200 flex h-32 w-full ">
 
-          <div className=" shrink-0 flex items-center w-[25vh] h-full">
+          <div className=" shrink-0 flex items-center w-32 h-full">
             <img src={trackData.image} 
-              className="flex-1 h-[25vh] object-cover ">
+              className="flex-1 h-32 w-32 object-cover ">
             </img>
           </div>
 
-          <div className="flex flex-col p-1 w-full overflow-y-scroll overflow-x-hidden">
+          <div className="flex flex-1 basis-5/6  flex-col p-1 overflow-y-scroll overflow-x-hidden">
             <div className="flex-1 text-xl overflow-hidden overflow-y-scroll text-ellipsis">
               {trackData.name}
             </div>
-            <div className="flex-1 text-xl text-purple-300  overflow-y-scroll">
+            <div className=" flex-1 text-xl text-purple-300  overflow-y-scroll">
               <i>{trackData.artist}</i>
             </div>
-            <div>
-            <a href={trackData.spotify_url} target="_blank" className="flex-1 max-h-8 w-8 ">
+          </div>
+
+          <div className=" flex flex-1 basis-1/6 ">
+            <a href={trackData.spotify_url} target="_blank" className=" hover:bg-white w-full flex items-center justify-center ">
               <img src={spotifyLogo} className="h-8"/>
             </a>
-            </div>
-            
           </div>
         </div> 
             <Outlet context={currAudioFeatures satisfies AudioFeatures } />
     </div>
-      </>
   )
 }
 

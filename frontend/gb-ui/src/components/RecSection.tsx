@@ -82,10 +82,13 @@ export default function RecSection(){
         }
       }
       setRecList(tempTrackList);
+      setIsLoadingRecs(false);
     }
   }, [actionData])
   
   useEffect(()=>{
+
+    setCheckedBoxes([]);
 
     const testFunc = async (token:string,id:string,isLoggedIn:boolean)=>{
       if(!ignore){
@@ -135,8 +138,6 @@ export default function RecSection(){
           setIsLoadingRecs(false);
        }
       }
-     
-
     }
     
     let ignore = false;
@@ -151,9 +152,6 @@ export default function RecSection(){
           }
       }
     }
-
-   
-    
   },[loaderData])
 
 
@@ -192,6 +190,7 @@ export default function RecSection(){
               setCheckedBoxes={setCheckedBoxes}
               audioFeatures={currAudioFeatures}
               setIsSelectingOptions={setIsSelectingOptions}
+              setIsLoadingRecs={setIsLoadingRecs}
             />
           :
               <RecList
