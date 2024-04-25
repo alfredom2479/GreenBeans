@@ -2,7 +2,7 @@ import {useEffect, useRef} from "react";
 import {Form, redirect, useActionData} from 'react-router-dom';
 import { requestSpotifyTrack } from '../api';
 
-import spotifyLogo from "../assets/spotify_logo.png";
+//import spotifyLogo from "../assets/spotify_logo.png";
 
 interface ActionParams{
   //params: Params,

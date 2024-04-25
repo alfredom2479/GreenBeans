@@ -85,7 +85,7 @@ export default function NavBar(){
   },[loaderData,navigate])
 
   return (
-    <div className="max-h-screen h-screen flex flex-col items-center ">
+    <div className="h-[100dvh] flex flex-col items-center ">
 
       <div className="h-14 flex items-center justify-between  w-full px-2">
         <button className="flex-1" onClick={()=>{setShowSideBar(true)}}>
