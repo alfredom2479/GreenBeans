@@ -111,45 +111,4 @@ export default function NavBar(){
     </div>
   )
 
-  /*
-  return (
-    <div className="max-h-screen h-screen flex flex-col items-center justify-center">
-      <Outlet/>
-      <nav className="flex fixed bottom-2 left-0 right-0 h-12 justify-between">
-        {currUser === null ? null :
-          <NavbarItem 
-            name="top"
-            path="/top" 
-            svgPath={topSvg}
-        />
-        }
-        {currUser === null ? null :
-          <NavbarItem 
-            name="saved"
-            path="/saved" 
-            svgPath={savedSvg}
-          />
-        }
-        <NavbarItem 
-          name="search"
-          path="/" 
-          svgPath={linkSvg}
-        />
-        {
-          !currUser || currUser==="" ?
-            <a className={accountStatusStyleString}
-            href="/api/auth/requestauth">
-              Log In
-            </a>
-          :
-            <button className={accountStatusStyleString}
-              onClick={()=>{setShowLogOutModal(true)}}>
-              {currUser}
-            </button>
-        }
-      </nav>
-      { showLogOutModal ? <LogOutModal setShowModal={setShowLogOutModal}/> : null }
-    </div>
-  )
-  */
 }

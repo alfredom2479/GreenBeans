@@ -49,7 +49,7 @@ export default function TopPage(){
         </div> */}
          
         <nav className="flex flex-col justify-center font-bold  h-12">
-          <ul className={`flex text-white`}>
+          <ul className={`flex text-stone-200`}>
           <TopNavItem path="month" name="30d"/>
           <TopNavItem path="sixmonths" name="6m"/>
           <TopNavItem path="alltime" name="y+"/>

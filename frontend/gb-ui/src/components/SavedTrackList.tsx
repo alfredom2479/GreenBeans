@@ -14,13 +14,11 @@ interface URLParams{
 
 export async function loader({params}:URLParams){
 
-  
-
   const accessToken:string|null = localStorage.getItem("access_token");
   if(!accessToken || accessToken === ""){
     return redirect('/');
   }
-if(!params.page){
+  if(!params.page){
     return redirect("/saved/0");
   }
 
@@ -34,18 +32,33 @@ if(!params.page){
       pageNumber = 0
     }
   }
+
+  const sessionSavedTracksData: string|null = sessionStorage.getItem("saved_tracks"+pageNumber);
+
+  if(sessionSavedTracksData !== null){
+    try{
+      const savedTracksDataJsond = JSON.parse(sessionSavedTracksData);
+      if('items' in savedTracksDataJsond){
+        return savedTracksDataJsond.items;
+    }
+    }catch(err){
+      console.log(err)
+    }
+  }
+
     const data = await requestSavedTracks(pageNumber,50,accessToken);
     
     if(data && data.items && Array.isArray(data.items)){
       if(data.items.length === 0){
         if(pageNumber !== 0 ){
-          return redirect("/saved/0")
+          return redirect("/saved/0");
         }
       }
+      sessionStorage.setItem("saved_tracks"+pageNumber,JSON.stringify(data));
       return data.items;
     }
     else{
-      return [];
+      return null;
     }
 }
 
@@ -59,7 +72,7 @@ export default function SavedTrackList(){
 
   const listRef = useRef<HTMLDivElement | null>(null);
 
-  const prevNextDefaultStyle = "flex-1 items-center justify-center bg-stone-900 hover:text-purple-600 text-purple-200 text-xl font-bold p-1  text-center border-white border-2 border-l-0 hover:border-purple-600"
+  const prevNextDefaultStyle = "flex-1 items-center justify-center bg-stone-900 hover:text-green-600 text-green-200 text-xl font-bold p-1  text-center border-white border-2 border-l-0 hover:border-green-300"
 
   const {page} = useParams();
   let pageNumber:number = 0;

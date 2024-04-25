@@ -32,17 +32,30 @@ export async function loader({params}:TopParams){
   if(!access_token || access_token===""){
     return redirect("/");
   }
-if(!params.range){
+  if(!params.range){
     return redirect("/top/month");
   }
 
-    const data = await requestTopTracks(access_token,rangeNum);
-    if(data.items && Array.isArray(data.items)){
-      return data.items
+  const sessionData: string|null = sessionStorage.getItem("top_tracks"+rangeNum);
+
+  if(sessionData !== null ){
+    try{
+      const topTracksJsond = JSON.parse(sessionData);
+      if('items' in topTracksJsond){
+        return topTracksJsond.items;
+      }
+    }catch(err){
+      console.log(err);
     }
+  }
+
+  const data = await requestTopTracks(access_token,rangeNum);
+  if(data.items && Array.isArray(data.items)){
+    sessionStorage.setItem("top_tracks"+rangeNum,JSON.stringify(data))
+    return data.items;
+  }
     
-    //need to return error to be handled by error element
-    return null;
+  return null;
     
 }
 

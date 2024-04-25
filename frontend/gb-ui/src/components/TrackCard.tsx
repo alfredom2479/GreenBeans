@@ -12,7 +12,7 @@ function handleDefaultModalError(prevInfo:SongPreviewInfo ){
 
 export default function TrackCard({id,name,artist,image,url,popModal=handleDefaultModalError,trackSaveState=TrackSaveState.CantSave}:ITrack){
 
-  const defaultTrackCardOptionString  = "flex-1 bg-purple-200 text-black flex p-1 text-center "
+  const defaultTrackCardOptionString  = "flex-1 bg-stone-200 hover:bg-green-400 text-black flex p-1 text-center "
     + "items-center justify-center font-bold text-lg rounded-3xl m-2 shrink-0  w-10"
 
   const disabledTrackCardOptionString  = "flex-1 bg-neutral-600 text-black flex p-1 text-center "
@@ -28,8 +28,8 @@ export default function TrackCard({id,name,artist,image,url,popModal=handleDefau
         </div>
 
         <div className="flex basis-7/12 flex-col shrink-1 grow-1 pl-2 overflow-hidden">
-          <div className="flex-1 text-purple-200 font-bold overflow-x-hidden truncate">{name}</div> 
-          <div className="flex-1 text-purple-300 overflow-x-hidden truncate">{artist}</div>
+          <div className="flex-1 text-stone-200 font-bold overflow-x-hidden truncate">{name}</div> 
+          <div className="flex-1 text-stone-300 overflow-x-hidden truncate">{artist}</div>
         </div>
 
         <div className=" flex basis-4/12 shrink-0 w-fit justify-evenly">
