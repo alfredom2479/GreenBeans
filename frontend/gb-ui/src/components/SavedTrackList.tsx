@@ -14,13 +14,11 @@ interface URLParams{
 
 export async function loader({params}:URLParams){
 
-  
-
   const accessToken:string|null = localStorage.getItem("access_token");
   if(!accessToken || accessToken === ""){
     return redirect('/');
   }
-if(!params.page){
+  if(!params.page){
     return redirect("/saved/0");
   }
 
@@ -34,18 +32,34 @@ if(!params.page){
       pageNumber = 0
     }
   }
+
+  const sessionSavedTracksData: string|null = sessionStorage.getItem("saved_tracks"+pageNumber);
+
+  if(sessionSavedTracksData !== null){
+    try{
+      const savedTracksDataJsond = JSON.parse(sessionSavedTracksData);
+      if('items' in savedTracksDataJsond){
+        console.log("used save tracks session data");
+        return savedTracksDataJsond.items;
+    }
+    }catch(err){
+      console.log(err)
+    }
+  }
+
     const data = await requestSavedTracks(pageNumber,50,accessToken);
     
     if(data && data.items && Array.isArray(data.items)){
       if(data.items.length === 0){
         if(pageNumber !== 0 ){
-          return redirect("/saved/0")
+          return redirect("/saved/0");
         }
       }
+      sessionStorage.setItem("saved_tracks"+pageNumber,JSON.stringify(data));
       return data.items;
     }
     else{
-      return [];
+      return null;
     }
 }
 
