@@ -42,7 +42,6 @@ export async function loader({params}:TopParams){
     try{
       const topTracksJsond = JSON.parse(sessionData);
       if('items' in topTracksJsond){
-        console.log("used session data");
         return topTracksJsond.items;
       }
     }catch(err){

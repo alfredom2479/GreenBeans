@@ -39,7 +39,6 @@ export async function loader({params}:URLParams){
     try{
       const savedTracksDataJsond = JSON.parse(sessionSavedTracksData);
       if('items' in savedTracksDataJsond){
-        console.log("used save tracks session data");
         return savedTracksDataJsond.items;
     }
     }catch(err){
