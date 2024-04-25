@@ -59,7 +59,7 @@ export default function SavedTrackList(){
 
   const listRef = useRef<HTMLDivElement | null>(null);
 
-  const prevNextDefaultStyle = "flex-1 items-center justify-center bg-stone-900 hover:text-purple-600 text-purple-200 text-xl font-bold p-1  text-center border-white border-2 border-l-0 hover:border-purple-600"
+  const prevNextDefaultStyle = "flex-1 items-center justify-center bg-stone-900 hover:text-green-600 text-green-200 text-xl font-bold p-1  text-center border-white border-2 border-l-0 hover:border-green-300"
 
   const {page} = useParams();
   let pageNumber:number = 0;

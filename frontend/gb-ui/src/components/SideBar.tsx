@@ -26,7 +26,7 @@ export default function SideBar({setShowSidebar, currUser, setShowLogOutModal}:p
 
             <NavLink 
               to="link-search"
-              className="my-4"
+              className="my-4 hover:text-green-400"
               >Link-Search
             </NavLink>
             
@@ -34,12 +34,12 @@ export default function SideBar({setShowSidebar, currUser, setShowLogOutModal}:p
             <>
               <NavLink
                 to="saved"
-                className="my-4"
+                className="my-4 hover:text-green-400"
                 >Saved Tracks
               </NavLink> 
               <NavLink
                 to="top"
-                className="my-4"
+                className="my-4 hover:text-green-400"
                 >Top Tracks
               </NavLink>
             </>   
@@ -48,12 +48,12 @@ export default function SideBar({setShowSidebar, currUser, setShowLogOutModal}:p
           }
           {
             currUser == null ?
-              <a className= "flex justify-center items-center basis-32 grow text-center font-bold "
+              <a className= "flex justify-center items-center basis-32 grow text-center font-bold hover:text-green-400"
                 href="/api/auth/requestauth">
                   Log In
               </a>
               :
-              <button className="flex justify-center items-center basis-32 grow text-center font-bold text"
+              <button className="flex justify-center items-center basis-32 grow text-center font-bold hover:text-green-400"
                 onClick={()=>{setShowLogOutModal(true)}}>
                   Log Out
                 </button>

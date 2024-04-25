@@ -116,7 +116,7 @@ export default function TrackPage(){
 
   return(
     <div className=" h-[calc(100%-3.5rem)] w-full flex flex-col ">
-        <div className=" bg-stone-900 text-purple-200 flex h-32 w-full ">
+        <div className=" bg-stone-900 text-stone-200 flex h-32 w-full ">
 
           <div className=" shrink-0 flex items-center w-32 h-full">
             <img src={trackData.image} 
@@ -128,7 +128,7 @@ export default function TrackPage(){
             <div className="flex-1 text-xl overflow-hidden overflow-y-scroll text-ellipsis">
               {trackData.name}
             </div>
-            <div className=" flex-1 text-xl text-purple-300  overflow-y-scroll">
+            <div className=" flex-1 text-xl text-stone-300  overflow-y-scroll">
               <i>{trackData.artist}</i>
             </div>
           </div>

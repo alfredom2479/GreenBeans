@@ -167,17 +167,17 @@ export default function RecSection(){
 
   return(
     <>
-    <nav className=" font-bold bg-purple-200 max-h-14">
+    <nav className=" font-bold bg-stone-200 max-h-14">
           <ul className={`flex text-stone-900 h-full`}>
             <li className={`flex-1 flex justify-center `}>
               <button onClick={()=>setIsSelectingOptions(false)}
-                className={!isSelectingOptions ? "text-stone-950 bg-purple-600 text-center w-full" : "text-center w-full"}>
+                className={!isSelectingOptions ? "text-stone-950 bg-green-400 text-center w-full" : "text-center w-full"}>
                 Recommendations
               </button>
             </li>
             <li className={`flex-1 flex justify-center `}>
               <button onClick={()=>setIsSelectingOptions(true)}  
-                className={isSelectingOptions ? "text-stone-950 bg-purple-600 text-center w-full" : "text-center w-full"}>
+                className={isSelectingOptions ? "text-stone-950 bg-green-400 text-center w-full" : "text-center w-full"}>
                 Options
               </button>
             </li>
