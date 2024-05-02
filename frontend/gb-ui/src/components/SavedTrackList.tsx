@@ -146,6 +146,7 @@ export default function SavedTrackList(){
           return (
             <li key={track.id}>
               <TrackCard
+                /*
                 id={track.id}
                 name={track.name}
                 artist={track.artist}
@@ -153,6 +154,9 @@ export default function SavedTrackList(){
                 url={track.url}
                 popModal={handleListenOnClick}
                 trackSaveState={TrackSaveState.Saved}
+                */
+               track={{...track,trackSaveState:TrackSaveState.Saved}}
+               popModal={handleListenOnClick}
                 />
             </li>
             

@@ -97,6 +97,7 @@ export default function TopOf(){
             return (
             <li key={track.id}>
             <TrackCard 
+              /*
               id={track.id} 
               name={track.name}
               artist={track.artist}
@@ -104,6 +105,9 @@ export default function TopOf(){
               url={track.url}
               popModal={handleListenOnClick}
               trackSaveState={TrackSaveState.CantSave}
+              */
+             track={{...track,trackSaveState:TrackSaveState.CantSave}}
+             popModal={handleListenOnClick}
             />
             </li>)
           })}

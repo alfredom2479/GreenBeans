@@ -90,11 +90,31 @@ export default function RecSection(){
 
     setCheckedBoxes([]);
 
+
     const testFunc = async (token:string,id:string,isLoggedIn:boolean)=>{
       if(!ignore){
         setIsLoadingRecs(true);
       }
-      const data = await requestSpotifyRec(token,id,[],{},isLoggedIn);
+
+    let data = null;
+      //const localRecs = localStorage.getItem("recs_"+id);
+            /*
+            if(localRecs !== null){
+              try{
+                const localRecsJsond = JSON.parse(localRecs);
+                data = localRecsJsond;
+                //jconsole.log(localRecsJsond);
+              }catch(err){
+                console.log(err);
+                data = null;
+              }
+            }
+            */
+      //if(data === null){
+        data = await requestSpotifyRec(token,id,[],{},isLoggedIn);
+        //localStorage.setItem("recs_"+id, JSON.stringify(data));
+      //}
+      //console.log(data);
 
       if(data.tracks && Array.isArray(data.tracks)){
         const trackData = data.tracks;
@@ -145,6 +165,7 @@ export default function RecSection(){
       if('trackId' in loaderData && typeof loaderData.trackId === "string" && loaderData.trackId.length > 0){
         if('access_token' in loaderData && typeof loaderData.access_token === "string" &&
           'isLoggedIn' in loaderData && typeof loaderData.isLoggedIn === "boolean"){
+
             testFunc(loaderData.access_token,loaderData.trackId,loaderData.isLoggedIn);
             return () =>{
               ignore = true; 

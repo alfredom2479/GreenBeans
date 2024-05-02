@@ -28,8 +28,59 @@ export async function loader({params}:IURLParams){
     access_token = "";
   }
 
-  const [trackLoaderData,audioFeatureLoaderData] = await Promise.all([requestSpotifyTrack(access_token, trackId, isLoggedIn),requestSpotifyTrackAudioFeatures(access_token,trackId, isLoggedIn)])
+  //const localTrackData = localStorage.getItem("track_data_"+trackId);
+  //const localAudioFeatures = localStorage.getItem("audio_features_"+trackId)
+
+  //const localDataExists:boolean[]= [false,false];
+
+  //let audioFeatureLoaderData = null;
+  //let trackLoaderData = null;
+/*
+
+  if(localAudioFeatures !== null){
+    try{
+      const localAudioFeaturesJsond = JSON.parse(localAudioFeatures);
+      //localDataExists[1] = true;
+      audioFeatureLoaderData = localAudioFeaturesJsond;
+    }catch(err){
+      console.log(err);
+      //localDataExists[1] = false;
+      localStorage.removeItem("audio_features_"+trackId);
+    }
+  }
+  if(localTrackData !== null){
+    try{
+      const localTrackDataJsond = JSON.parse(localTrackData);
+      //localDataExists[0] = true;
+      trackLoaderData = localTrackDataJsond;
+    }catch(err){
+      console.log(err);
+      //localDataExists[0] = true;
+      localStorage.removeItem("track_data_"+trackId);
+    }
+  }
+
+  if(trackLoaderData=== null){
+    //console.log("useing local audio features");
+    trackLoaderData = await requestSpotifyTrack(access_token, trackId, isLoggedIn);
+    localStorage.setItem("track_data_"+trackId,JSON.stringify(trackLoaderData));
+    //return {trackLoaderData,audioFeatureLoaderData};
+  }
+  if(audioFeatureLoaderData === null){
+    audioFeatureLoaderData = await requestSpotifyTrackAudioFeatures(access_token,trackId, isLoggedIn);
+    localStorage.setItem("audio_features_"+trackId,JSON.stringify(audioFeatureLoaderData));
+  }
   return {trackLoaderData,audioFeatureLoaderData};
+ */ 
+  //else{
+    const [trackLoaderData,audioFeatureLoaderData] = await Promise.all([requestSpotifyTrack(access_token, trackId, isLoggedIn),requestSpotifyTrackAudioFeatures(access_token,trackId, isLoggedIn)])
+    //localStorage.setItem("audio_features_"+trackId,JSON.stringify(audioFeatureLoaderData));
+    console.log(trackLoaderData);
+    return {trackLoaderData,audioFeatureLoaderData};
+  //}
+  
+
+  
 
 }
 
@@ -39,6 +90,7 @@ export default function TrackPage(){
 
   const [trackData, setTrackData] = useState<ITrack>({id:"",name: "", artist: "", image:"",trackSaveState:TrackSaveState.CantSave});
   const [currAudioFeatures,setCurrAudioFeatures] = useState<AudioFeatures>({});
+
     
   useEffect(()=>{
 
@@ -64,12 +116,16 @@ export default function TrackPage(){
         audioFeatureLoaderData = {};
     }
 
+    //console.log(trackLoaderData);
+    //console.log(audioFeatureLoaderData);
+
     if(typeof trackLoaderData === 'object' && trackLoaderData ){
 
       const possibleTrack: ITrack|null = isTrack(trackLoaderData,1);
       //some golang influence lol
       if(possibleTrack != null){
-        setTrackData(possibleTrack)
+        console.log(possibleTrack);
+        setTrackData(possibleTrack);
       }
 
       if(typeof audioFeatureLoaderData === 'object' && audioFeatureLoaderData){

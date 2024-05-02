@@ -1,16 +1,23 @@
 import {Link} from "react-router-dom"
-import { ITrack, SongPreviewInfo, TrackSaveState } from "../interfaces"
+import { ITrack, SongPreviewInfo, } from "../interfaces"
 
 import listenSvg from '../assets/listen.svg';
 import findRecsSvg from '../assets/search-list.svg';
 import SaveButton from "./SaveButton";
 
 
-function handleDefaultModalError(prevInfo:SongPreviewInfo ){
-  console.log("no modal was given to handle preview: "+ prevInfo.name+" "+prevInfo+" "+prevInfo.url);
+function handleDefaultModalError(songPreviewInfo:SongPreviewInfo | undefined ){
+  if(songPreviewInfo && songPreviewInfo.name && songPreviewInfo.artist && songPreviewInfo.url){
+    console.log("no modal was given to handle preview: "+ songPreviewInfo.name+" "+songPreviewInfo+" "+songPreviewInfo.url);
+  }
 }
 
-export default function TrackCard({id,name,artist,image,url,popModal=handleDefaultModalError,trackSaveState=TrackSaveState.CantSave}:ITrack){
+interface TrackCardParams{
+  track : ITrack,
+  popModal: (songPreviewInfo:SongPreviewInfo | undefined) =>void,
+}
+
+export default function TrackCard({track,popModal=handleDefaultModalError}:TrackCardParams){
 
   const defaultTrackCardOptionString  = "flex-1 bg-stone-200 hover:bg-green-400 text-black flex p-1 text-center "
     + "items-center justify-center font-bold text-lg rounded-3xl m-2 shrink-0  w-10"
@@ -24,26 +31,26 @@ export default function TrackCard({id,name,artist,image,url,popModal=handleDefau
     <div className="flex bg-stone-800 my-1 rounded-xl h-14">
         <div 
         className=" h-14 w-14 shrink-0">
-        <img className="bg-fill" src={image} />
+        <img className="bg-fill" src={track.image} />
         </div>
 
         <div className="flex basis-7/12 flex-col shrink-1 grow-1 pl-2 overflow-hidden">
-          <div className="flex-1 text-stone-200 font-bold overflow-x-hidden truncate">{name}</div> 
-          <div className="flex-1 text-stone-300 overflow-x-hidden truncate">{artist}</div>
+          <div className="flex-1 text-stone-200 font-bold overflow-x-hidden truncate">{track.name}</div> 
+          <div className="flex-1 text-stone-300 overflow-x-hidden truncate">{track.artist}</div>
         </div>
 
         <div className=" flex basis-4/12 shrink-0 w-fit justify-evenly">
 
-          <Link to={`/track/${id}`}
+          <Link to={`/track/${track.id}`}
           // className="flex-1 bg-green-950 text-white basis-1/6 p-1 text-center flex items-center justify-center font-bold text-lg rounded-3xl"
           className={defaultTrackCardOptionString}
           >
             <img src={findRecsSvg} alt="recs" className="w-8"/>
           </Link>
 
-          {url!==null && url !==undefined && name !==null && name !== undefined && artist !== null && name !== undefined ?
+          {track.url!==null && track.url !==undefined && track.name !==null && track.name !== undefined && track.artist !== null && track.artist !== undefined ?
             <button
-              onClick={()=>popModal({name:name,artist:artist,url:url})}
+              onClick={()=>popModal({name:track.name,artist: track.artist,url: track.url?track.url :""})}
               className={defaultTrackCardOptionString}
             >
               <img src={listenSvg} alt="listen" className="w-8"/>
@@ -57,7 +64,7 @@ export default function TrackCard({id,name,artist,image,url,popModal=handleDefau
               </button>
           }
 
-           <SaveButton id={id} trackSaveState={trackSaveState}/>
+           <SaveButton id={track.id} trackSaveState={track.trackSaveState}/>
 
         </div>
       </div> 

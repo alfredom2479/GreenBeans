@@ -54,10 +54,18 @@ const isTrack = (possibleTrack: any, size:number=0): ITrack|null=>{
   if(possibleTrack.external_urls && possibleTrack.external_urls.spotify){
     tempTrack.spotify_url = possibleTrack.external_urls.spotify;
   }
-
+  
   return tempTrack;
 }
 
+/*
+// eslint-disable-next-line  @typescript-eslint/no-explicit-any
+const isITrackObject = (possibleITrack:any){
+
+}
+*/
+
 export {
-  isTrack
+  isTrack,
+  //isITrackObject
 }
