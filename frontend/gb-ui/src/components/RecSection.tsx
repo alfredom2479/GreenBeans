@@ -96,25 +96,8 @@ export default function RecSection(){
         setIsLoadingRecs(true);
       }
 
-    let data = null;
-      //const localRecs = localStorage.getItem("recs_"+id);
-            /*
-            if(localRecs !== null){
-              try{
-                const localRecsJsond = JSON.parse(localRecs);
-                data = localRecsJsond;
-                //jconsole.log(localRecsJsond);
-              }catch(err){
-                console.log(err);
-                data = null;
-              }
-            }
-            */
-      //if(data === null){
-        data = await requestSpotifyRec(token,id,[],{},isLoggedIn);
-        //localStorage.setItem("recs_"+id, JSON.stringify(data));
-      //}
-      //console.log(data);
+      let data = null;
+      data = await requestSpotifyRec(token,id,[],{},isLoggedIn);
 
       if(data.tracks && Array.isArray(data.tracks)){
         const trackData = data.tracks;

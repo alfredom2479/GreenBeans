@@ -2,15 +2,43 @@ import { ITrack } from "./interfaces";
 
 let request: IDBOpenDBRequest;
 let db: IDBDatabase;
-const version = 1;
+let version = 1;
+const dbName = "greenbeansDB";
 
 export enum Stores {
   Tracks = 'tracks'
 }
 
+export const openIDB = ()=>{
+  request = indexedDB.open(dbName);
+
+  request.onupgradeneeded = () => {
+    console.log("openIDB - upgrade needed");
+    db = request.result;
+  }
+
+  if(!db.objectStoreNames.contains(Stores.Tracks)){
+    console.log("creating tracks store...");
+    db.createObjectStore(Stores.Tracks, {keyPath: 'id'});
+  }
+  
+  request.onsuccess = (event) => {
+    console.log("openIDB - onsuccess");
+    console.log(event);
+    db = request.result;
+
+    version = db.version;
+  };
+
+  request.onerror = (event) => {
+
+    console.log("There ahs been an error opening IndexedDB Database");
+    console.log(event);
+  }
+}
 
 export const addITrack = (storeName:string,data:ITrack)=>{
-  request = indexedDB.open('greenbeansDB',version);
+  request = indexedDB.open(dbName,version);
 
   request.onsuccess = () =>{
     console.log("request.onsuccess - addData",data);

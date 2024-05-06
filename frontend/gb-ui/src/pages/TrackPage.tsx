@@ -6,6 +6,7 @@ import { ITrack, AudioFeatures, TrackSaveState,  } from "../interfaces";
 import { isTrack } from "../utils";
 
 import spotifyLogo from "../assets/spotify_logo.png";
+//import { Stores, addITrack } from "../idb";
 
 interface IURLParams{
   params:Params
@@ -126,6 +127,7 @@ export default function TrackPage(){
       if(possibleTrack != null){
         console.log(possibleTrack);
         setTrackData(possibleTrack);
+        //addITrack(Stores.Tracks, possibleTrack);
       }
 
       if(typeof audioFeatureLoaderData === 'object' && audioFeatureLoaderData){

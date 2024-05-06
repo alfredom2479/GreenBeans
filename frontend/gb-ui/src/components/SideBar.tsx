@@ -25,21 +25,37 @@ export default function SideBar({setShowSidebar, currUser, setShowLogOutModal}:p
             }
 
             <NavLink 
-              to="link-search"
-              className="my-4 hover:text-green-400"
+              to="/link-search"
+              //className="my-4 hover:text-green-400"
+              className = {({isActive,isPending,isTransitioning})=>[
+                isActive? "text-green-400 bold pointer-events-none" : "",
+                isPending? "pointer-events-none" : "",
+                isTransitioning? "pointer-events-none" : "",
+                "hover:text-green-400 my-4"
+              ].join(" ")}
               >Link-Search
             </NavLink>
             
             {currUser !== null ? 
             <>
               <NavLink
-                to="saved"
-                className="my-4 hover:text-green-400"
+                to="/saved"
+                className = {({isActive,isPending,isTransitioning})=>[
+                isActive? "text-green-400 bold pointer-events-none" : "",
+                isPending? "pointer-events-none" : "",
+                isTransitioning? "pointer-events-none" : "",
+                "hover:text-green-400 my-4"
+              ].join(" ")}
                 >Saved Tracks
               </NavLink> 
               <NavLink
-                to="top"
-                className="my-4 hover:text-green-400"
+                to="/top"
+                className = {({isActive,isPending,isTransitioning})=>[
+                isActive? "text-green-400 bold pointer-events-none" : "",
+                isPending? "pointer-events-none" : "",
+                isTransitioning? "pointer-events-none" : "",
+                "hover:text-green-400 my-4"
+              ].join(" ")}
                 >Top Tracks
               </NavLink>
             </>   

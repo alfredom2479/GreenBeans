@@ -32,6 +32,7 @@ export default function SaveButton({trackSaveState, id}:SaveButtonParams){
             <img src={trackSavedSvg} alt="saved" className="w-8"/>
           </button>
         )
+        
 
         try{
           const responseData = await saveSpotifyTrack(id);
