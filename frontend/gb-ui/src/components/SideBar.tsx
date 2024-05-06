@@ -28,7 +28,7 @@ export default function SideBar({setShowSidebar, currUser, setShowLogOutModal}:p
               to="/link-search"
               //className="my-4 hover:text-green-400"
               className = {({isActive,isPending,isTransitioning})=>[
-                isActive? "text-green-400 bold pointer-events-none" : "",
+                isActive? "text-green-400 font-bold pointer-events-none" : "",
                 isPending? "pointer-events-none" : "",
                 isTransitioning? "pointer-events-none" : "",
                 "hover:text-green-400 my-4"
@@ -41,7 +41,7 @@ export default function SideBar({setShowSidebar, currUser, setShowLogOutModal}:p
               <NavLink
                 to="/saved"
                 className = {({isActive,isPending,isTransitioning})=>[
-                isActive? "text-green-400 bold pointer-events-none" : "",
+                isActive? "text-green-400 font-bold pointer-events-none" : "",
                 isPending? "pointer-events-none" : "",
                 isTransitioning? "pointer-events-none" : "",
                 "hover:text-green-400 my-4"
@@ -51,7 +51,7 @@ export default function SideBar({setShowSidebar, currUser, setShowLogOutModal}:p
               <NavLink
                 to="/top"
                 className = {({isActive,isPending,isTransitioning})=>[
-                isActive? "text-green-400 bold pointer-events-none" : "",
+                isActive? "text-green-400 font-bold pointer-events-none" : "",
                 isPending? "pointer-events-none" : "",
                 isTransitioning? "pointer-events-none" : "",
                 "hover:text-green-400 my-4"
