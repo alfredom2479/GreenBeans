@@ -13,9 +13,13 @@ import hamburgerSvg from '../assets/hamburger3.svg';
 
 import spotifyLogo from "../assets/spotify_logo.png";
 import SideBar from "./SideBar";
+import { openIDB } from "../idb";
 
 export async function loader(){
   const access_token:string|null = localStorage.getItem("access_token");
+
+  openIDB();
+  console.log("navbar loader running");
 
   if(!access_token || access_token===""){
     return "[ERROR]";

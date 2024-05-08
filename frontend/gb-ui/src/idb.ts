@@ -1,30 +1,36 @@
-import { ITrack } from "./interfaces";
+import { AudioFeatures, ITrack } from "./interfaces";
 
 let request: IDBOpenDBRequest;
 let db: IDBDatabase;
-let version = 1;
+let version = 2;
 const dbName = "greenbeansDB";
 
 export enum Stores {
-  Tracks = 'tracks'
+  Tracks = 'tracks',
+  AudioFeatures = 'audio_features'
 }
 
 export const openIDB = ()=>{
-  request = indexedDB.open(dbName);
+  request = indexedDB.open(dbName,version);
 
   request.onupgradeneeded = () => {
     console.log("openIDB - upgrade needed");
     db = request.result;
+
+    if(!db.objectStoreNames.contains(Stores.Tracks)){
+      console.log("creating tracks store...");
+      db.createObjectStore(Stores.Tracks, {keyPath: 'id'});
+    }
+
+    if(!db.objectStoreNames.contains(Stores.AudioFeatures)){
+      console.log("creating audio features stores...");
+      db.createObjectStore(Stores.AudioFeatures,{keyPath:'id'});
+    }
   }
 
-  if(!db.objectStoreNames.contains(Stores.Tracks)){
-    console.log("creating tracks store...");
-    db.createObjectStore(Stores.Tracks, {keyPath: 'id'});
-  }
-  
   request.onsuccess = (event) => {
     console.log("openIDB - onsuccess");
-    console.log(event);
+    //console.log(event);
     db = request.result;
 
     version = db.version;
@@ -117,7 +123,7 @@ export const getITrack= (storeName:string,key:string):Promise<ITrack|null>=>{
     }
   })
 }
-export const addAudioFeatures = (storeName:string, data:ITrack)=>{
+export const addAudioFeatures = (storeName:string, data:AudioFeatures)=>{
     request = indexedDB.open(dbName,version);
 
     request.onsuccess= () => {
@@ -141,7 +147,7 @@ export const addAudioFeatures = (storeName:string, data:ITrack)=>{
     }
   }
 
-  export const getAudioFeatures = (storeName:string,key:string):Promise<object|null>=>{
+  export const getAudioFeatures = (storeName:string,key:string):Promise<AudioFeatures|null>=>{
     return new Promise((resolve)=>{
       request = indexedDB.open(dbName);
 

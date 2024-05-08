@@ -99,7 +99,7 @@ export default function RecSection(){
 
       let data = null;
       
-      data = await requestSpotifyRec(token,id,[],{},isLoggedIn);
+      data = await requestSpotifyRec(token,id,[],{id},isLoggedIn);
 
       if(data.tracks && Array.isArray(data.tracks)){
         const trackData = data.tracks;

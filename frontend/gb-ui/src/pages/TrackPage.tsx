@@ -6,7 +6,7 @@ import { ITrack, AudioFeatures, TrackSaveState,  } from "../interfaces";
 import { isAudioFeatures, isITrackObject, isTrack } from "../utils";
 
 import spotifyLogo from "../assets/spotify_logo.png";
-import { Stores, getITrack,addITrack} from "../idb";
+import { Stores, getITrack,addITrack, getAudioFeatures, addAudioFeatures} from "../idb";
 
 interface IURLParams{
   params:Params
@@ -33,15 +33,19 @@ export async function loader({params}:IURLParams){
   let audioFeatureLoaderData = null;
 
   let usingIDBTrackData:boolean = false;
-  const usingIDBFeatureData:boolean = false;
+  let usingIDBFeatureData:boolean = false;
 
   const idbTrackData:ITrack|null= await getITrack(Stores.Tracks,trackId);
+  const idbAudioFeatureData:AudioFeatures|null = await getAudioFeatures(Stores.AudioFeatures,trackId);
   
   if(idbTrackData != null){
-    console.log(idbTrackData);
     usingIDBTrackData = true;
     trackLoaderData = idbTrackData;
-    console.log("using idb track data");
+  }
+
+  if(idbAudioFeatureData != null){
+    usingIDBFeatureData = true;
+    audioFeatureLoaderData = idbAudioFeatureData; 
   }
 
   if(!usingIDBTrackData){
@@ -49,7 +53,6 @@ export async function loader({params}:IURLParams){
   }
   if(!usingIDBFeatureData){
     audioFeatureLoaderData = await requestSpotifyTrackAudioFeatures(access_token,trackId, isLoggedIn);
-    console.log(audioFeatureLoaderData);
   }
 
   
@@ -68,7 +71,7 @@ export default function TrackPage(){
   const loaderData = useLoaderData();
 
   const [trackData, setTrackData] = useState<ITrack>({id:"",name: "", artist: "", image:"",trackSaveState:TrackSaveState.CantSave});
-  const [currAudioFeatures,setCurrAudioFeatures] = useState<AudioFeatures>({});
+  const [currAudioFeatures,setCurrAudioFeatures] = useState<AudioFeatures>({id:""});
 
     
   useEffect(()=>{
@@ -93,7 +96,6 @@ export default function TrackPage(){
           audioFeatureLoaderData = loaderData.audioFeatureLoaderData
           usingIDBTrackData = loaderData.usingIDBTrackData;
           usingIDBFeatureData = loaderData.usingIDBFeatureData;
-          console.log(usingIDBFeatureData);
       }
       else{
         trackLoaderData = {};
@@ -132,7 +134,9 @@ export default function TrackPage(){
         const possibleAudioFeatures = isAudioFeatures(audioFeatureLoaderData);
         if (possibleAudioFeatures != null){
           setCurrAudioFeatures(possibleAudioFeatures);
-          console.log(possibleAudioFeatures);
+          if(!usingIDBFeatureData){
+            addAudioFeatures(Stores.AudioFeatures,possibleAudioFeatures);
+          }
         }
       }
     }

@@ -118,7 +118,14 @@ const isITrackObject = (possibleITrack:any):ITrack|null=>{
 
 // eslint-disable-next-line  @typescript-eslint/no-explicit-any
 const isAudioFeatures =(possibleAudioFeatures:any):AudioFeatures|null =>{
-  const tempAudioFeatures:AudioFeatures = {};
+  const tempAudioFeatures:AudioFeatures = {id:""};
+
+  if('id' in possibleAudioFeatures && typeof possibleAudioFeatures.id === 'string'){
+    tempAudioFeatures.id = possibleAudioFeatures.id;
+  }
+  else{
+    return null;
+  }
 
   if('acousticness' in possibleAudioFeatures && typeof possibleAudioFeatures.acousticness === 'number'){
     tempAudioFeatures.acousticness = possibleAudioFeatures.acousticness;

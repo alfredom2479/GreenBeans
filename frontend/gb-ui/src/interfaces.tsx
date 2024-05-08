@@ -24,6 +24,7 @@ export interface SongPreviewInfo{
 }
 
 export interface AudioFeatures{
+  id:string,
   acousticness?: number,
   danceability?: number,
   energy?: number,
