@@ -3,10 +3,10 @@ import { Outlet, useLoaderData} from "react-router-dom";
 import { requestSpotifyTrack,requestSpotifyTrackAudioFeatures } from "../api";
 import type {Params} from "react-router-dom";
 import { ITrack, AudioFeatures, TrackSaveState,  } from "../interfaces";
-import { isTrack } from "../utils";
+import { isAudioFeatures, isITrackObject, isTrack } from "../utils";
 
 import spotifyLogo from "../assets/spotify_logo.png";
-//import { Stores, addITrack } from "../idb";
+import { Stores, getITrack,addITrack} from "../idb";
 
 interface IURLParams{
   params:Params
@@ -21,7 +21,6 @@ export async function loader({params}:IURLParams){
     trackId = params.trackid;
   }
 
-
   let access_token:string|null = localStorage.getItem("access_token");
 
   if(!access_token || access_token===""){
@@ -29,60 +28,39 @@ export async function loader({params}:IURLParams){
     access_token = "";
   }
 
-  //const localTrackData = localStorage.getItem("track_data_"+trackId);
-  //const localAudioFeatures = localStorage.getItem("audio_features_"+trackId)
+  //begin the queries
+  let trackLoaderData = null;  
+  let audioFeatureLoaderData = null;
 
-  //const localDataExists:boolean[]= [false,false];
+  let usingIDBTrackData:boolean = false;
+  const usingIDBFeatureData:boolean = false;
 
-  //let audioFeatureLoaderData = null;
-  //let trackLoaderData = null;
-/*
-
-  if(localAudioFeatures !== null){
-    try{
-      const localAudioFeaturesJsond = JSON.parse(localAudioFeatures);
-      //localDataExists[1] = true;
-      audioFeatureLoaderData = localAudioFeaturesJsond;
-    }catch(err){
-      console.log(err);
-      //localDataExists[1] = false;
-      localStorage.removeItem("audio_features_"+trackId);
-    }
-  }
-  if(localTrackData !== null){
-    try{
-      const localTrackDataJsond = JSON.parse(localTrackData);
-      //localDataExists[0] = true;
-      trackLoaderData = localTrackDataJsond;
-    }catch(err){
-      console.log(err);
-      //localDataExists[0] = true;
-      localStorage.removeItem("track_data_"+trackId);
-    }
+  const idbTrackData:ITrack|null= await getITrack(Stores.Tracks,trackId);
+  
+  if(idbTrackData != null){
+    console.log(idbTrackData);
+    usingIDBTrackData = true;
+    trackLoaderData = idbTrackData;
+    console.log("using idb track data");
   }
 
-  if(trackLoaderData=== null){
-    //console.log("useing local audio features");
+  if(!usingIDBTrackData){
     trackLoaderData = await requestSpotifyTrack(access_token, trackId, isLoggedIn);
-    localStorage.setItem("track_data_"+trackId,JSON.stringify(trackLoaderData));
-    //return {trackLoaderData,audioFeatureLoaderData};
   }
-  if(audioFeatureLoaderData === null){
+  if(!usingIDBFeatureData){
     audioFeatureLoaderData = await requestSpotifyTrackAudioFeatures(access_token,trackId, isLoggedIn);
-    localStorage.setItem("audio_features_"+trackId,JSON.stringify(audioFeatureLoaderData));
+    console.log(audioFeatureLoaderData);
   }
-  return {trackLoaderData,audioFeatureLoaderData};
- */ 
-  //else{
-    const [trackLoaderData,audioFeatureLoaderData] = await Promise.all([requestSpotifyTrack(access_token, trackId, isLoggedIn),requestSpotifyTrackAudioFeatures(access_token,trackId, isLoggedIn)])
-    //localStorage.setItem("audio_features_"+trackId,JSON.stringify(audioFeatureLoaderData));
-    console.log(trackLoaderData);
-    return {trackLoaderData,audioFeatureLoaderData};
-  //}
-  
 
   
-
+  //[trackLoaderData,audioFeatureLoaderData] = await Promise.all([requestSpotifyTrack(access_token, trackId, isLoggedIn),requestSpotifyTrackAudioFeatures(access_token,trackId, isLoggedIn)])
+  //console.log(trackLoaderData);
+  return {
+    trackLoaderData,
+    audioFeatureLoaderData, 
+    usingIDBTrackData,
+    usingIDBFeatureData};
+  
 }
 
 export default function TrackPage(){
@@ -97,15 +75,25 @@ export default function TrackPage(){
 
     let trackLoaderData: object|null = {};
     let audioFeatureLoaderData: object|null = {};
+    let usingIDBTrackData: boolean = false;
+    let usingIDBFeatureData:boolean = false; 
 
     if(typeof loaderData === 'object' && loaderData) { 
+
       if('trackLoaderData' in loaderData  &&
         typeof loaderData.trackLoaderData==='object' &&
         'audioFeatureLoaderData' in loaderData &&
         typeof loaderData.audioFeatureLoaderData === 'object'
+        && 'usingIDBTrackData' in loaderData &&
+        typeof loaderData.usingIDBTrackData === 'boolean' &&
+        'usingIDBFeatureData' in loaderData &&
+        typeof loaderData.usingIDBFeatureData === 'boolean'
         ){
           trackLoaderData = loaderData.trackLoaderData;
           audioFeatureLoaderData = loaderData.audioFeatureLoaderData
+          usingIDBTrackData = loaderData.usingIDBTrackData;
+          usingIDBFeatureData = loaderData.usingIDBFeatureData;
+          console.log(usingIDBFeatureData);
       }
       else{
         trackLoaderData = {};
@@ -122,51 +110,30 @@ export default function TrackPage(){
 
     if(typeof trackLoaderData === 'object' && trackLoaderData ){
 
-      const possibleTrack: ITrack|null = isTrack(trackLoaderData,1);
+      let possibleTrack: ITrack |null = null;
+      if(usingIDBTrackData === true){
+        possibleTrack = isITrackObject(trackLoaderData);
+      }
+      else{
+        possibleTrack = isTrack(trackLoaderData,1);
+      }
+
       //some golang influence lol
+      
       if(possibleTrack != null){
-        console.log(possibleTrack);
+        //console.log(possibleTrack);
         setTrackData(possibleTrack);
-        //addITrack(Stores.Tracks, possibleTrack);
+        if(!usingIDBTrackData){
+          addITrack(Stores.Tracks, possibleTrack);
+        }
       }
 
       if(typeof audioFeatureLoaderData === 'object' && audioFeatureLoaderData){
-        const tempAudioFeatures:AudioFeatures = {}
-
-        if('acousticness' in audioFeatureLoaderData && typeof audioFeatureLoaderData['acousticness'] === "number"){
-          tempAudioFeatures.acousticness = audioFeatureLoaderData.acousticness
+        const possibleAudioFeatures = isAudioFeatures(audioFeatureLoaderData);
+        if (possibleAudioFeatures != null){
+          setCurrAudioFeatures(possibleAudioFeatures);
+          console.log(possibleAudioFeatures);
         }
-        if('danceability' in audioFeatureLoaderData && typeof audioFeatureLoaderData.danceability === "number"){
-            tempAudioFeatures.danceability = audioFeatureLoaderData.danceability
-        }
-        if('energy' in audioFeatureLoaderData && typeof audioFeatureLoaderData.energy === "number"){
-            tempAudioFeatures.energy = audioFeatureLoaderData.energy
-        }
-        if('liveness' in audioFeatureLoaderData && typeof audioFeatureLoaderData.liveness === "number"){
-            tempAudioFeatures.liveness = audioFeatureLoaderData.liveness
-        }
-        if('valence' in audioFeatureLoaderData && typeof audioFeatureLoaderData.valence === "number"){
-            tempAudioFeatures.valence = audioFeatureLoaderData.valence
-        }
-        if('tempo' in audioFeatureLoaderData && typeof audioFeatureLoaderData.tempo=== "number"){
-            tempAudioFeatures.tempo = audioFeatureLoaderData.tempo
-        }
-        if('duration_ms' in audioFeatureLoaderData && typeof audioFeatureLoaderData.duration_ms=== "number"){
-            tempAudioFeatures.duration_ms = audioFeatureLoaderData.duration_ms
-        }
-        if('time_signature' in audioFeatureLoaderData && typeof audioFeatureLoaderData.time_signature=== "number"){
-            tempAudioFeatures.time_signature = audioFeatureLoaderData.time_signature
-        }
-        if('instrumentalness' in audioFeatureLoaderData && typeof audioFeatureLoaderData.instrumentalness=== "number"){
-            tempAudioFeatures.instrumentalness= audioFeatureLoaderData.instrumentalness
-        }
-        if('key' in audioFeatureLoaderData && typeof audioFeatureLoaderData.key === "number"){
-            tempAudioFeatures.key= audioFeatureLoaderData.key
-        }
-        if('mode' in audioFeatureLoaderData && typeof audioFeatureLoaderData.mode === "number"){
-            tempAudioFeatures.mode = audioFeatureLoaderData.mode
-        }
-        setCurrAudioFeatures(tempAudioFeatures);
       }
     }
     
@@ -192,8 +159,8 @@ export default function TrackPage(){
           </div>
 
           <div className=" flex flex-1 basis-1/6 ">
-            <a href={trackData.spotify_url} target="_blank" className=" hover:bg-white w-full flex items-center justify-center ">
-              <img src={spotifyLogo} className="h-8"/>
+            <a href={trackData.spotify_url} target="_blank" className=" hover:bg-white w-full flex items-center justify-center p-2">
+              <img src={spotifyLogo} className="h-12"/>
             </a>
           </div>
         </div> 

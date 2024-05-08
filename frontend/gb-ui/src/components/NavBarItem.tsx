@@ -23,7 +23,6 @@ export default function NavbarItem({name,path,svgPath}:componenetParams){
         isTransitioning ? "pointer-events-none": ""
       ].join(" ")
     }
-       
     >
       <img src={svgPath} alt={name} className="w-8 text-white "/>
     </NavLink>

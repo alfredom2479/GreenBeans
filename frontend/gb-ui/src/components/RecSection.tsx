@@ -8,6 +8,7 @@ import { isTrack } from "../utils";
 import type {Params} from "react-router-dom";
 import {  requestSaveStatus, requestSpotifyRec } from "../api";
 import RecList from "./RecList";
+//import { getData, Stores } from "../idb";
 
 interface LoaderParams{
   params:Params
@@ -97,6 +98,7 @@ export default function RecSection(){
       }
 
       let data = null;
+      
       data = await requestSpotifyRec(token,id,[],{},isLoggedIn);
 
       if(data.tracks && Array.isArray(data.tracks)){
@@ -137,6 +139,7 @@ export default function RecSection(){
           }
          }
         if(!ignore){
+          //console.log(tempTrackList);
           setRecList(tempTrackList);
           setIsLoadingRecs(false);
        }
