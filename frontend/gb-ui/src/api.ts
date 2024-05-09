@@ -186,8 +186,8 @@ export async function requestSpotifyRec(accessToken:string, trackId:string, sele
 
     const name: keyof AudioFeatures = audioFeatureNames[i] as keyof AudioFeatures ;
 
-    const featureValue: number | undefined = audioFeatures[name] ;
-    if(featureValue === undefined) continue;
+    const featureValue: number | undefined |string = audioFeatures[name] ;
+    if(featureValue === undefined || typeof featureValue === 'string') continue;
     
     let upperLimit: number = featureValue;
     let lowerLimit: number = featureValue;
