@@ -1,17 +1,18 @@
 import { AudioFeatures, ITrack } from "./interfaces";
 
-let request: IDBOpenDBRequest;
+//let request: IDBOpenDBRequest;
 let db: IDBDatabase;
-let version = 2;
+let version = 3;
 const dbName = "greenbeansDB";
 
 export enum Stores {
   Tracks = 'tracks',
-  AudioFeatures = 'audio_features'
+  AudioFeatures = 'audio_features',
+  TrackLists = 'track_lists'
 }
 
 export const openIDB = ()=>{
-  request = indexedDB.open(dbName,version);
+  const request = indexedDB.open(dbName,version);
 
   request.onupgradeneeded = () => {
     console.log("openIDB - upgrade needed");
@@ -23,12 +24,18 @@ export const openIDB = ()=>{
     }
 
     if(!db.objectStoreNames.contains(Stores.AudioFeatures)){
-      console.log("creating audio features stores...");
+      console.log("creating audio features store...");
       db.createObjectStore(Stores.AudioFeatures,{keyPath:'id'});
+    }
+
+    if(!db.objectStoreNames.contains(Stores.TrackLists)){
+      console.log("creating Track Lists store...");
+      //dont forget to specify the key
+      db.createObjectStore(Stores.TrackLists);
     }
   }
 
-  request.onsuccess = (event) => {
+  request.onsuccess = () => {
     console.log("openIDB - onsuccess");
     //console.log(event);
     db = request.result;
@@ -44,10 +51,10 @@ export const openIDB = ()=>{
 }
 
 export const addITrack = async (storeName:string,data:ITrack)=>{
-  request = indexedDB.open(dbName,version);
+  const request = indexedDB.open(dbName,version);
 
   request.onsuccess = () =>{
-    console.log("request.onsuccess - addITrack",data);
+    //console.log("request.onsuccess - addITrack",data);
     db = request.result;
     const transaction = db.transaction(storeName,'readwrite');
     const store = transaction.objectStore(storeName);
@@ -58,26 +65,26 @@ export const addITrack = async (storeName:string,data:ITrack)=>{
     const error = request.error?.message;
 
     if(error){
-      console.log(error);
+      console.log("addITrack error - "+error);
     }
     else{
-      console.log("Unknown Error has occured");
-    }
+      console.log("addITrack - Unknown Error has occured");
+     }
   };
-
 }
 
-export const updateITrack = (storeName:string, key:string,data:ITrack)=>{
 
-  request = indexedDB.open(dbName, version);
+export const updateITrack = (storeName:string, data:ITrack)=>{
+
+  const request = indexedDB.open(dbName, version);
 
   request.onsuccess = ()=>{
-    console.log('onsuccess - update data', key);
+    //console.log('onsuccess - update data', key);
     db = request.result;
     const transaction = db.transaction(storeName,'readwrite');
     const store = transaction.objectStore(storeName);
-
     store.put(data);
+
     //in case we want to implement this func so that it can be used
     //without the complete data
 
@@ -93,13 +100,23 @@ export const updateITrack = (storeName:string, key:string,data:ITrack)=>{
       }
     */
     
-  }
+  };
+  request.onerror = () => {
+    const error = request.error?.message;
+
+    if(error){
+      console.log("updateITrack error - "+error);
+    }
+    else{
+      console.log("updateITrack - Unknown Error has occured");
+     }
+  };
 }
 
 export const getITrack= (storeName:string,key:string):Promise<ITrack|null>=>{
   return new Promise((resolve)=>{
 
-    request = indexedDB.open(dbName);
+    const request = indexedDB.open(dbName);
 
     request.onsuccess = () => {
       console.log("request.onsucces = getITrack");
@@ -124,7 +141,7 @@ export const getITrack= (storeName:string,key:string):Promise<ITrack|null>=>{
   })
 }
 export const addAudioFeatures = (storeName:string, data:AudioFeatures)=>{
-    request = indexedDB.open(dbName,version);
+    const request = indexedDB.open(dbName,version);
 
     request.onsuccess= () => {
       console.log("request.onsuccess = addAudioFeatures");
@@ -149,7 +166,7 @@ export const addAudioFeatures = (storeName:string, data:AudioFeatures)=>{
 
   export const getAudioFeatures = (storeName:string,key:string):Promise<AudioFeatures|null>=>{
     return new Promise((resolve)=>{
-      request = indexedDB.open(dbName);
+      const request = indexedDB.open(dbName);
 
       request.onsuccess = () => {
         console.log('request onsuccess - getAudioFeatures')
@@ -170,3 +187,83 @@ export const addAudioFeatures = (storeName:string, data:AudioFeatures)=>{
       }
     })
   }
+
+
+export const addTrackList = (storeName:string,trackList: ITrack[],key:string)=>{
+  //console.log(trackList);
+  const request= indexedDB.open(dbName,version);
+
+  const idList:string[] = [];
+
+  request.onsuccess = () =>{
+    console.log("request.onsucess - addTrackLIst");
+    db = request.result;
+    const transaction = db.transaction(storeName,'readwrite');
+    const store = transaction.objectStore(storeName);
+
+    for(let i=0; i < trackList.length; i++){
+      addITrack(Stores.Tracks,trackList[i]);
+      idList.push(trackList[i].id);
+    }
+    //u have to specify key
+    store.put(idList,key);
+  };
+
+  request.onerror = () =>{
+    const error = request.error?.message;
+
+    if(error){
+      console.log(error);
+    }
+    else{
+      console.log("Unknown error has occured");
+    }
+  }
+}
+
+export const getTrackList = async (storeName:string, key:string):Promise<ITrack[]|null>=>{
+  return new Promise((resolve)=>{
+    
+    const request = indexedDB.open(dbName);
+
+    request.onsuccess = () => {
+      console.log("request onsuccess = getTrackList");
+      db = request.result;
+      
+      const transaction = db.transaction(storeName,'readonly');
+      const store = transaction.objectStore(storeName);
+      const res = store.get(key);
+
+      res.onsuccess = async () => {
+        console.log(res.result);
+        
+        if(res.result === null || res.result === undefined){
+          resolve(null);
+          return;
+        }
+        
+        const trackIdList = res.result;
+        const resultTrackList:ITrack[] = [] ;
+
+        for(let i = 0; i <trackIdList.length;i++){
+          const trackObject = await getITrack(Stores.Tracks,trackIdList[i]);
+          if(trackObject !== null && trackObject !== undefined){
+            resultTrackList.push(trackObject)
+          }
+          else{
+            resolve(null);
+            return;
+          }
+        }
+
+        resolve(resultTrackList);
+        return;
+      }
+
+      res.onerror = () => {
+        console.log("get track list error");
+        resolve(null);
+      }
+    }
+  })
+}

@@ -163,9 +163,8 @@ const isAudioFeatures =(possibleAudioFeatures:any):AudioFeatures|null =>{
   return(tempAudioFeatures);
 }
 
-
 export {
   isTrack,
   isITrackObject,
-  isAudioFeatures
+  isAudioFeatures,
 }

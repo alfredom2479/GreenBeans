@@ -64,7 +64,7 @@ export default function TrackCard({track,popModal=handleDefaultModalError}:Track
               </button>
           }
 
-           <SaveButton id={track.id} trackSaveState={track.trackSaveState}/>
+           <SaveButton trackInfo={track}/>
 
         </div>
       </div> 
