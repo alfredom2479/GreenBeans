@@ -107,7 +107,7 @@ export default function RecSection(){
           return;
       }
 
-      console.log("the request to server part is running :(");
+      console.log("the request to server part is running ");
 
       let data = null;
       data = await requestSpotifyRec(token,id,[],{id},isLoggedIn);

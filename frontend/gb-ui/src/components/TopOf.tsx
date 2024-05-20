@@ -6,8 +6,9 @@ import TrackCard from "./TrackCard";
 import { ITrack, TrackSaveState } from "../interfaces";
 
 import { requestTopTracks } from '../api';
-import { isTrack } from "../utils";
+import { isITrackObject, isTrack } from "../utils";
 import { useHandleListenOnClick } from "../interfaces";
+import { Stores, addTrackList, getTrackList } from "../idb";
 
 interface TopParams{
   params:Params
@@ -36,8 +37,19 @@ export async function loader({params}:TopParams){
     return redirect("/top/month");
   }
 
-  const sessionData: string|null = sessionStorage.getItem("top_tracks"+rangeNum);
+  const id:string = "top_tracks"+rangeNum;
+  let usingIdbData:boolean = false;
+  //const sessionData: string|null = sessionStorage.getItem("top_tracks"+rangeNum);
+  const idbTrackListData: ITrack[]|null = await getTrackList(Stores.TrackLists,"top_tracks"+rangeNum);
 
+  if(idbTrackListData != null){
+    usingIdbData = true;
+    console.log("idbTrackListData is not null");
+    console.log(idbTrackListData);
+    return {usingIdbData,list:idbTrackListData,id}
+  }
+
+  /*
   if(sessionData !== null ){
     try{
       const topTracksJsond = JSON.parse(sessionData);
@@ -48,11 +60,12 @@ export async function loader({params}:TopParams){
       console.log(err);
     }
   }
+  */
 
   const data = await requestTopTracks(access_token,rangeNum);
   if(data.items && Array.isArray(data.items)){
-    sessionStorage.setItem("top_tracks"+rangeNum,JSON.stringify(data))
-    return data.items;
+    //sessionStorage.setItem("top_tracks"+rangeNum,JSON.stringify(data))
+    return {usingIdbData, list:data.items,id};
   }
     
   return null;
@@ -73,20 +86,41 @@ export default function TopOf(){
     let loaderItems = [];
     const newTracks:ITrack[] = [];
 
-    if(Array.isArray(loadedData)){
-      loaderItems = loadedData;
-      let possibleTrack:ITrack|null = null;
+    console.log(loadedData);
+    if(typeof loadedData === 'object' && loadedData !== null && 'list' in loadedData 
+      && 'usingIdbData' in loadedData && Array.isArray(loadedData.list) 
+      && typeof loadedData.usingIdbData === 'boolean' && 'id' in loadedData
+      && typeof loadedData.id === "string"
+     ){
+      console.log("useEffect type check passed");
+      loaderItems = loadedData.list;
+     
 
-      for(let i = 0; i < loaderItems.length; i++){
-        possibleTrack = isTrack(loaderItems[i]);
-         if(possibleTrack !== null){
-          newTracks.push(possibleTrack);
-         }
+    //if(Array.isArray(loadedData)){
+      //loaderItems = loadedData;
+        let possibleTrack:ITrack|null = null;
+
+        for(let i = 0; i < loaderItems.length; i++){
+          if(loadedData.usingIdbData === false){
+            possibleTrack = isTrack(loaderItems[i]);
+          }
+          else{
+            possibleTrack = isITrackObject(loaderItems[i]);
+          }
+          if(possibleTrack !== null){
+            newTracks.push(possibleTrack);
+          }
+        }
+      //}
+
+      setTopTracksList(newTracks)
+      if(loadedData.usingIdbData === false){
+        addTrackList(Stores.TrackLists,newTracks,loadedData.id)
       }
-    }
-    setTopTracksList(newTracks)
-    if(listRef.current !== null){
-      listRef.current.scrollTo(0,0);
+      
+      if(listRef.current !== null){
+        listRef.current.scrollTo(0,0);
+      }
     }
   },[loadedData])
 
@@ -97,15 +131,6 @@ export default function TopOf(){
             return (
             <li key={track.id}>
             <TrackCard 
-              /*
-              id={track.id} 
-              name={track.name}
-              artist={track.artist}
-              image={track.image}
-              url={track.url}
-              popModal={handleListenOnClick}
-              trackSaveState={TrackSaveState.CantSave}
-              */
              track={{...track,trackSaveState:TrackSaveState.CantSave}}
              popModal={handleListenOnClick}
             />

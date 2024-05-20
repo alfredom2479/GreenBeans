@@ -1,9 +1,16 @@
 import { AudioFeatures, ITrack, audioFeatureNames } from "./interfaces";
 
+enum RequestMethods {
+  Post = 'POST',
+  Get = 'GET',
+  Put = 'PUT'
+
+}
+
 export async function requestAuth(){
 
   const res:Response|null = await fetch("/api/auth/requestauth",{
-      method: "GET",
+      method: RequestMethods.Get,
     });
 
 
@@ -43,7 +50,7 @@ export async function refreshTokens(refresh_token:string|null){
 
   try{
     res = await fetch("/api/auth/refresh_token?"+authParams.toString(),{
-      method:"GET"
+      method: RequestMethods.Get
     });
   }catch(err){
     return {access_token: null};
@@ -70,7 +77,7 @@ export async function requestTokens(code:string|null, state:string|null){
   const authParams = new URLSearchParams({code,state});
 
     res = await fetch("/api/auth/gettokens?"+authParams.toString(),{
-      method: "GET",
+      method: RequestMethods.Get,
     });
 
   const data = await res.json();
@@ -88,7 +95,10 @@ export async function requestTokens(code:string|null, state:string|null){
 
 export async function requestMySpotifyAccount(accessToken:string){
     //console.log("req to /me");
-    const data = await sendRequest("https://api.spotify.com/v1/me", accessToken);
+    const data = await sendRequest(
+      "https://api.spotify.com/v1/me",
+      accessToken,
+      RequestMethods.Get);
     return data;
 }
 
@@ -109,8 +119,9 @@ export async function requestTopTracks(accessToken:string, range:number ){
 
   const data = await sendRequest(
     `https://api.spotify.com/v1/me/top/tracks?time_range=${inputRange}&limit=50`, 
-    accessToken
-  )
+    accessToken,
+    RequestMethods.Get
+  );
   return data;
 }
 
@@ -122,12 +133,16 @@ export async function requestSavedTracks(pageNumber:number,tracksPerPage:number,
     totalOffset = 99999999;
   }
   
-  const data = await sendRequest(`https://api.spotify.com/v1/me/tracks?limit=${tracksPerPage}&offset=${totalOffset}`,accessToken);
+  const data = await sendRequest(
+    `https://api.spotify.com/v1/me/tracks?limit=${tracksPerPage}&offset=${totalOffset}`,
+    accessToken,
+    RequestMethods.Get
+  );
   return data;
 }
 
+//MISSING sendRequest 1
 export async function saveSpotifyTrack( trackId:string) :Promise<Response|null>{
-  let res:Response|null = null;
   let accessToken:string|null = null;
 
   accessToken = localStorage.getItem("access_token");
@@ -136,6 +151,17 @@ export async function saveSpotifyTrack( trackId:string) :Promise<Response|null>{
     return null;
   }
 
+  const data = await sendRequest(
+    "https://api.spotify.com/v1/me/tracks?ids="+trackId,
+    accessToken,
+    RequestMethods.Put,
+    false
+  );
+
+  console.log(data);
+  return data;
+
+  /*
   res = await fetch("https://api.spotify.com/v1/me/tracks?ids="+trackId,{
     method: "PUT",
     headers: {
@@ -147,12 +173,17 @@ export async function saveSpotifyTrack( trackId:string) :Promise<Response|null>{
   }
 
   return res;
+  */
 }
 
 export async function requestSpotifyTrack(accessToken:string, trackId:string, isLoggedIn:boolean ){
 
   if(isLoggedIn){
-      const data = await sendRequest(`https://api.spotify.com/v1/tracks/${trackId}`,accessToken);
+      const data = await sendRequest(
+        `https://api.spotify.com/v1/tracks/${trackId}`,
+        accessToken,
+        RequestMethods.Get
+      );
       return data;
   }
   else{
@@ -229,7 +260,9 @@ export async function requestSpotifyRec(accessToken:string, trackId:string, sele
   if(isLoggedIn){
       const data = await sendRequest(
         `https://api.spotify.com/v1/recommendations?limit=50&seed_tracks=${queryOptionSuffix}`,
-        accessToken);
+        accessToken,
+        RequestMethods.Get
+      );
       return data;
   }
   else{
@@ -253,7 +286,11 @@ export async function requestSpotifyRec(accessToken:string, trackId:string, sele
 export async function requestSpotifyTrackAudioFeatures(accessToken:string, trackId:string, isLoggedIn: boolean){
 
   if(isLoggedIn){
-      const data = await sendRequest(`https://api.spotify.com/v1/audio-features/${trackId}`, accessToken)
+      const data = await sendRequest(
+        `https://api.spotify.com/v1/audio-features/${trackId}`, 
+        accessToken,
+        RequestMethods.Get
+      );
       return data;
   }
   else{
@@ -291,17 +328,21 @@ export async function requestSaveStatus (accessToken:string|null,tracks: ITrack[
       queryString = queryString.substring(0, queryString.length-1);
     }
 
-    const data = await sendRequest(`https://api.spotify.com/v1/me/tracks/contains?ids=`+queryString,accessToken)
+    const data = await sendRequest(
+      `https://api.spotify.com/v1/me/tracks/contains?ids=`+queryString,
+      accessToken,
+      RequestMethods.Get
+    );
     return data;
 }
 
-async function sendRequest(endpoint:string, accessToken:string){
+async function sendRequest(endpoint:string, accessToken:string,requestMethod:RequestMethods,expectsJson:boolean=true){
 
   console.log('request to '+endpoint)
   let res:Response|null = null
 
   res = await fetch(endpoint,{
-    method: "GET",
+    method: requestMethod,
     headers: {
       Authorization:  'Bearer '+ accessToken
       //Authorization:  'Bearer e'+ accessToken
@@ -331,9 +372,14 @@ async function sendRequest(endpoint:string, accessToken:string){
         // Authorization: 'Bearer 69' + access_token
       }
     })
+
+  }
+  if(!expectsJson){
+    return res;
   }
 
   let data = null;
+  
   try{
     data = await res.json();
   }catch(err){
