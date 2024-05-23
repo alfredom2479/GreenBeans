@@ -40,7 +40,7 @@ export async function loader({params}:TopParams){
   const id:string = "top_tracks"+rangeNum;
   let usingIdbData:boolean = false;
   //const sessionData: string|null = sessionStorage.getItem("top_tracks"+rangeNum);
-  const idbTrackListData: ITrack[]|null = await getTrackList(Stores.TrackLists,"top_tracks"+rangeNum);
+  const idbTrackListData: ITrack[]|null = await getTrackList(Stores.TrackLists,id);
 
   if(idbTrackListData != null){
     usingIdbData = true;

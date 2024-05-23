@@ -6,7 +6,8 @@ import { requestSavedTracks } from "../api";
 import type {Params} from "react-router-dom";
 
 import { ITrack, useHandleListenOnClick, TrackSaveState } from "../interfaces";
-import { isTrack } from "../utils";
+import { isITrackObject, isTrack } from "../utils";
+import { Stores, addTrackList, getTrackList } from "../idb";
 
 interface URLParams{
   params:Params
@@ -33,8 +34,20 @@ export async function loader({params}:URLParams){
     }
   }
 
-  const sessionSavedTracksData: string|null = sessionStorage.getItem("saved_tracks"+pageNumber);
+  const id:string = "saved_tracks"+pageNumber;
+  let usingIdbData:boolean = false;
 
+  //const sessionSavedTracksData: string|null = sessionStorage.getItem("saved_tracks"+pageNumber);
+  const idbTrackListData: ITrack[]|null = await getTrackList(Stores.TrackLists,id)
+
+  if(idbTrackListData != null){
+    usingIdbData = true;
+    console.log("idb saved dasta is not null");
+    console.log(idbTrackListData);
+    return {usingIdbData,list:idbTrackListData,id};
+  }
+
+  /*
   if(sessionSavedTracksData !== null){
     try{
       const savedTracksDataJsond = JSON.parse(sessionSavedTracksData);
@@ -45,6 +58,7 @@ export async function loader({params}:URLParams){
       console.log(err)
     }
   }
+  */
 
     const data = await requestSavedTracks(pageNumber,50,accessToken);
     
@@ -54,12 +68,11 @@ export async function loader({params}:URLParams){
           return redirect("/saved/0");
         }
       }
-      sessionStorage.setItem("saved_tracks"+pageNumber,JSON.stringify(data));
-      return data.items;
+      //sessionStorage.setItem("saved_tracks"+pageNumber,JSON.stringify(data));
+      return {usingIdbData,list:data.items,id};
     }
-    else{
-      return null;
-    }
+    
+    return null;
 }
 
 export default function SavedTrackList(){
@@ -94,22 +107,46 @@ export default function SavedTrackList(){
   }
 
   useEffect(()=>{
-    if(Array.isArray(loaderData)){
 
-      const tempTrackList:ITrack[] = [];
-      let possibleTrack:ITrack|null = null
+    let loaderItems = [];
+    const tempTrackList:ITrack[] = [];
+
+    console.log(loaderData);
+
+    //if(Array.isArray(loaderData)){
+
+      if(typeof loaderData === 'object' && loaderData !== null && 'list' in loaderData
+        &&'usingIdbData' in loaderData && Array.isArray(loaderData.list)
+        && typeof loaderData.usingIdbData === 'boolean' && 'id' in loaderData
+        && typeof loaderData.id === "string"
+      ){
+        console.log("saved tracks useEffect type check passed");
+        loaderItems=loaderData.list;
+
+        let possibleTrack:ITrack|null = null
       
-      for(let i=0; i < loaderData.length;i++){
-        possibleTrack = isTrack(loaderData[i].track)
-        if(possibleTrack != null){
-          tempTrackList.push(possibleTrack)
+        for(let i=0; i < loaderItems.length;i++){
+          if(loaderData.usingIdbData === false){
+            possibleTrack = isTrack(loaderItems[i].track);
+          }
+          else{
+            possibleTrack = isITrackObject(loaderItems[i]);
+          }
+          if(possibleTrack != null){
+            tempTrackList.push(possibleTrack)
+          }
+          console.log(possibleTrack);
+        }
+        setSavedTracksList(tempTrackList);
+        if(loaderData.usingIdbData === false && loaderItems.length > 0){
+          addTrackList(Stores.TrackLists,tempTrackList,loaderData.id);
+        }
+
+        if(listRef.current !== null){
+          listRef.current.scrollTo(0,0);
         }
       }
-      setSavedTracksList(tempTrackList);
-      if(listRef.current !== null){
-        listRef.current.scrollTo(0,0);
-      }
-    }
+    //}
   },[loaderData]);
 
   return(
