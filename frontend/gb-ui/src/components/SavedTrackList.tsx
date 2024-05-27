@@ -135,7 +135,6 @@ export default function SavedTrackList(){
           if(possibleTrack != null){
             tempTrackList.push(possibleTrack)
           }
-          console.log(possibleTrack);
         }
         setSavedTracksList(tempTrackList);
         if(loaderData.usingIdbData === false && loaderItems.length > 0){

@@ -38,13 +38,17 @@ export async function loader({params}:TopParams){
   }
 
   const id:string = "top_tracks"+rangeNum;
+  const sessionDataCheckString = "top_session_data_loaded"
+
   let usingIdbData:boolean = false;
   //const sessionData: string|null = sessionStorage.getItem("top_tracks"+rangeNum);
+  const topSessionDataLoaded: string|null = sessionStorage.getItem(sessionDataCheckString);
+  
   const idbTrackListData: ITrack[]|null = await getTrackList(Stores.TrackLists,id);
 
-  if(idbTrackListData != null){
+  if(idbTrackListData != null && topSessionDataLoaded != null){
     usingIdbData = true;
-    console.log("idbTrackListData is not null");
+    console.log("idbTrackListData is not null and topSessionDataLoaded is not null");
     console.log(idbTrackListData);
     return {usingIdbData,list:idbTrackListData,id}
   }
@@ -65,6 +69,7 @@ export async function loader({params}:TopParams){
   const data = await requestTopTracks(access_token,rangeNum);
   if(data.items && Array.isArray(data.items)){
     //sessionStorage.setItem("top_tracks"+rangeNum,JSON.stringify(data))
+    sessionStorage.setItem(sessionDataCheckString, "true");
     return {usingIdbData, list:data.items,id};
   }
     
@@ -114,7 +119,7 @@ export default function TopOf(){
       //}
 
       setTopTracksList(newTracks)
-      if(loadedData.usingIdbData === false){
+      if(loadedData.usingIdbData === false && loaderItems.length > 0){
         addTrackList(Stores.TrackLists,newTracks,loadedData.id)
       }
       
