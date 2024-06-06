@@ -2,13 +2,14 @@ import { AudioFeatures, ITrack } from "./interfaces";
 
 //let request: IDBOpenDBRequest;
 let db: IDBDatabase;
-let version = 3;
+let version = 4;
 const dbName = "greenbeansDB";
 
 export enum Stores {
   Tracks = 'tracks',
   AudioFeatures = 'audio_features',
-  TrackLists = 'track_lists'
+  TrackLists = 'track_lists',
+  LastUpdated = 'last_updated'
 }
 
 export const openIDB = ()=>{
@@ -32,6 +33,10 @@ export const openIDB = ()=>{
       console.log("creating Track Lists store...");
       //dont forget to specify the key
       db.createObjectStore(Stores.TrackLists);
+    }
+    if(!db.objectStoreNames.contains(Stores.LastUpdated)){
+      console.log("creating Last Updated store...");
+      db.createObjectStore(Stores.LastUpdated);
     }
   }
 
@@ -181,7 +186,7 @@ export const addAudioFeatures = (storeName:string, data:AudioFeatures)=>{
         }
 
         res.onerror = () => {
-          console.log("getAudioFeatures");
+          console.log("getAudioFeatures error ");
           resolve(null);
         }
       }
@@ -262,6 +267,61 @@ export const getTrackList = async (storeName:string, key:string):Promise<ITrack[
 
       res.onerror = () => {
         console.log("get track list error");
+        resolve(null);
+      }
+    }
+  })
+}
+
+export const addLastUpdatedTime = (storeName:string,timeSaved:number, key:string)=>{
+  const request = indexedDB.open(dbName,version);
+  console.log("in addLastUpdatedTime idb function");
+  request.onsuccess = () => {
+    console.log("addLastUpdatedTime onsuccess");
+    db = request.result;
+    const transaction = db.transaction(storeName,'readwrite');
+    const store = transaction.objectStore(storeName);
+    store.put(timeSaved,key);
+  }
+
+  request.onerror = () => {
+    const error = request.error?.message;
+
+    if(error){
+      console.log("There has been an error adding new last_updated_time: "+key+" -> "+timeSaved);
+      console.log(error)
+    }
+    else{
+      console.log("Unknown error has occured while adding last updated time: "+key+" -> "+timeSaved);
+    }
+  }
+}
+
+export const getLastUpdatedTime = (storeName:string,key:string):Promise<number|null> =>{
+  return new Promise((resolve)=>{
+    const request = indexedDB.open(dbName);
+
+    request.onsuccess = () =>{
+      console.log('request onsuccess = getAudioFeatures');
+      db = request.result;
+
+      const transaction = db.transaction(storeName,'readonly');
+      const store = transaction.objectStore(storeName);
+      const res = store.get(key);
+
+      res.onsuccess = () =>{
+        if(res.result === null || res.result === undefined){
+          resolve(null);
+          return;
+        }
+        else{
+          resolve(res.result)
+          return;
+        }
+      }
+
+      res.onerror = () =>{
+        console.log("getLastUpdatedTime error");
         resolve(null);
       }
     }

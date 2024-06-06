@@ -38,7 +38,7 @@ export async function loader({params}:TopParams){
   }
 
   const id:string = "top_tracks"+rangeNum;
-  const sessionDataCheckString = "top_session_data_loaded"
+  const sessionDataCheckString = "top_session_data_loaded"+rangeNum;
 
   let usingIdbData:boolean = false;
   //const sessionData: string|null = sessionStorage.getItem("top_tracks"+rangeNum);

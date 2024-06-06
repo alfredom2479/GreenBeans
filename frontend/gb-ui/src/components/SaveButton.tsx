@@ -59,6 +59,7 @@ export default function SaveButton({trackInfo}:SaveButtonParams){
               </button>
             );
             updateITrack(Stores.Tracks,{...trackInfo,trackSaveState:TrackSaveState.Saved});
+            sessionStorage.setItem("last_track_saved_time",""+Date.now());
           }
         }catch(err){
           console.log("Error saving track");

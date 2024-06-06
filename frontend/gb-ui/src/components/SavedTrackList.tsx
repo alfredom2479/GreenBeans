@@ -7,7 +7,7 @@ import type {Params} from "react-router-dom";
 
 import { ITrack, useHandleListenOnClick, TrackSaveState } from "../interfaces";
 import { isITrackObject, isTrack } from "../utils";
-import { Stores, addTrackList, getTrackList } from "../idb";
+import { Stores, addLastUpdatedTime, addTrackList, getLastUpdatedTime, getTrackList } from "../idb";
 
 interface URLParams{
   params:Params
@@ -38,13 +38,22 @@ export async function loader({params}:URLParams){
   let usingIdbData:boolean = false;
 
   //const sessionSavedTracksData: string|null = sessionStorage.getItem("saved_tracks"+pageNumber);
+  const lastTrackSavedTime: string|null =sessionStorage.getItem("last_track_saved_time");
+
   const idbTrackListData: ITrack[]|null = await getTrackList(Stores.TrackLists,id)
+  
 
   if(idbTrackListData != null){
-    usingIdbData = true;
-    console.log("idb saved dasta is not null");
-    console.log(idbTrackListData);
-    return {usingIdbData,list:idbTrackListData,id};
+    const idbLastUpdatedTime:number|null = await getLastUpdatedTime(Stores.LastUpdated,id)
+
+    if(Number(lastTrackSavedTime) <Number(idbLastUpdatedTime)){
+      console.log("idb last updated time" +idbLastUpdatedTime);
+      console.log("session last track saved time: "+lastTrackSavedTime);
+
+      usingIdbData = true;
+      console.log(idbTrackListData);
+      return {usingIdbData,list:idbTrackListData,id};
+    }
   }
 
   /*
@@ -69,6 +78,8 @@ export async function loader({params}:URLParams){
         }
       }
       //sessionStorage.setItem("saved_tracks"+pageNumber,JSON.stringify(data));
+      //set last updated idb time here
+      addLastUpdatedTime(Stores.LastUpdated,Date.now(),id);
       return {usingIdbData,list:data.items,id};
     }
     
