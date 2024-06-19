@@ -28,7 +28,7 @@ export async function action({params,request}:IURLParams){
   else{
     redirect("/");
   }
-  let audioFeatures:AudioFeatures = {};
+  let audioFeatures:AudioFeatures = {id:""};
   let settings:string[] = [];
   const requestJson = await request.json();
 
