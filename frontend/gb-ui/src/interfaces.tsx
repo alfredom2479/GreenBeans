@@ -13,8 +13,7 @@ export interface ITrack{
   image: string
   url?: string,
   spotify_url?:string,
-  isRec?:boolean
-  popModal?(songPreviewInfo:SongPreviewInfo|undefined):void,
+  //popModal?(songPreviewInfo:SongPreviewInfo|undefined):void,
   trackSaveState: TrackSaveState
 }
 
@@ -25,6 +24,7 @@ export interface SongPreviewInfo{
 }
 
 export interface AudioFeatures{
+  id:string,
   acousticness?: number,
   danceability?: number,
   energy?: number,

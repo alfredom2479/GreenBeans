@@ -1,17 +1,19 @@
 import { useEffect, useState } from "react";
 
-import { TrackSaveState } from "../interfaces"
+import { ITrack, TrackSaveState } from "../interfaces"
 
 import addTrackSvg from '../assets/plus2.svg';
 import trackSavedSvg from '../assets/check.svg';
 import { saveSpotifyTrack } from "../api";
+import { Stores, updateITrack } from "../idb";
 
 interface SaveButtonParams{
-  trackSaveState: TrackSaveState,
-  id: string
+  //trackSaveState: TrackSaveState,
+  //id: string
+  trackInfo: ITrack
 }
 
-export default function SaveButton({trackSaveState, id}:SaveButtonParams){
+export default function SaveButton({trackInfo}:SaveButtonParams){
 
   const [saveButton,setSaveButton] = useState(
     <button
@@ -31,10 +33,11 @@ export default function SaveButton({trackSaveState, id}:SaveButtonParams){
           >
             <img src={trackSavedSvg} alt="saved" className="w-8"/>
           </button>
-        )
+        );
+        
 
         try{
-          const responseData = await saveSpotifyTrack(id);
+          const responseData = await saveSpotifyTrack(trackInfo.id);
           if(!responseData ){
             setSaveButton(
               <button
@@ -54,7 +57,9 @@ export default function SaveButton({trackSaveState, id}:SaveButtonParams){
               >
                 <img src={trackSavedSvg} alt="saved" className="w-8"/>
               </button>
-            )
+            );
+            updateITrack(Stores.Tracks,{...trackInfo,trackSaveState:TrackSaveState.Saved});
+            sessionStorage.setItem("last_track_saved_time",""+Date.now());
           }
         }catch(err){
           console.log("Error saving track");
@@ -62,7 +67,7 @@ export default function SaveButton({trackSaveState, id}:SaveButtonParams){
         }
     }
 
-    if(trackSaveState === TrackSaveState.Saveable){
+    if(trackInfo.trackSaveState === TrackSaveState.Saveable){
       setSaveButton(
         <button
           className="flex-1 bg-stone-200 text-black flex p-1 text-center items-center justify-center font-bold text-lg rounded-3xl m-2 shrink-0  w-10"
@@ -70,9 +75,9 @@ export default function SaveButton({trackSaveState, id}:SaveButtonParams){
         >
           <img src={addTrackSvg} alt="save" className="w-8"/>
       </button>
-      )
+      );
     }
-    else if(trackSaveState === TrackSaveState.Saved){
+    else if(trackInfo.trackSaveState === TrackSaveState.Saved){
       setSaveButton(
         <button 
           className="flex-1 bg-green-400 text-black flex p-1 text-center items-center justify-center font-bold text-lg rounded-3xl m-2 shrink-0  w-10"
@@ -80,10 +85,10 @@ export default function SaveButton({trackSaveState, id}:SaveButtonParams){
         >
           <img src={trackSavedSvg} alt="saved" className="w-8"/>
         </button>
-      )
+      );
     }
 
-  },[id,trackSaveState])
+  },[trackInfo])
   return (
     <>
       {saveButton}

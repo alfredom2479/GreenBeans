@@ -8,6 +8,8 @@ import { isTrack } from "../utils";
 import type {Params} from "react-router-dom";
 import {  requestSaveStatus, requestSpotifyRec } from "../api";
 import RecList from "./RecList";
+import { Stores, addTrackList, getTrackList } from "../idb";
+//import { getData, Stores } from "../idb";
 
 interface LoaderParams{
   params:Params
@@ -94,7 +96,21 @@ export default function RecSection(){
       if(!ignore){
         setIsLoadingRecs(true);
       }
-      const data = await requestSpotifyRec(token,id,[],{},isLoggedIn);
+
+      const idbTrackListData:ITrack[]|null = await getTrackList(Stores.TrackLists,id);
+      //console.log(idbTrackListData);
+
+      console.log(ignore)
+      if(idbTrackListData !== null ){
+          setRecList(idbTrackListData);
+          setIsLoadingRecs(false)
+          return;
+      }
+
+      console.log("the request to server part is running ");
+
+      let data = null;
+      data = await requestSpotifyRec(token,id,[],{id},isLoggedIn);
 
       if(data.tracks && Array.isArray(data.tracks)){
         const trackData = data.tracks;
@@ -134,7 +150,11 @@ export default function RecSection(){
           }
          }
         if(!ignore){
+          //console.log(tempTrackList);
           setRecList(tempTrackList);
+          if(idbTrackListData === null){
+            addTrackList(Stores.TrackLists ,tempTrackList,id);
+          }
           setIsLoadingRecs(false);
        }
       }
@@ -145,6 +165,8 @@ export default function RecSection(){
       if('trackId' in loaderData && typeof loaderData.trackId === "string" && loaderData.trackId.length > 0){
         if('access_token' in loaderData && typeof loaderData.access_token === "string" &&
           'isLoggedIn' in loaderData && typeof loaderData.isLoggedIn === "boolean"){
+
+            
             testFunc(loaderData.access_token,loaderData.trackId,loaderData.isLoggedIn);
             return () =>{
               ignore = true; 

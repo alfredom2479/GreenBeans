@@ -18,6 +18,7 @@ export default function RecList({listTracks,handleOnClick,isLoadingRecs}:CompPar
             return (
               <li key={track.id}>
               <TrackCard
+                /*
                 id={track.id}
                 name={track.name}
                 artist={track.artist}
@@ -25,6 +26,9 @@ export default function RecList({listTracks,handleOnClick,isLoadingRecs}:CompPar
                 url={track.url}
                 popModal={handleOnClick}
                 trackSaveState={track.trackSaveState}
+                */
+                track={track}
+                popModal={handleOnClick}
               />
               </li>
             )
