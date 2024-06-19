@@ -13,7 +13,7 @@ import hamburgerSvg from '../assets/hamburger3.svg';
 
 import spotifyLogo from "../assets/spotify_logo.png";
 import SideBar from "./SideBar";
-import { openIDB } from "../idb";
+import { deleteAllStores, openIDB } from "../idb";
 
 export async function loader(){
   const access_token:string|null = localStorage.getItem("access_token");
@@ -22,6 +22,11 @@ export async function loader(){
   console.log("navbar loader running");
 
   if(!access_token || access_token===""){
+    const cleared_idb:string|null = localStorage.getItem("cleared_idb");
+    if(cleared_idb ===null){
+    deleteAllStores();
+    localStorage.setItem("cleared_idb","true");
+    }
     return "[ERROR]";
   }
 
@@ -33,6 +38,7 @@ export async function loader(){
   try{
     const data = await requestMySpotifyAccount(access_token);
     if(data && data.display_name){
+      deleteAllStores();
       localStorage.setItem("greenbeans_user",data.display_name);
       return data.display_name;
 
@@ -82,7 +88,7 @@ export default function NavBar(){
       setCurrUser(loaderData);
     }
     else{
-      localStorage.clear()
+      //localStorage.clear()
       setCurrUser(null);
       //navigate("/");
     } 

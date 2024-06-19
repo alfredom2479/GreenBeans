@@ -1,13 +1,17 @@
 import { Dispatch,SetStateAction } from "react"
 import {useNavigate } from "react-router-dom";
+import { deleteAllStores } from "../idb";
 
 export default function LogOutModal({setShowModal}: {setShowModal: Dispatch<SetStateAction<boolean>>}){
 
   const navigate = useNavigate();
 
   function handleLogOut(){
+    console.log("handling logout...")
+    deleteAllStores();
     setShowModal(false);
     localStorage.clear();
+    sessionStorage.clear();
     navigate("/");
     window.location.reload();
   }

@@ -327,3 +327,49 @@ export const getLastUpdatedTime = (storeName:string,key:string):Promise<number|n
     }
   })
 }
+
+export const deleteAllStores = async ()=>{
+  console.log("delete all stores is running");
+  const request = indexedDB.open(dbName,version);
+
+  request.onsuccess= () =>{
+    db = request.result;
+    const transaction = db.transaction(db.objectStoreNames,'readwrite');
+
+    transaction.onerror = (event) =>{
+      console.log("Transaction error!");
+      console.log(event);
+    }
+    transaction.oncomplete = ()=>{
+      console.log("All stores have been deleted");
+    }
+
+    console.log(db.objectStoreNames);
+    for(const storeName of db.objectStoreNames){
+      console.log("store name:"+storeName);
+      const objectStore = transaction.objectStore(storeName);
+      const clearReq = objectStore.clear();
+
+      clearReq.onerror = (event) =>{
+        console.log("error clearing "+ storeName)
+        console.log(event);
+      }
+      clearReq.onsuccess = () =>{
+        console.log(storeName+" cleered succesfully");
+      }
+
+    }
+
+  }
+
+  request.onerror = () =>{
+    const error = request.error?.message;
+
+    if(error){
+      console.log(error);
+    }
+    else {
+      console.log("Unknown error has occured");
+    }
+  }
+}
