@@ -63,17 +63,6 @@ export default function LinkSearchPage(){
 
   return (
     <div className="h-full w-full pb-16 flex flex-col ">
-
-
-      {/* <div className="h-14 shrink-0 p-2 flex items-center justify-between text-right mx-2">
-        <a href='https://spotify.com' target='_blank' >
-          <img src={spotifyLogo} className='flex-1 h-10 grow-0' />
-        </a>
-        <h1 className="flex-1 basis-1/2 text-white font-bold text-4xl ">
-          Link-Search
-        </h1>
-      </div> */}
-
       <div className="flex flex-col items-center justify-center w-full h-full">
         <Form method='post'
           className='flex flex-col justify-center items-center w-full'>
@@ -85,15 +74,7 @@ export default function LinkSearchPage(){
           </button>
         </Form>
       </div>
-
-        {/*mayba implement search history functionality using redux
-      <div className="flex flex-col justify-center items-center">
-        <h3 className="text-purple-300 font-bold text-2xl pt-4">Search History</h3>
-        <br/>
-        <h4 className="text-purple-300 font-bold text-xl pt-2">(Under Construction)</h4>
-      </div>
-
-        */}
+        {/*mayba implement search history functionality using redux*/}
     </div>
   )
 }

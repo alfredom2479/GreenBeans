@@ -4,11 +4,6 @@ import {  requestMySpotifyAccount } from "../api";
 import LogOutModal from "./LogOutModal";
 //import NavbarItem from "./NavBarItem";
 
-/*
-import linkSvg from '../assets/link.svg';
-import savedSvg from '../assets/saved.svg';
-import topSvg from '../assets/top.svg';
-*/
 import hamburgerSvg from '../assets/hamburger3.svg';
 
 import spotifyLogo from "../assets/spotify_logo.png";
@@ -19,12 +14,11 @@ export async function loader(){
   const access_token:string|null = localStorage.getItem("access_token");
 
   openIDB();
-  console.log("navbar loader running");
 
   if(!access_token || access_token===""){
     const cleared_idb:string|null = localStorage.getItem("cleared_idb");
     if(cleared_idb ===null){
-    deleteAllStores();
+    await deleteAllStores();
     localStorage.setItem("cleared_idb","true");
     }
     return "[ERROR]";
@@ -60,12 +54,6 @@ export default function NavBar(){
   const navigate = useNavigate();
   const location = useLocation();
 
-  /*const accountStatusStyleString = "flex justify-center items-center basis-32 "+
-    "grow text-center font-bold text-lg bg-green-900 text-white "+
-    "rounded-3xl mr-2"
-    */
-
-
   useEffect(()=>{
     if(location.pathname.includes("top")){
       setPageName("Top")
@@ -88,9 +76,7 @@ export default function NavBar(){
       setCurrUser(loaderData);
     }
     else{
-      //localStorage.clear()
       setCurrUser(null);
-      //navigate("/");
     } 
   },[loaderData,navigate])
 
