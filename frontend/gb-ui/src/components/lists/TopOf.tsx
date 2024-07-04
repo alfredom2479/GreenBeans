@@ -2,13 +2,13 @@ import {useEffect, useRef, useState} from "react";
 import { redirect,useLoaderData} from "react-router-dom";
 import type {Params} from 'react-router-dom';
 
-import TrackCard from "./TrackCard";
-import { ITrack, TrackSaveState } from "../interfaces";
+import TrackCard from "../TrackCard";
+import { ITrack, TrackSaveState } from "../../interfaces";
 
-import { requestTopTracks } from '../api';
-import { isITrackObject, isTrack } from "../utils";
-import { useHandleListenOnClick } from "../interfaces";
-import { Stores, addTrackList, getTrackList } from "../idb";
+import { requestTopTracks } from '../../api';
+import { isITrackObject, isTrack } from "../../utils";
+import { useHandleListenOnClick } from "../../interfaces";
+import { Stores, addTrackList, getTrackList } from "../../idb";
 
 interface TopParams{
   params:Params

@@ -1,13 +1,13 @@
 import {useState, useEffect, useRef} from "react"
 import { redirect, useLoaderData, useParams, NavLink } from "react-router-dom";
-import TrackCard from "./TrackCard";
-import { requestSavedTracks } from "../api";
+import TrackCard from "../TrackCard";
+import { requestSavedTracks } from "../../api";
 
 import type {Params} from "react-router-dom";
 
-import { ITrack, useHandleListenOnClick, TrackSaveState } from "../interfaces";
-import { isITrackObject, isTrack } from "../utils";
-import { Stores, addLastUpdatedTime, addTrackList, getLastUpdatedTime, getTrackList } from "../idb";
+import { ITrack, useHandleListenOnClick, TrackSaveState } from "../../interfaces";
+import { isITrackObject, isTrack } from "../../utils";
+import { Stores, addLastUpdatedTime, addTrackList, getLastUpdatedTime, getTrackList } from "../../idb";
 
 interface URLParams{
   params:Params

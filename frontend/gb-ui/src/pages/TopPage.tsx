@@ -1,6 +1,6 @@
 import {useState} from "react"
 import {Outlet, redirect} from "react-router-dom";
-import TopNavItem from "../components/TopNavItem";
+import TopNavItem from "../components/navigation/TopNavItem";
 import SongPreviewModal from "../components/modals/SongPreviewModal";
 
 import type {Params} from "react-router-dom";

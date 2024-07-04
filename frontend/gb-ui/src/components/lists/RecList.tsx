@@ -1,5 +1,5 @@
-import { ITrack, SongPreviewInfo, } from "../interfaces"
-import TrackCard from "./TrackCard"
+import { ITrack, SongPreviewInfo, } from "../../interfaces"
+import TrackCard from "../TrackCard"
 
 interface CompParams{
   listTracks: ITrack[],

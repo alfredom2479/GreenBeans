@@ -6,7 +6,7 @@ import LogOutModal from "../modals/LogOutModal";
 import hamburgerSvg from '../../assets/hamburger3.svg';
 
 import spotifyLogo from "../../assets/spotify_logo.png";
-import SideBar from "../SideBar";
+import SideBar from "../navigation/SideBar";
 import { deleteAllStores, openIDB } from "../../idb";
 
 export async function loader(){

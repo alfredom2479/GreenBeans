@@ -7,7 +7,7 @@ import { isTrack } from "../utils";
 
 import type {Params} from "react-router-dom";
 import {  requestSaveStatus, requestSpotifyRec } from "../api";
-import RecList from "./RecList";
+import RecList from "./lists/RecList";
 import { Stores, addTrackList, getTrackList } from "../idb";
 //import { getData, Stores } from "../idb";
 
