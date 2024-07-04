@@ -15,14 +15,14 @@ import {action as getRecsAction} from './components/RecOptionsSection';
 import SavedPage,{loader as savedPageLoader} from './pages/SavedPage';
 import SavedTrackList,{loader as savedTracksLoader} from './components/SavedTrackList';
 import LinkSearchPage, {action as searchLinkAction} from './pages/LinkSearchPage';
-import NavBar, {loader as loggedInCheckerLoader} from './components/NavBar';
+import MainLayout, {loader as loggedInCheckerLoader} from './components/layouts/MainLayout';
 import RootErrorBoundary from './components/error-components/RootErrorBoundary';
 import RecSection, {loader as preRecLoader} from './components/RecSection';
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <NavBar/>,
+    element: <MainLayout/>,
     loader: loggedInCheckerLoader,
     errorElement: <RootErrorBoundary/>,
     children: [

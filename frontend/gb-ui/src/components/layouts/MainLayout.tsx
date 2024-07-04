@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 import { Outlet, useLoaderData, useLocation, useNavigate} from "react-router-dom";
-import {  requestMySpotifyAccount } from "../api";
-import LogOutModal from "./LogOutModal";
+import {  requestMySpotifyAccount } from "../../api";
+import LogOutModal from "../LogOutModal";
 //import NavbarItem from "./NavBarItem";
 
-import hamburgerSvg from '../assets/hamburger3.svg';
+import hamburgerSvg from '../../assets/hamburger3.svg';
 
-import spotifyLogo from "../assets/spotify_logo.png";
-import SideBar from "./SideBar";
-import { deleteAllStores, openIDB } from "../idb";
+import spotifyLogo from "../../assets/spotify_logo.png";
+import SideBar from "../SideBar";
+import { deleteAllStores, openIDB } from "../../idb";
 
 export async function loader(){
   const access_token:string|null = localStorage.getItem("access_token");
@@ -17,11 +17,12 @@ export async function loader(){
 
   if(!access_token || access_token===""){
     const cleared_idb:string|null = localStorage.getItem("cleared_idb");
-    if(cleared_idb ===null){
-    await deleteAllStores();
-    localStorage.setItem("cleared_idb","true");
+    if(cleared_idb === null){
+      await deleteAllStores();
+      localStorage.setItem("cleared_idb","true");
     }
-    return "[ERROR]";
+
+    return null;
   }
 
   const username = localStorage.getItem("greenbeans_user");
@@ -38,9 +39,9 @@ export async function loader(){
 
     }
   }catch(err){
-    return "[ERROR]";
+    return null;
   }
-  return "[ERROR]";
+  return null;
 }
 
 export default function NavBar(){
@@ -50,7 +51,7 @@ export default function NavBar(){
   const [showSideBar, setShowSideBar] = useState<boolean>(false);
   const [pageName, setPageName] = useState<string>("Link-Search");
 
-  const loaderData = useLoaderData();
+  const loaderDataUsername = useLoaderData();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -72,13 +73,14 @@ export default function NavBar(){
 
   useEffect(()=>{
 
-    if(typeof loaderData ==="string" && loaderData !== "[ERROR]"){
-      setCurrUser(loaderData);
+    if(typeof loaderDataUsername ==="string" ){
+      setCurrUser(loaderDataUsername);
     }
     else{
       setCurrUser(null);
     } 
-  },[loaderData,navigate])
+  },[loaderDataUsername,navigate])
+
 
   return (
     <div className="h-[100dvh] flex flex-col items-center ">

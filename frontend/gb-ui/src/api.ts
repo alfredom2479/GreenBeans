@@ -356,7 +356,6 @@ async function sendRequest(endpoint:string, accessToken:string,requestMethod:Req
       method: "GET", 
       headers: {
         Authorization: 'Bearer ' + access_token
-        // Authorization: 'Bearer 69' + access_token
       }
     })
 
