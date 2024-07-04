@@ -1,6 +1,6 @@
 import { Dispatch,SetStateAction } from "react"
 import {useNavigate } from "react-router-dom";
-import { deleteAllStores } from "../idb";
+import { deleteAllStores } from "../../idb";
 
 export default function LogOutModal({setShowModal}: {setShowModal: Dispatch<SetStateAction<boolean>>}){
 

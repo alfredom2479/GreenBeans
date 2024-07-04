@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import { Outlet, useLoaderData, useLocation, useNavigate} from "react-router-dom";
 import {  requestMySpotifyAccount } from "../../api";
-import LogOutModal from "../LogOutModal";
-//import NavbarItem from "./NavBarItem";
+import LogOutModal from "../modals/LogOutModal";
 
 import hamburgerSvg from '../../assets/hamburger3.svg';
 

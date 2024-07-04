@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction } from "react"
-import { SongPreviewInfo } from "../interfaces"
+import { SongPreviewInfo } from "../../interfaces"
 
 interface params  {
   setShowModal: Dispatch<SetStateAction<boolean>>,

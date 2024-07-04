@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { ITrack, SongPreviewInfo, TrackSaveState, useAudioFeatures, } from "../interfaces";
 import {  redirect, useActionData, useLoaderData } from "react-router-dom";
 import RecOptionsSection from "./RecOptionsSection";
-import SongPreviewModal from "./SongPreviewModal";
+import SongPreviewModal from "./modals/SongPreviewModal";
 import { isTrack } from "../utils";
 
 import type {Params} from "react-router-dom";
