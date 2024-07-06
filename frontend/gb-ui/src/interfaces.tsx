@@ -13,7 +13,6 @@ export interface ITrack{
   image: string
   url?: string,
   spotify_url?:string,
-  //popModal?(songPreviewInfo:SongPreviewInfo|undefined):void,
   trackSaveState: TrackSaveState
 }
 

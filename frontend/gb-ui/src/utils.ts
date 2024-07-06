@@ -1,7 +1,5 @@
 import { AudioFeatures, ITrack, TrackSaveState } from "./interfaces";
 
-// If parsing like this is too slow, there might be an automatic way to do it.
-//something like Golang's Unmarshal. Look into this. custom way might be faster.
 
 // eslint-disable-next-line  @typescript-eslint/no-explicit-any
 const isTrack = (possibleTrack: any, size:number=0): ITrack|null=>{
@@ -30,7 +28,6 @@ const isTrack = (possibleTrack: any, size:number=0): ITrack|null=>{
 
   const maxImgSize:number = size === 1 ? 1000 :500;
   
-  //deciding that track image is not necessary. Do not return null if cant find one
   if(possibleTrack.album && possibleTrack.album.images &&
     Array.isArray(possibleTrack.album.images) && possibleTrack.album.images.length > 0){
       const albumImages = possibleTrack.album.images;
@@ -47,8 +44,6 @@ const isTrack = (possibleTrack: any, size:number=0): ITrack|null=>{
 
   if(possibleTrack.preview_url){
     tempTrack.url = possibleTrack.preview_url;
-    //choosing not to link to external_url
-    //just show that preview is not available in the UI
   }
 
   if(possibleTrack.external_urls && possibleTrack.external_urls.spotify){
@@ -109,8 +104,6 @@ const isITrackObject = (possibleITrack:any):ITrack|null=>{
     ){
       tempTrack.trackSaveState = possibleITrack.trackSaveState;
     }
-    //ur gonna still have to check if each track is saved each time
-    //u load a rec list
   }
 
   return tempTrack; 

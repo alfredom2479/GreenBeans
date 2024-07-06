@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction } from "react"
-import { NavLink } from "react-router-dom"
+import SideBarNavItem from "./SidebarNavItem"
 
 interface params{
   setShowSidebar: Dispatch<SetStateAction<boolean>>,
@@ -17,51 +17,23 @@ export default function SideBar({setShowSidebar, currUser, setShowLogOutModal}:p
           <nav className="flex flex-col text-white items-center text-2xl">
 
             {currUser !== null ? 
-                <div className="text-4xl font-bold mb-6">
+                <div className="text-3xl text-center font-bold mb-6 w-60 truncate">
                   {currUser}
                 </div> 
               : 
                 null 
             }
 
-            <NavLink 
-              to="/link-search"
-              //className="my-4 hover:text-green-400"
-              className = {({isActive,isPending,isTransitioning})=>[
-                isActive? "text-green-400 font-bold pointer-events-none" : "",
-                isPending? "pointer-events-none" : "",
-                isTransitioning? "pointer-events-none" : "",
-                "hover:text-green-400 my-4"
-              ].join(" ")}
-              >Link-Search
-            </NavLink>
-            
+            <SideBarNavItem path="/link-search" name="Link-Search" />
             {currUser !== null ? 
             <>
-              <NavLink
-                to="/saved"
-                className = {({isActive,isPending,isTransitioning})=>[
-                isActive? "text-green-400 font-bold pointer-events-none" : "",
-                isPending? "pointer-events-none" : "",
-                isTransitioning? "pointer-events-none" : "",
-                "hover:text-green-400 my-4"
-              ].join(" ")}
-                >Saved Tracks
-              </NavLink> 
-              <NavLink
-                to="/top"
-                className = {({isActive,isPending,isTransitioning})=>[
-                isActive? "text-green-400 font-bold pointer-events-none" : "",
-                isPending? "pointer-events-none" : "",
-                isTransitioning? "pointer-events-none" : "",
-                "hover:text-green-400 my-4"
-              ].join(" ")}
-                >Top Tracks
-              </NavLink>
+              <SideBarNavItem path="/saved" name="Saved Tracks"/>
+              <SideBarNavItem path="/top" name="TopTracks"/>
             </>   
             :
             null
           }
+
           {
             currUser == null ?
               <a className= "flex justify-center items-center basis-32 grow text-center font-bold hover:text-green-400"
@@ -75,8 +47,6 @@ export default function SideBar({setShowSidebar, currUser, setShowLogOutModal}:p
                 </button>
 
           }
-
-            
           </nav>
         </div>
     </div>
