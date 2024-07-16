@@ -16,22 +16,17 @@ interface URLParams{
 export async function loader({params}:URLParams){
 
   const accessToken:string|null = localStorage.getItem("access_token");
-  if(!accessToken || accessToken === ""){
-    return redirect('/');
-  }
-  if(!params.page){
-    return redirect("/saved/0");
-  }
+  if(!accessToken || accessToken === "") return redirect('/'); 
+
+  if(!params.page) return redirect("/saved/0");
 
   let pageNumber:number = 0;
 
   if(typeof params.page === "string"){
-    
-    pageNumber = Number(params.page);
 
-    if(pageNumber < 0){
-      pageNumber = 0
-    }
+    pageNumber = Number(params.page);
+    if(pageNumber < 0) pageNumber = 0;
+
   }
 
   const id:string = "saved_tracks"+pageNumber;
@@ -85,6 +80,7 @@ export async function loader({params}:URLParams){
     
     return null;
 }
+
 
 export default function SavedTrackList(){
 
@@ -193,18 +189,9 @@ export default function SavedTrackList(){
           return (
             <li key={track.id}>
               <TrackCard
-                /*
-                id={track.id}
-                name={track.name}
-                artist={track.artist}
-                image={track.image}
-                url={track.url}
+                track={{...track,trackSaveState:TrackSaveState.Saved}}
                 popModal={handleListenOnClick}
-                trackSaveState={TrackSaveState.Saved}
-                */
-               track={{...track,trackSaveState:TrackSaveState.Saved}}
-               popModal={handleListenOnClick}
-                />
+              />
             </li>
             
           )

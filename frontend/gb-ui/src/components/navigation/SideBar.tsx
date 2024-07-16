@@ -16,7 +16,8 @@ export default function SideBar({setShowSidebar, currUser, setShowLogOutModal}:p
         <div className="bg-stone-800 w-64 h-full p-2 ">
           <nav className="flex flex-col text-white items-center text-2xl">
 
-            {currUser !== null ? 
+            {
+              currUser !== null ? 
                 <div className="text-3xl text-center font-bold mb-6 w-60 truncate">
                   {currUser}
                 </div> 
@@ -25,28 +26,29 @@ export default function SideBar({setShowSidebar, currUser, setShowLogOutModal}:p
             }
 
             <SideBarNavItem path="/link-search" name="Link-Search" />
-            {currUser !== null ? 
-            <>
-              <SideBarNavItem path="/saved" name="Saved Tracks"/>
-              <SideBarNavItem path="/top" name="TopTracks"/>
-            </>   
-            :
-            null
-          }
 
-          {
-            currUser == null ?
-              <a className= "flex justify-center items-center basis-32 grow text-center font-bold hover:text-green-400"
-                href="/api/auth/requestauth">
-                  Log In
-              </a>
+            {
+              currUser !== null ? 
+                <>
+                  <SideBarNavItem path="/saved" name="Saved Tracks"/>
+                  <SideBarNavItem path="/top" name="TopTracks"/>
+                </>   
               :
-              <button className="flex justify-center items-center basis-32 grow text-center font-bold hover:text-green-400"
-                onClick={()=>{setShowLogOutModal(true)}}>
-                  Log Out
-                </button>
+                null
+            }
 
-          }
+            {
+              currUser == null ?
+                <a className= "flex justify-center items-center basis-32 grow text-center font-bold hover:text-green-400"
+                  href="/api/auth/requestauth">
+                    Log In
+                </a>
+              :
+                <button className="flex justify-center items-center basis-32 grow text-center font-bold hover:text-green-400"
+                  onClick={()=>{setShowLogOutModal(true)}}>
+                    Log Out
+                </button>
+            }
           </nav>
         </div>
     </div>

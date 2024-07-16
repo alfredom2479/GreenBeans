@@ -1,13 +1,12 @@
 import { Dispatch,SetStateAction } from "react"
 import {useNavigate } from "react-router-dom";
-import { deleteAllStores } from "../../idb";
 
 export default function LogOutModal({setShowModal}: {setShowModal: Dispatch<SetStateAction<boolean>>}){
 
   const navigate = useNavigate();
 
   function handleLogOut(){
-    console.log("handling logout...")
+    console.log("logging out...")
     setShowModal(false);
     localStorage.clear();
     sessionStorage.clear();
@@ -20,15 +19,20 @@ export default function LogOutModal({setShowModal}: {setShowModal: Dispatch<SetS
       <div className="bg-gray-50 m-auto w-10/12 flex justify-center p-2 rounded-md text-center">
 
         <div className="flex flex-col text-xl ">
-          <div className="font-bold">
-            Log Out?
-          </div>
+          <div className="font-bold">Log Out?</div>
           <div className="">
             When you log back in, on the Permissions Page, Click the <b><u>'not you?'</u></b> link if you would like to switch accounts.
           </div>
           <div className="flex justify-center">
-          <button type="submit" onClick={()=>{handleLogOut()}}className="bg-red-950 text-white p-4 m-4 rounded-md">yes</button>
-          <button onClick={()=>{setShowModal(false)}} className="bg-gray-700 text-white p-4 m-4 rounded-md">no</button>
+            <button  className="bg-red-950 text-white p-4 m-4 rounded-md"  
+              type="submit" 
+              onClick={()=>{handleLogOut()}}>
+                yes
+            </button>
+            <button className="bg-gray-700 text-white p-4 m-4 rounded-md"  
+              onClick={()=>{setShowModal(false)}} >
+                no
+            </button>
           </div>
         </div>
 

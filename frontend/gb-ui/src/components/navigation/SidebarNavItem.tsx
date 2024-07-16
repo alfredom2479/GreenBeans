@@ -15,9 +15,8 @@ export default function SideBarNavItem({path,name}:{path:string,name:string}){
         isPending ? pendingStyleString : "",
         isTransitioning ? transitioningStyleString : "",
         baseStyleString
-      ].join(" ")}
-      >
+      ].join(" ")}>
         {name}
-      </NavLink>
+    </NavLink>
   )
 }
