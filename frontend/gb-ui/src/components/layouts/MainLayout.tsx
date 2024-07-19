@@ -2,9 +2,7 @@ import { useEffect, useState } from "react";
 import { Outlet, useLoaderData, useLocation, useNavigate} from "react-router-dom";
 import {  requestMySpotifyAccount } from "../../api";
 import LogOutModal from "../modals/LogOutModal";
-
 import hamburgerSvg from '../../assets/hamburger3.svg';
-
 import spotifyLogo from "../../assets/spotify_logo.png";
 import SideBar from "../navigation/SideBar";
 import { deleteAllStores, openIDB } from "../../idb";
@@ -55,14 +53,12 @@ export default function NavBar(){
   const location = useLocation();
 
   useEffect(()=>{
-
     const urlPath:string = location.pathname;
 
     if(urlPath.includes("top")) setPageName("Top")
     else if(urlPath.includes("saved")) setPageName("Saved")
     else if(urlPath.includes("track")) setPageName("Recs")
     else setPageName("Link")
-    
   },[location])
 
   useEffect(()=>{
@@ -72,7 +68,6 @@ export default function NavBar(){
 
   return (
     <div className="h-[100dvh] flex flex-col items-center ">
-
       <div className="h-14 flex items-center justify-between w-full px-2">
         <button className="flex-1"
           onClick={()=>{setShowSideBar(true)}} >
@@ -89,21 +84,15 @@ export default function NavBar(){
           {pageName}
         </h1>
       </div>
-
       <Outlet/>
-
-      {
-        showSideBar ? 
+      {showSideBar ? 
           <SideBar 
             setShowSidebar={setShowSideBar} 
             currUser={currUser} 
             setPageName={setPageName}
             setShowLogOutModal={setShowLogOutModal}
           />
-        : 
-          null
-      }
-
+        : null}
       { showLogOutModal ? <LogOutModal setShowModal={setShowLogOutModal}/> : null }
     </div>
   )
