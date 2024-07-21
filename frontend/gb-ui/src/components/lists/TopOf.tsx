@@ -64,12 +64,12 @@ export default function TopOf(){
             return (
             <li key={track.id}>
             <TrackCard 
-             track={{...track,trackSaveState:TrackSaveState.CantSave}}
-             popModal={handleListenOnClick}
+              track={{...track,trackSaveState:TrackSaveState.CantSave}}
+              popModal={handleListenOnClick}
             />
             </li>)
           })}
         </ul>
-        </div>
+      </div>
   )
 }
