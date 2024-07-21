@@ -20,7 +20,6 @@ export async function loader(){
       await deleteAllStores();
       localStorage.setItem("cleared_idb","true");
     }
-
     return null;
   }
 
@@ -33,12 +32,11 @@ export async function loader(){
       deleteAllStores();
       localStorage.setItem("greenbeans_user",data.display_name);
       return data.display_name;
-
     }
+    return null
   }catch(err){
     return null
   }
-  return null;
 }
 
 export default function NavBar(){
@@ -54,10 +52,9 @@ export default function NavBar(){
 
   useEffect(()=>{
     const urlPath:string = location.pathname;
-
-    if(urlPath.includes("top")) setPageName("Top")
-    else if(urlPath.includes("saved")) setPageName("Saved")
-    else if(urlPath.includes("track")) setPageName("Recs")
+    if (urlPath.includes("top")) setPageName("Top")
+    else if (urlPath.includes("saved")) setPageName("Saved")
+    else if (urlPath.includes("track")) setPageName("Recs")
     else setPageName("Link")
   },[location])
 

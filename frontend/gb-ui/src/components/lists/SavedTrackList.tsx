@@ -57,7 +57,7 @@ export default function SavedTrackList(){
   let pageNumber, nextPageNumber, prevPageNumber:number = 0;
 
   if(typeof page === "string" ){
-    pageNumber =Number(page)
+    pageNumber = Number(page);
     if(pageNumber < 0) pageNumber = 0;
     if(pageNumber > 1) prevPageNumber = pageNumber -1;
     nextPageNumber = pageNumber +1;
@@ -72,8 +72,9 @@ export default function SavedTrackList(){
       && typeof loaderData.usingIdbData === 'boolean' && 'id' in loaderData
       && typeof loaderData.id === "string"){
 
+        // eslint-disable-next-line  @typescript-eslint/no-explicit-any
         const trackCheckFunction = loaderData.usingIdbData === false ? (li:any)=>{return isTrack(li.track)} : isITrackObject;
-        let loaderItems = loaderData.list;
+        const loaderItems = loaderData.list;
         let possibleTrack:ITrack|null = null
       
         for(let i=0; i < loaderItems.length;i++){
@@ -90,47 +91,43 @@ export default function SavedTrackList(){
 
   return(
   <div className="flex flex-col h-full ">
-  <div className="flex ">
-        {pageNumber !== 0 ?
-          <NavLink 
+    <div className="flex">
+      {pageNumber !== 0 ?
+        <NavLink 
           to={`/saved/${prevPageNumber}`}
           className={({isPending,isTransitioning})=>[
             prevNextDefaultStyle,
             isPending ? "pointer-events-none" : "",
             isTransitioning ? "pointer-events-none" : ""
-          ].join(" ")
-        }
-          >prev
+          ].join(" ")}
+            >prev
         </NavLink>
-        : 
-          null
-        }
+        : null}
         <NavLink 
           to={`/saved/${nextPageNumber}`}
           className={({isPending,isTransitioning})=>[
             prevNextDefaultStyle,
             isPending ? "pointer-events-none" : "",
             isTransitioning ? "pointer-events-none" : ""
-          ].join(" ")
-        }
-          >next
+          ].join(" ")}
+            >next
         </NavLink>
     </div>
-    <div className=" overflow-y-scroll" ref={listRef}>
-      <ul>
-        {savedTracksList.map((track)=>{
-          return (
-            <li key={track.id}>
-              <TrackCard
-                track={{...track,trackSaveState:TrackSaveState.Saved}}
-                popModal={handleListenOnClick}
-              />
-            </li>
-            
-          )
-        })}
-      </ul>
-    </div>
+    <div className="overflow-y-scroll" 
+      ref={listRef}>
+        <ul>
+          {savedTracksList.map((track)=>{
+            return (
+              <li key={track.id}>
+                <TrackCard
+                  track={{...track,trackSaveState:TrackSaveState.Saved}}
+                  popModal={handleListenOnClick}
+                />
+              </li>
+            )
+          })}
+        </ul>
+      </div>
     
     </div>
   )
