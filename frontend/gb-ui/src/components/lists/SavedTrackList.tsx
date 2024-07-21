@@ -4,8 +4,8 @@ import TrackCard from "../TrackCard";
 import { requestSavedTracks } from "../../api";
 import type {Params} from "react-router-dom";
 import { ITrack, useHandleListenOnClick, TrackSaveState } from "../../interfaces";
-import { isITrackObject, isTrack } from "../../utils";
-import { Stores, addLastUpdatedTime, addTrackList, getLastUpdatedTime, getTrackList } from "../../idb";
+import {  parseListLoaderData } from "../../utils";
+import { Stores, addLastUpdatedTime,  getLastUpdatedTime, getTrackList } from "../../idb";
 
 interface URLParams{params:Params}
 
@@ -64,28 +64,8 @@ export default function SavedTrackList(){
   }
 
   useEffect(()=>{
-
-    const tempTrackList:ITrack[] = [];
-
-    if(typeof loaderData === 'object' && loaderData !== null && 'list' in loaderData
-      && 'usingIdbData' in loaderData && Array.isArray(loaderData.list)
-      && typeof loaderData.usingIdbData === 'boolean' && 'id' in loaderData
-      && typeof loaderData.id === "string"){
-
-        // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-        const trackCheckFunction = loaderData.usingIdbData === false ? (li:any)=>{return isTrack(li.track)} : isITrackObject;
-        const loaderItems = loaderData.list;
-        let possibleTrack:ITrack|null = null
-      
-        for(let i=0; i < loaderItems.length;i++){
-          possibleTrack = trackCheckFunction(loaderItems[i]);
-          if(possibleTrack != null) tempTrackList.push(possibleTrack);
-        }
-
-        setSavedTracksList(tempTrackList);
-        if(loaderData.usingIdbData === false && tempTrackList.length > 0) addTrackList(Stores.TrackLists,tempTrackList,loaderData.id);
-        if(listRef.current !== null) listRef.current.scrollTo(0,0);
-    }
+    parseListLoaderData(loaderData,setSavedTracksList,false);
+    if(listRef !== null && listRef.current !== null) listRef.current.scrollTo(0,0);
   },[loaderData]);
 
   return(

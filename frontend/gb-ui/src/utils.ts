@@ -1,5 +1,31 @@
+import { Dispatch,  SetStateAction } from "react";
 import { AudioFeatures, ITrack, TrackSaveState } from "./interfaces";
+import {Stores,addTrackList} from "./idb"
 
+const parseListLoaderData = 
+// eslint-disable-next-line  @typescript-eslint/no-explicit-any
+  (loaderData: any, setTrackList:Dispatch<SetStateAction<ITrack[]>>, isTopList:boolean)=>{
+
+    if(typeof loaderData === 'object' && loaderData !== null && 'list' in loaderData
+      && 'usingIdbData' in loaderData && Array.isArray(loaderData.list)
+      && typeof loaderData.usingIdbData === 'boolean' && 'id' in loaderData
+      && typeof loaderData.id === "string"){
+      // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+      const isTrackProperFunction = isTopList ? isTrack : (li:any)=>{return isTrack(li.track)}
+      const trackCheckFunction = loaderData.usingIdbData === false ? isTrackProperFunction : isITrackObject;
+      const loaderItems = loaderData.list;
+      const tempTrackList:ITrack[] = [];
+      let possibleTrack:ITrack|null = null
+    
+      for(let i=0; i < loaderItems.length;i++){
+        possibleTrack = trackCheckFunction(loaderItems[i]);
+        if(possibleTrack != null) tempTrackList.push(possibleTrack);
+      }
+
+      setTrackList(tempTrackList);
+      if(loaderData.usingIdbData === false && tempTrackList.length > 0) addTrackList(Stores.TrackLists,tempTrackList,loaderData.id);
+  }
+}
 
 // eslint-disable-next-line  @typescript-eslint/no-explicit-any
 const isTrack = (possibleTrack: any, size:number=0): ITrack|null=>{
@@ -157,6 +183,7 @@ const isAudioFeatures =(possibleAudioFeatures:any):AudioFeatures|null =>{
 }
 
 export {
+  parseListLoaderData,
   isTrack,
   isITrackObject,
   isAudioFeatures,

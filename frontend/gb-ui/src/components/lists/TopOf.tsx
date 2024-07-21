@@ -4,9 +4,9 @@ import type {Params} from 'react-router-dom';
 import TrackCard from "../TrackCard";
 import { ITrack, TrackSaveState } from "../../interfaces";
 import { requestTopTracks } from '../../api';
-import { isITrackObject, isTrack } from "../../utils";
+import {  parseListLoaderData } from "../../utils";
 import { useHandleListenOnClick } from "../../interfaces";
-import { Stores, addTrackList, getTrackList } from "../../idb";
+import { Stores, getTrackList } from "../../idb";
 
 interface TopParams{params:Params}
 
@@ -53,39 +53,8 @@ export default function TopOf(){
   const {handleListenOnClick} = useHandleListenOnClick();
 
   useEffect(()=>{
-    const newTracks:ITrack[] = [];
-
-    if(typeof loadedData === 'object' && loadedData !== null && 'list' in loadedData 
-      && 'usingIdbData' in loadedData && Array.isArray(loadedData.list) 
-      && typeof loadedData.usingIdbData === 'boolean' && 'id' in loadedData
-      && typeof loadedData.id === "string"
-     ){
-        // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-        const trackCheckFunction = loadedData.usingIdbData === false ? isTrack : isITrackObject;
-        const loaderItems = loadedData.list;
-        let possibleTrack:ITrack|null = null;
-
-        for(let i = 0; i < loaderItems.length; i++){
-
-          possibleTrack = trackCheckFunction(loaderItems[i]);
-          if(possibleTrack != null) newTracks.push(possibleTrack);
-          /*
-          if(loadedData.usingIdbData === false){
-            possibleTrack = isTrack(loaderItems[i]);
-          }
-          else{
-            possibleTrack = isITrackObject(loaderItems[i]);
-          }
-          if(possibleTrack !== null){
-            newTracks.push(possibleTrack);
-          }
-            */
-        }
-
-      setTopTracksList(newTracks)
-      if(loadedData.usingIdbData === false && loaderItems.length > 0) addTrackList(Stores.TrackLists,newTracks,loadedData.id);
-      if(listRef.current !== null) listRef.current.scrollTo(0,0);
-    }
+    parseListLoaderData(loadedData,setTopTracksList,true);
+    if(listRef !== null && listRef.current !== null) listRef.current.scrollTo(0,0);
   },[loadedData])
 
   return(
