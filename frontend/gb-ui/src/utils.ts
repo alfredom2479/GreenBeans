@@ -6,7 +6,7 @@ const isTrack = (possibleTrack: any, size:number=0): ITrack|null=>{
 
   const tempTrack:ITrack = {id: "", name:"",artist:"",image:"",trackSaveState:TrackSaveState.CantSave} ;
 
-  if(possibleTrack === null && possibleTrack === undefined){
+  if(possibleTrack === null || possibleTrack === undefined){
     return null;
   }
 

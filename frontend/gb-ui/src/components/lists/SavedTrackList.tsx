@@ -78,14 +78,13 @@ export default function SavedTrackList(){
         let possibleTrack:ITrack|null = null
       
         for(let i=0; i < loaderItems.length;i++){
-          possibleTrack = trackCheckFunction(loaderItems[i])
-          if(possibleTrack != null) tempTrackList.push(possibleTrack)
+          possibleTrack = trackCheckFunction(loaderItems[i]);
+          if(possibleTrack != null) tempTrackList.push(possibleTrack);
         }
 
         setSavedTracksList(tempTrackList);
         if(loaderData.usingIdbData === false && tempTrackList.length > 0) addTrackList(Stores.TrackLists,tempTrackList,loaderData.id);
         if(listRef.current !== null) listRef.current.scrollTo(0,0);
-        
     }
   },[loaderData]);
 
@@ -131,5 +130,4 @@ export default function SavedTrackList(){
     
     </div>
   )
-
 }
