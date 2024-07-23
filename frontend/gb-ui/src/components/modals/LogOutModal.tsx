@@ -35,7 +35,6 @@ export default function LogOutModal({setShowModal}: {setShowModal: Dispatch<SetS
             </button>
           </div>
         </div>
-
       </div>
     </div>
   )
