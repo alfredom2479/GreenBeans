@@ -240,7 +240,7 @@ export const getTrackList = async (storeName:string, key:string):Promise<ITrack[
       const res = store.get(key);
 
       res.onsuccess = async () => {
-        console.log(res.result);
+        //console.log(res.result);
         
         if(res.result === null || res.result === undefined){
           resolve(null);

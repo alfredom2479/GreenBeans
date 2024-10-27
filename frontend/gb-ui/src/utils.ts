@@ -1,7 +1,7 @@
 import { Dispatch,  SetStateAction } from "react";
 import { AudioFeatures, ITrack, TrackSaveState } from "./interfaces";
 import {Stores,addTrackList} from "./idb"
-
+import {didb} from "./dexiedb"
 const parseListLoaderData = 
 // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   (loaderData: any, setTrackList:Dispatch<SetStateAction<ITrack[]>>, isTopList:boolean)=>{
@@ -23,8 +23,95 @@ const parseListLoaderData =
       }
 
       setTrackList(tempTrackList);
-      if(loaderData.usingIdbData === false && tempTrackList.length > 0) addTrackList(Stores.TrackLists,tempTrackList,loaderData.id);
+      if(loaderData.usingIdbData === false && tempTrackList.length > 0){
+      addTrackList(Stores.TrackLists,tempTrackList,loaderData.id);
+      addTracksToDidb(tempTrackList,loaderData.id);
+      } 
   }
+}
+
+const addTracksToDidb = async (trackList:ITrack[],trackListId:string)=>{
+  const idList:string[] = [];
+
+  for(let i=0; i < trackList.length; i++){
+    try{
+      idList.push(trackList[i].id);
+      await didb.tracks.add(trackList[i]);
+    }
+    catch(err){
+      console.log("error adding track to dexie "+err);
+    }
+  }
+  try{
+    const res = await didb.track_lists.put(idList,trackListId);
+    console.log(res);
+  }
+  catch(err){
+    console.log("error adding track list to dexie ");
+    console.log(err);
+  }
+}
+
+const getTrackListFromDidb = async (id:string):Promise<ITrack[]|null>=>{
+  return new Promise( async (resolve)=>{
+    let trackListIdList:string[]|null = null;
+    //check if track list exists and if its valid
+    try{
+      trackListIdList= await didb.track_lists.get(id) || null;
+      //console.log(trackListIdList);
+    }
+    catch(err){
+      console.log("error getting track list from dexie ");
+      console.log(err);
+      resolve(null);
+      return;
+    }
+
+    if(trackListIdList === null){
+      resolve(null);
+      return;
+    }
+
+    const trackList:ITrack[] = [];
+    let possibleITrack:ITrack|null = null;
+    for(let i = 0; i < trackListIdList.length; i++){
+      try{
+        possibleITrack = await didb.tracks.get(trackListIdList[i]) || null;
+        if(possibleITrack === null){
+          //if 1 to n-1 tracks are missing, list quality is unacceptable.
+          //Also signal that indexedDB is in an incomplete state.
+          resolve(null);
+          return;
+        }
+      }
+      catch(err){
+        console.log("error getting track from dexie ");
+        console.log(err);
+        resolve(null);
+        return;
+      }
+      trackList.push(possibleITrack);
+    }
+    resolve(trackList);
+    return;
+  })
+  
+}
+
+async function clearAllDexieTables() {
+  console.log("clearing all dexie tables");
+  await didb.transaction('rw', didb.tables, async () => {
+    for (const table of didb.tables) {
+      try{
+        await table.clear();
+        console.log("cleared table: "+table.name);
+      }
+      catch(err){
+        console.log("error clearing dexie table: "+table.name);
+        console.log(err);
+      }
+    }
+  });
 }
 
 // eslint-disable-next-line  @typescript-eslint/no-explicit-any
@@ -187,4 +274,7 @@ export {
   isTrack,
   isITrackObject,
   isAudioFeatures,
+  addTracksToDidb,
+  getTrackListFromDidb,
+  clearAllDexieTables
 }

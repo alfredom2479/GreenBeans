@@ -6,7 +6,7 @@ import type {Params} from "react-router-dom";
 import { ITrack, useHandleListenOnClick, TrackSaveState } from "../../interfaces";
 import {  parseListLoaderData } from "../../utils";
 import { Stores, addLastUpdatedTime,  getLastUpdatedTime, getTrackList } from "../../idb";
-
+import { didb } from "../../dexiedb";
 interface URLParams{params:Params}
 
 export async function loader({params}:URLParams){
@@ -28,6 +28,21 @@ export async function loader({params}:URLParams){
   const idbTrackListData: ITrack[]|null = await getTrackList(Stores.TrackLists,id)
   if(idbTrackListData != null){
     const idbLastUpdatedTime:number|null = await getLastUpdatedTime(Stores.LastUpdated,id)
+
+    try{
+      const didbLastUpdatedTime:number|null = await didb.last_updated.get(id) || null;
+      if(didbLastUpdatedTime === null){
+        console.log("no last updated time found in dexie for: "+id);
+      }
+      else{
+        console.log(didbLastUpdatedTime);
+      }
+    }
+    catch(err){
+      console.log("error getting last updated time from dexie: "+id);
+      console.log(err);
+    }
+
     if(Number(lastTrackSavedTime) < Number(idbLastUpdatedTime)){
       usingIdbData = true;
       return {usingIdbData,list:idbTrackListData,id};
@@ -38,6 +53,14 @@ export async function loader({params}:URLParams){
   if(data && data.items && Array.isArray(data.items)){
     if(data.items.length === 0 && pageNumber !== 0) return redirect("/saved/0");
     addLastUpdatedTime(Stores.LastUpdated,Date.now(),id);
+    try{
+      const res = await didb.last_updated.put(Date.now(),id);
+      console.log(res);
+    }
+    catch(err){
+      console.log("error adding last updated time to dexie: "+id+" -> "+Date.now());
+      console.log(err);
+    }
     return {usingIdbData,list:data.items,id};
   }
     

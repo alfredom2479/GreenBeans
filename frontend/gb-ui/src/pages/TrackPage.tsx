@@ -4,9 +4,9 @@ import { requestSpotifyTrack,requestSpotifyTrackAudioFeatures } from "../api";
 import type {Params} from "react-router-dom";
 import { ITrack, AudioFeatures, TrackSaveState,  } from "../interfaces";
 import { isAudioFeatures, isITrackObject, isTrack } from "../utils";
-
-import spotifyLogo from "../assets/spotify_logo.png";
+//import spotifyLogo from "../assets/spotify_logo.png";
 import { Stores, getITrack,addITrack, getAudioFeatures, addAudioFeatures} from "../idb";
+import { didb } from "../dexiedb";
 
 interface IURLParams{
   params:Params
@@ -31,13 +31,28 @@ export async function loader({params}:IURLParams){
   //begin the queries
   let trackLoaderData = null;  
   let audioFeatureLoaderData = null;
-
   let usingIDBTrackData:boolean = false;
   let usingIDBFeatureData:boolean = false;
 
   const idbTrackData:ITrack|null= await getITrack(Stores.Tracks,trackId);
+  let didbTrackData_temp:ITrack|null; 
   const idbAudioFeatureData:AudioFeatures|null = await getAudioFeatures(Stores.AudioFeatures,trackId);
-  
+  let didbAudioFeatureData_temp:AudioFeatures|null;
+
+  try {
+    console.log(didb);
+    didbAudioFeatureData_temp = await didb.audio_features.get(trackId) || null;
+    didbTrackData_temp = await didb.tracks.get(trackId) || null;
+  }
+  catch(err){
+    console.log("error getting audio features or track from dexie");
+    didbAudioFeatureData_temp = null;
+    didbTrackData_temp = null;
+  }
+
+  console.log(didbTrackData_temp);
+  console.log(didbAudioFeatureData_temp);
+
   if(idbTrackData != null){
     usingIDBTrackData = true;
     trackLoaderData = idbTrackData;
@@ -66,6 +81,8 @@ export async function loader({params}:IURLParams){
   
 }
 
+
+
 export default function TrackPage(){
 
   const loaderData = useLoaderData();
@@ -80,6 +97,29 @@ export default function TrackPage(){
     let audioFeatureLoaderData: object|null = {};
     let usingIDBTrackData: boolean = false;
     let usingIDBFeatureData:boolean = false; 
+
+    console.log(didb);
+
+    async function addTrackToDexie(track:ITrack){
+      try{
+        const res = await didb.tracks.add(track);
+        console.log(res);
+      }
+      catch(err){
+        console.log("error adding track to dexie "+err);
+      }
+    }
+    async function addAudioFeaturesToDexie(audioFeatures:AudioFeatures){
+     try{
+      console.log(didb);
+      console.log(didb.audio_features);
+      const res = await didb.audio_features.add(audioFeatures);
+      console.log(res);
+     } 
+     catch(err){
+      console.log("error adding audio features to dexie "+err);
+     }
+    }
 
     if(typeof loaderData === 'object' && loaderData) { 
 
@@ -127,6 +167,7 @@ export default function TrackPage(){
         setTrackData(possibleTrack);
         if(!usingIDBTrackData){
           addITrack(Stores.Tracks, possibleTrack);
+          addTrackToDexie(possibleTrack);
         }
       }
 
@@ -135,11 +176,14 @@ export default function TrackPage(){
         if (possibleAudioFeatures != null){
           setCurrAudioFeatures(possibleAudioFeatures);
           if(!usingIDBFeatureData){
+            console.log(possibleAudioFeatures);
             addAudioFeatures(Stores.AudioFeatures,possibleAudioFeatures);
+            addAudioFeaturesToDexie(possibleAudioFeatures);
           }
         }
       }
     }
+    console.log("spot url:"+trackData.spotify_url);
     
   },[loaderData])
 
@@ -148,9 +192,11 @@ export default function TrackPage(){
         <div className=" bg-stone-900 text-stone-200 flex h-32 w-full ">
 
           <div className=" shrink-0 flex items-center w-32 h-full">
+            <a href={trackData.spotify_url}>
             <img src={trackData.image} 
               className="flex-1 h-32 w-32 object-cover ">
             </img>
+            </a>
           </div>
 
           <div className="flex flex-1 basis-5/6  flex-col p-1 overflow-y-scroll overflow-x-hidden">
@@ -162,11 +208,11 @@ export default function TrackPage(){
             </div>
           </div>
 
-          <div className=" flex flex-1 basis-1/6 ">
+          {/* <div className=" flex flex-1 basis-1/6 ">
             <a href={trackData.spotify_url} target="_blank" className=" hover:bg-white w-full flex items-center justify-center p-2">
               <img src={spotifyLogo} className="h-12"/>
             </a>
-          </div>
+          </div> */}
         </div> 
             <Outlet context={currAudioFeatures satisfies AudioFeatures } />
     </div>

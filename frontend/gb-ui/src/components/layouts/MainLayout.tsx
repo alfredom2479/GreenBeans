@@ -6,6 +6,7 @@ import hamburgerSvg from '../../assets/hamburger3.svg';
 import spotifyLogo from "../../assets/spotify_logo.png";
 import SideBar from "../navigation/SideBar";
 import { deleteAllStores, openIDB } from "../../idb";
+import { clearAllDexieTables } from "../../utils";
 
 export async function loader(){
 
@@ -18,25 +19,29 @@ export async function loader(){
 
     if(cleared_idb === null){
       await deleteAllStores();
+      await clearAllDexieTables();
       localStorage.setItem("cleared_idb","true");
     }
     return null;
   }
 
-  const username = localStorage.getItem("greenbeans_user");
+  const username:string|null = localStorage.getItem("greenbeans_user");
   if(username !== null && username !== "") return username;
   
   try{
     const data = await requestMySpotifyAccount(access_token);
     if(data && data.display_name){
-      deleteAllStores();
+      await deleteAllStores();
+      await clearAllDexieTables();
       localStorage.setItem("greenbeans_user",data.display_name);
       return data.display_name;
     }
     return null
   }catch(err){
+    console.log("no username found");
     return null
   }
+  
 }
 
 export default function NavBar(){
@@ -66,17 +71,22 @@ export default function NavBar(){
   return (
     <div className="h-[100dvh] flex flex-col items-center ">
       <div className="h-14 flex items-center justify-between w-full px-2">
-        <button className="flex-1"
-          onClick={()=>{setShowSideBar(true)}} >
-            <img className="flex-1 h-10"
-              src={hamburgerSvg}/>
-        </button>
-        <a className="flex flex-1 justify-center"
-          href='https://spotify.com' 
-          target='_blank' >
-            <img className='flex-1 h-10 grow-0'
-              src={spotifyLogo} />
+        <div className="flex-1">
+          <button className="flex-1"
+            onClick={()=>{setShowSideBar(true)}} >
+              <img className="flex-1 h-10"
+                src={hamburgerSvg}/>
+          </button>
+        </div>
+        <div className="flex flex-1 justify-center items-center">
+          <a className="flex h-10 w-10"
+            href='https://spotify.com' 
+            target='_blank' >
+              <img className='flex-1 h-10 grow-0'
+                src={spotifyLogo} />
           </a>
+        </div>
+        
         <h1 className="flex-1 text-white font-bold text-2xl text-right">
           {pageName}
         </h1>
