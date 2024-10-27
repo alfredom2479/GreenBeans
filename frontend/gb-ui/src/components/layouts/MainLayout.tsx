@@ -8,6 +8,7 @@ import SideBar from "../navigation/SideBar";
 import { deleteAllStores, openIDB } from "../../idb";
 import { clearAllDexieTables } from "../../utils";
 
+//Loader checks for username locally, then on spotify, then clears indexedDB if needed.
 export async function loader(){
 
   openIDB();
