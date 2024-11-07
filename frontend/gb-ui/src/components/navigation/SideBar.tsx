@@ -22,8 +22,8 @@ export default function SideBar({setShowSidebar, currUser, setShowLogOutModal}:p
             <SideBarNavItem path="/link-search" name="Link-Search" />
             {currUser !== null ? 
                 <>
-                  <SideBarNavItem path="/saved" name="Saved Tracks"/>
-                  <SideBarNavItem path="/top" name="TopTracks"/>
+                  <SideBarNavItem path="/saved" name="My Saved Tracks"/>
+                  <SideBarNavItem path="/top" name="My Top Tracks"/>
                 </>   
               : null }
             {currUser == null ?
