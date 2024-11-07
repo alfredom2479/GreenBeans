@@ -8,13 +8,12 @@ export default function TopNavItem({path,name}:{path:string, name:string}){
   return (
     <li className="flex-1 flex justify-center content-center">
       <NavLink to={path}
-      className={({isActive,isPending,isTransitioning})=> [
-        isActive ?  ActiveNavLinkStyles : DefaultNavLinkStyles,
-        isPending ? "pointer-events-none" : "",
-        isTransitioning ? "pointer-events-none" : ""
-      ].join(" ")
-    }
-      >
+        className={({isActive,isPending,isTransitioning})=> [
+          isActive ?  ActiveNavLinkStyles : DefaultNavLinkStyles,
+          isPending ? "pointer-events-none" : "",
+          isTransitioning ? "pointer-events-none" : ""
+        ].join(" ")
+      }>
         {name}
       </NavLink> 
     </li>

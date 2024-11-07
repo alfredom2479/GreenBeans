@@ -5,8 +5,8 @@ import { ITrack, TrackSaveState } from "../interfaces"
 import addTrackSvg from '../assets/plus2.svg';
 import trackSavedSvg from '../assets/check.svg';
 import { saveSpotifyTrack } from "../api";
-import { Stores, updateITrack } from "../idb";
-
+//import { Stores, updateITrack } from "../idb";
+import { didb } from "../dexiedb";
 interface SaveButtonParams{
   //trackSaveState: TrackSaveState,
   //id: string
@@ -58,7 +58,15 @@ export default function SaveButton({trackInfo}:SaveButtonParams){
                 <img src={trackSavedSvg} alt="saved" className="w-8"/>
               </button>
             );
-            updateITrack(Stores.Tracks,{...trackInfo,trackSaveState:TrackSaveState.Saved});
+            //updateITrack(Stores.Tracks,{...trackInfo,trackSaveState:TrackSaveState.Saved});
+            //update track save status
+            try{
+              await didb.tracks.put({...trackInfo,trackSaveState:TrackSaveState.Saved});
+            }
+            catch(err){
+              console.log("error adding track to dexie ");
+              console.log(err);
+            }
             sessionStorage.setItem("last_track_saved_time",""+Date.now());
           }
         }catch(err){

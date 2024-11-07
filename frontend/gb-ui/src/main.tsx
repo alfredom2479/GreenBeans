@@ -9,20 +9,20 @@ import {
 
 import AuthPage, {loader as tokensLoader} from "./pages/AuthPage";
 import TopPage,{loader as topPageLoader} from "./pages/TopPage"
-import TopOf, {loader as topDataLoader} from './components/TopOf';
+import TopOf, {loader as topDataLoader} from './components/lists/TopOf';
 import TrackPage,{loader as trackDataLoader} from './pages/TrackPage';
 import {action as getRecsAction} from './components/RecOptionsSection';
 import SavedPage,{loader as savedPageLoader} from './pages/SavedPage';
-import SavedTrackList,{loader as savedTracksLoader} from './components/SavedTrackList';
+import SavedTrackList,{loader as savedTracksLoader} from './components/lists/SavedTrackList';
 import LinkSearchPage, {action as searchLinkAction} from './pages/LinkSearchPage';
-import NavBar, {loader as loggedInCheckerLoader} from './components/NavBar';
+import MainLayout, {loader as loggedInCheckerLoader} from './components/layouts/MainLayout';
 import RootErrorBoundary from './components/error-components/RootErrorBoundary';
 import RecSection, {loader as preRecLoader} from './components/RecSection';
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <NavBar/>,
+    element: <MainLayout/>,
     loader: loggedInCheckerLoader,
     errorElement: <RootErrorBoundary/>,
     children: [

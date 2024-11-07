@@ -14,26 +14,21 @@ interface IURLParams{
 export async function action({params,request}:IURLParams){  
   let access_token:string|null = localStorage.getItem("access_token");
   let isLoggedIn = true;
+  let trackId:string = "";
 
-  let trackId:string = "default_track_id";
-
-  if(!access_token || access_token === undefined){
+  if(!access_token || access_token === undefined || access_token===""){
     access_token = "";
     isLoggedIn = false;
   }
 
-  if(params.trackid && typeof params.trackid === "string"){
-    trackId = params.trackid;
-  }
-  else{
-    redirect("/");
-  }
+  if (typeof params.trackid === "string") trackId = params.trackid;
+  else redirect("/");
+  
   let audioFeatures:AudioFeatures = {id:""};
   let settings:string[] = [];
+
   const requestJson = await request.json();
-
   audioFeatures = requestJson.audioFeatures;
-
   settings = requestJson.settings;
 
   const data = await requestSpotifyRec(access_token,trackId,settings,audioFeatures, isLoggedIn);

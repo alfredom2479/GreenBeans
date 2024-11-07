@@ -161,19 +161,6 @@ export async function saveSpotifyTrack( trackId:string) :Promise<Response|null>{
   console.log(data);
   return data;
 
-  /*
-  res = await fetch("https://api.spotify.com/v1/me/tracks?ids="+trackId,{
-    method: "PUT",
-    headers: {
-      Authorization: 'Bearer ' + accessToken
-    }
-  });
-  if(!res.ok){
-    return null;
-  }
-
-  return res;
-  */
 }
 
 export async function requestSpotifyTrack(accessToken:string, trackId:string, isLoggedIn:boolean ){
@@ -369,7 +356,6 @@ async function sendRequest(endpoint:string, accessToken:string,requestMethod:Req
       method: "GET", 
       headers: {
         Authorization: 'Bearer ' + access_token
-        // Authorization: 'Bearer 69' + access_token
       }
     })
 

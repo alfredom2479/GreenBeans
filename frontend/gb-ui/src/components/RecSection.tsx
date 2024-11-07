@@ -2,13 +2,14 @@ import { useEffect, useState } from "react"
 import { ITrack, SongPreviewInfo, TrackSaveState, useAudioFeatures, } from "../interfaces";
 import {  redirect, useActionData, useLoaderData } from "react-router-dom";
 import RecOptionsSection from "./RecOptionsSection";
-import SongPreviewModal from "./SongPreviewModal";
+import SongPreviewModal from "./modals/SongPreviewModal";
 import { isTrack } from "../utils";
 
 import type {Params} from "react-router-dom";
 import {  requestSaveStatus, requestSpotifyRec } from "../api";
-import RecList from "./RecList";
+import RecList from "./lists/RecList";
 import { Stores, addTrackList, getTrackList } from "../idb";
+import { addTracksToDidb, getTrackListFromDidb } from "../utils";
 //import { getData, Stores } from "../idb";
 
 interface LoaderParams{
@@ -90,6 +91,30 @@ export default function RecSection(){
   
   useEffect(()=>{
 
+    /*
+    async function addTracksToDidb(trackList:ITrack[],trackListId:string){
+      const idList:string[] = [];
+      for(let i=0; i < trackList.length; i++){
+          try{
+            idList.push(trackList[i].id);
+            await didb.tracks.add(trackList[i]);
+            //console.log(res);
+          }
+          catch(err){
+            console.log("error adding track to dexie "+err);
+          }
+      }
+     try{
+      const res = await didb.track_lists.put(idList,trackListId);
+      console.log(res);
+     }
+     catch(err){
+      console.log("error adding track list to dexie ");
+      console.log(err);
+     }
+    } 
+    */
+
     setCheckedBoxes([]);
 
     const testFunc = async (token:string,id:string,isLoggedIn:boolean)=>{
@@ -97,12 +122,22 @@ export default function RecSection(){
         setIsLoadingRecs(true);
       }
 
-      const idbTrackListData:ITrack[]|null = await getTrackList(Stores.TrackLists,id);
+      //const idbTrackListData:ITrack[]|null = await getTrackList(Stores.TrackLists,id);
+      let didbTrackListData:ITrack[]|null=null;
+
+      try{
+        didbTrackListData= await getTrackListFromDidb(id) ;
+        //console.log(didbTrackListData);
+      }
+      catch(err){
+        console.log("error getting track list from dexie ");
+        console.log(err);
+      }
       //console.log(idbTrackListData);
 
       console.log(ignore)
-      if(idbTrackListData !== null ){
-          setRecList(idbTrackListData);
+      if(didbTrackListData !== null ){
+          setRecList(didbTrackListData);
           setIsLoadingRecs(false)
           return;
       }
@@ -152,8 +187,9 @@ export default function RecSection(){
         if(!ignore){
           //console.log(tempTrackList);
           setRecList(tempTrackList);
-          if(idbTrackListData === null){
-            addTrackList(Stores.TrackLists ,tempTrackList,id);
+          if(didbTrackListData === null){
+            //addTrackList(Stores.TrackLists ,tempTrackList,id);
+            addTracksToDidb(tempTrackList,id);
           }
           setIsLoadingRecs(false);
        }

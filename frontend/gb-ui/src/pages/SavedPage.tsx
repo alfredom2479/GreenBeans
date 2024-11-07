@@ -1,7 +1,7 @@
 import {useState} from 'react';
 import { Outlet, redirect } from "react-router-dom";
 
-import SongPreviewModal from "../components/SongPreviewModal";
+import SongPreviewModal from "../components/modals/SongPreviewModal";
 import { ListenOnClickContextType, SongPreviewInfo } from "../interfaces";
 
 import type {Params} from "react-router-dom";
