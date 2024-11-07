@@ -5,7 +5,7 @@ import type {Params} from "react-router-dom";
 import { ITrack, AudioFeatures, TrackSaveState,  } from "../interfaces";
 import { isAudioFeatures, isITrackObject, isTrack } from "../utils";
 //import spotifyLogo from "../assets/spotify_logo.png";
-import { Stores, getITrack,addITrack, getAudioFeatures, addAudioFeatures} from "../idb";
+//import { Stores, getITrack,addITrack, getAudioFeatures, addAudioFeatures} from "../idb";
 import { didb } from "../dexiedb";
 
 interface IURLParams{
@@ -34,33 +34,39 @@ export async function loader({params}:IURLParams){
   let usingIDBTrackData:boolean = false;
   let usingIDBFeatureData:boolean = false;
 
-  const idbTrackData:ITrack|null= await getITrack(Stores.Tracks,trackId);
-  let didbTrackData_temp:ITrack|null; 
-  const idbAudioFeatureData:AudioFeatures|null = await getAudioFeatures(Stores.AudioFeatures,trackId);
-  let didbAudioFeatureData_temp:AudioFeatures|null;
+  //const idbTrackData:ITrack|null= await getITrack(Stores.Tracks,trackId);
+  //const idbAudioFeatureData:AudioFeatures|null = await getAudioFeatures(Stores.AudioFeatures,trackId);
+
+  let didbTrackData:ITrack|null; 
+  let didbAudioFeatureData:AudioFeatures|null;
 
   try {
-    console.log(didb);
-    didbAudioFeatureData_temp = await didb.audio_features.get(trackId) || null;
-    didbTrackData_temp = await didb.tracks.get(trackId) || null;
+    //console.log(didb);
+    didbTrackData = await didb.tracks.get(trackId) || null;
   }
   catch(err){
-    console.log("error getting audio features or track from dexie");
-    didbAudioFeatureData_temp = null;
-    didbTrackData_temp = null;
+    didbTrackData = null;
+    console.log("error getting track from dexie");
   }
 
-  console.log(didbTrackData_temp);
-  console.log(didbAudioFeatureData_temp);
+  try {
+    didbAudioFeatureData = await didb.audio_features.get(trackId) || null;
+  }
+  catch(err){
+    didbAudioFeatureData = null;
+    console.log("error getting audio features from dexie");
+  }
 
-  if(idbTrackData != null){
+  //console.log(didbTrackData);
+  //console.log(didbAudioFeatureData);
+
+  if(didbTrackData != null){
     usingIDBTrackData = true;
-    trackLoaderData = idbTrackData;
+    trackLoaderData = didbTrackData;
   }
-
-  if(idbAudioFeatureData != null){
+  if(didbAudioFeatureData != null){
     usingIDBFeatureData = true;
-    audioFeatureLoaderData = idbAudioFeatureData; 
+    audioFeatureLoaderData = didbAudioFeatureData; 
   }
 
   if(!usingIDBTrackData){
@@ -111,8 +117,6 @@ export default function TrackPage(){
     }
     async function addAudioFeaturesToDexie(audioFeatures:AudioFeatures){
      try{
-      console.log(didb);
-      console.log(didb.audio_features);
       const res = await didb.audio_features.add(audioFeatures);
       console.log(res);
      } 
@@ -166,7 +170,7 @@ export default function TrackPage(){
         //console.log(possibleTrack);
         setTrackData(possibleTrack);
         if(!usingIDBTrackData){
-          addITrack(Stores.Tracks, possibleTrack);
+          //addITrack(Stores.Tracks, possibleTrack);
           addTrackToDexie(possibleTrack);
         }
       }
@@ -176,8 +180,7 @@ export default function TrackPage(){
         if (possibleAudioFeatures != null){
           setCurrAudioFeatures(possibleAudioFeatures);
           if(!usingIDBFeatureData){
-            console.log(possibleAudioFeatures);
-            addAudioFeatures(Stores.AudioFeatures,possibleAudioFeatures);
+            //addAudioFeatures(Stores.AudioFeatures,possibleAudioFeatures);
             addAudioFeaturesToDexie(possibleAudioFeatures);
           }
         }

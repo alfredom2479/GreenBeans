@@ -1,6 +1,6 @@
 import { Dispatch,  SetStateAction } from "react";
 import { AudioFeatures, ITrack, TrackSaveState } from "./interfaces";
-import {Stores,addTrackList} from "./idb"
+//import {Stores,addTrackList} from "./idb"
 import {didb} from "./dexiedb"
 const parseListLoaderData = 
 // eslint-disable-next-line  @typescript-eslint/no-explicit-any
@@ -24,7 +24,7 @@ const parseListLoaderData =
 
       setTrackList(tempTrackList);
       if(loaderData.usingIdbData === false && tempTrackList.length > 0){
-      addTrackList(Stores.TrackLists,tempTrackList,loaderData.id);
+      //addTrackList(Stores.TrackLists,tempTrackList,loaderData.id);
       addTracksToDidb(tempTrackList,loaderData.id);
       } 
   }

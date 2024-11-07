@@ -5,13 +5,13 @@ import LogOutModal from "../modals/LogOutModal";
 import hamburgerSvg from '../../assets/hamburger3.svg';
 import spotifyLogo from "../../assets/spotify_logo.png";
 import SideBar from "../navigation/SideBar";
-import { deleteAllStores, openIDB } from "../../idb";
+//import { deleteAllStores, openIDB } from "../../idb";
 import { clearAllDexieTables } from "../../utils";
 
 //Loader checks for username locally, then on spotify, then clears indexedDB if needed.
 export async function loader(){
 
-  openIDB();
+  //openIDB();
 
   const access_token:string|null = localStorage.getItem("access_token");
 
@@ -19,7 +19,7 @@ export async function loader(){
     const cleared_idb:string|null = localStorage.getItem("cleared_idb");
 
     if(cleared_idb === null){
-      await deleteAllStores();
+      //await deleteAllStores();
       await clearAllDexieTables();
       localStorage.setItem("cleared_idb","true");
     }
@@ -32,7 +32,7 @@ export async function loader(){
   try{
     const data = await requestMySpotifyAccount(access_token);
     if(data && data.display_name){
-      await deleteAllStores();
+      //await deleteAllStores();
       await clearAllDexieTables();
       localStorage.setItem("greenbeans_user",data.display_name);
       return data.display_name;

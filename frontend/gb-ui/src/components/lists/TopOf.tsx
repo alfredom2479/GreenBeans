@@ -4,7 +4,7 @@ import type {Params} from 'react-router-dom';
 import TrackCard from "../TrackCard";
 import { ITrack, TrackSaveState } from "../../interfaces";
 import { requestTopTracks } from '../../api';
-import {  parseListLoaderData } from "../../utils";
+import {  parseListLoaderData, getTrackListFromDidb } from "../../utils";
 import { useHandleListenOnClick } from "../../interfaces";
 import { Stores, getTrackList } from "../../idb";
 
@@ -31,9 +31,21 @@ export async function loader({params}:TopParams){
   const id:string = "top_tracks"+rangeNum;
   const sessionDataCheckString:string = "top_session_data_loaded"+rangeNum;
   const topSessionDataLoaded:string|null = sessionStorage.getItem(sessionDataCheckString);
-  const idbTrackListData:ITrack[]|null = await getTrackList(Stores.TrackLists,id);
 
-  if(idbTrackListData != null && topSessionDataLoaded != null) return {usingIdbData:true,list:idbTrackListData,id};
+  //const idbTrackListData:ITrack[]|null = await getTrackList(Stores.TrackLists,id);
+  
+  let didbTrackListData:ITrack[]|null=null;
+
+  try{
+    didbTrackListData= await getTrackListFromDidb(id) ;
+    //console.log(didbTrackListData);
+  }
+  catch(err){
+    console.log("error getting track list from dexie ");
+    console.log(err);
+  }
+
+  if(didbTrackListData != null && topSessionDataLoaded != null) return {usingIdbData:true,list:didbTrackListData,id};
   
   const data = await requestTopTracks(access_token,rangeNum);
   if(data.items && Array.isArray(data.items)){

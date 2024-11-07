@@ -9,7 +9,6 @@ import type {Params} from "react-router-dom";
 import {  requestSaveStatus, requestSpotifyRec } from "../api";
 import RecList from "./lists/RecList";
 import { Stores, addTrackList, getTrackList } from "../idb";
-import { didb } from "../dexiedb";
 import { addTracksToDidb, getTrackListFromDidb } from "../utils";
 //import { getData, Stores } from "../idb";
 
@@ -123,10 +122,11 @@ export default function RecSection(){
         setIsLoadingRecs(true);
       }
 
-      const idbTrackListData:ITrack[]|null = await getTrackList(Stores.TrackLists,id);
+      //const idbTrackListData:ITrack[]|null = await getTrackList(Stores.TrackLists,id);
+      let didbTrackListData:ITrack[]|null=null;
 
       try{
-        const didbTrackListData:ITrack[]|null = await getTrackListFromDidb(id) ;
+        didbTrackListData= await getTrackListFromDidb(id) ;
         //console.log(didbTrackListData);
       }
       catch(err){
@@ -136,8 +136,8 @@ export default function RecSection(){
       //console.log(idbTrackListData);
 
       console.log(ignore)
-      if(idbTrackListData !== null ){
-          setRecList(idbTrackListData);
+      if(didbTrackListData !== null ){
+          setRecList(didbTrackListData);
           setIsLoadingRecs(false)
           return;
       }
@@ -187,8 +187,8 @@ export default function RecSection(){
         if(!ignore){
           //console.log(tempTrackList);
           setRecList(tempTrackList);
-          if(idbTrackListData === null){
-            addTrackList(Stores.TrackLists ,tempTrackList,id);
+          if(didbTrackListData === null){
+            //addTrackList(Stores.TrackLists ,tempTrackList,id);
             addTracksToDidb(tempTrackList,id);
           }
           setIsLoadingRecs(false);
