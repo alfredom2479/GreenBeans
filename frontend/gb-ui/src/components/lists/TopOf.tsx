@@ -6,7 +6,6 @@ import { ITrack, TrackSaveState } from "../../interfaces";
 import { requestTopTracks } from '../../api';
 import {  parseListLoaderData, getTrackListFromDidb } from "../../utils";
 import { useHandleListenOnClick } from "../../interfaces";
-import { Stores, getTrackList } from "../../idb";
 
 interface TopParams{params:Params}
 
