@@ -104,8 +104,6 @@ export default function TrackPage(){
     let usingIDBTrackData: boolean = false;
     let usingIDBFeatureData:boolean = false; 
 
-    console.log(didb);
-
     async function addTrackToDexie(track:ITrack){
       try{
         const res = await didb.tracks.add(track);
