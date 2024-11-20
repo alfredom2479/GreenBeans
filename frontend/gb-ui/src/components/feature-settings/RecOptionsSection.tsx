@@ -1,8 +1,9 @@
 import {  redirect,useSubmit } from "react-router-dom";
 import type {Params} from "react-router-dom";
+import { useState } from "react";
 import { AudioFeatures, ITrack, TrackSaveState, AudioFeatureSettings } from "../../interfaces";
 import { requestSaveStatus, requestSpotifyRec } from "../../api";
-import { isTrack } from "../../utils";
+import { isTrack, getAudioFeatureReadableData } from "../../utils";
 import FeatureSettingsBox from "./FeatureSettingsBox";
 import BoolFeatureSettingsBox from "./BoolFeatureSettingsBox";
 import OptionFeatureSettBox from "./OptionFeatureSettBox";
@@ -35,7 +36,7 @@ export async function action({params,request}:IURLParams){
     liveness: false,
     valence: {min: 0, max: 1},
     tempo: {min: 0, max: 200},
-    instrumentalness: {min: 0, max: 1},
+    //instrumentalness: {min: 0, max: 1},
     duration_ms: {min: 0, max: 600},
     time_signature: 4,
     key: 0,
@@ -121,8 +122,8 @@ interface RecOptionsSectionProps{
   setValenceSettings: React.Dispatch<React.SetStateAction<{min:number, max:number}>>,
   tempoSettings: {min:number, max:number},
   setTempoSettings: React.Dispatch<React.SetStateAction<{min:number, max:number}>>,
-  instrumentalnessSettings: {min:number, max:number},
-  setInstrumentalnessSettings: React.Dispatch<React.SetStateAction<{min:number, max:number}>>,
+  //instrumentalnessSettings,
+  //setInstrumentalnessSettings,
   keySettings: number,
   setKeySettings: React.Dispatch<React.SetStateAction<number>>,
   modeSettings: boolean,
@@ -151,8 +152,8 @@ export default function RecOptionsSection({
   setValenceSettings,
   tempoSettings,
   setTempoSettings,
-  instrumentalnessSettings,
-  setInstrumentalnessSettings,
+  //instrumentalnessSettings,
+  //setInstrumentalnessSettings,
   keySettings,
   setKeySettings,
   modeSettings,
@@ -165,18 +166,21 @@ export default function RecOptionsSection({
 
   const submit = useSubmit();
 
+ 
+
+
   const audioFeatureNames: [keyof AudioFeatures, string][] = [
+    ["duration_ms", "Duration"],
     ["acousticness", "Acousticness"],
     ["danceability", "Danceability"],
     ["energy", "Energy"],
-    ["liveness", "Liveness"],
-    ["valence", "Valence"],
+    ["valence", "Mood"],
     ["tempo", "Tempo"],
-    ["duration_ms", "Duration"],
     ["time_signature", "Time Signature"],
-    ["instrumentalness", "Instrumentalness"],
+    //["instrumentalness", "Instrumentalness"], instrumentalness only returns really low values
     ["key", "Key"],
-    ["mode", "Mode"]
+    ["mode", "Mode"],
+    ["liveness", "Played Live?"],
   ]
 
   enum SettingsType{
@@ -196,71 +200,73 @@ const featureNameToSettingsTypeMap: Record<keyof AudioFeatures, SettingsType> = 
   "tempo": SettingsType.PERCENTAGE_MIN_MAX,
   "duration_ms": SettingsType.PERCENTAGE_MIN_MAX, //need to convert ms to seconds
   "time_signature": SettingsType.OPTIONS,
-  "instrumentalness": SettingsType.PERCENTAGE_MIN_MAX,
+  //"instrumentalness": SettingsType.PERCENTAGE_MIN_MAX,
   "key": SettingsType.OPTIONS,
   "mode": SettingsType.BOOL,
 }
-  //const audioFeatureSettings:AudioFeatureSettings = {};
 
-  const getSettingsForFeature = (featureName: keyof AudioFeatures) => {
-    switch(featureName) {
-      case "acousticness":
-        return {
-          audioFeatureSetting: acousticnessSettings,
-          setAudioFeatureSetting: setAcousticnessSettings
-        };
-      case "danceability":
-        return {
-          audioFeatureSetting: danceabilitySettings,
-          setAudioFeatureSetting: setDanceabilitySettings
-        };
-      case "energy":
-        return {
-          audioFeatureSetting: energySettings,
-          setAudioFeatureSetting: setEnergySettings
-        };
-      case "liveness":
-        return {
-          audioFeatureSetting: livenessSettings,
-          setAudioFeatureSetting: setLivenessSettings
-        };
-      case "valence":
-        return {
-          audioFeatureSetting: valenceSettings,
-          setAudioFeatureSetting: setValenceSettings
-        };
-      case "tempo":
-        return {
-          audioFeatureSetting: tempoSettings,
-          setAudioFeatureSetting: setTempoSettings
-        };
-      case "instrumentalness":
-        return {
-          audioFeatureSetting: instrumentalnessSettings,
-          setAudioFeatureSetting: setInstrumentalnessSettings
-        };
-      case "key":
-        return {
-          audioFeatureSetting: keySettings,
-          setAudioFeatureSetting: setKeySettings
-        };
-      case "mode":
-        return {
-          audioFeatureSetting: modeSettings,
-          setAudioFeatureSetting: setModeSettings
-        };
-      case "duration_ms":
-        return {
-          audioFeatureSetting: durationSettings,
-          setAudioFeatureSetting: setDurationSettings
-        };
-      case "time_signature":
-        return {
-          audioFeatureSetting: timeSignatureSettings,
-          setAudioFeatureSetting: setTimeSignatureSettings
-        };
-      default:
-        return {
+const audioFeatureReadableData = getAudioFeatureReadableData(audioFeatures);
+
+
+const getSettingsForFeature = (featureName: keyof AudioFeatures) => {
+  switch(featureName) {
+    case "acousticness":
+      return {
+        audioFeatureSetting: acousticnessSettings,
+        setAudioFeatureSetting: setAcousticnessSettings
+      };
+    case "danceability":
+      return {
+        audioFeatureSetting: danceabilitySettings,
+        setAudioFeatureSetting: setDanceabilitySettings
+      };
+    case "energy":
+      return {
+        audioFeatureSetting: energySettings,
+        setAudioFeatureSetting: setEnergySettings
+      };
+    case "liveness":
+      return {
+        audioFeatureSetting: livenessSettings,
+        setAudioFeatureSetting: setLivenessSettings
+      };
+    case "valence":
+      return {
+        audioFeatureSetting: valenceSettings,
+        setAudioFeatureSetting: setValenceSettings
+      };
+    case "tempo":
+      return {
+        audioFeatureSetting: tempoSettings,
+        setAudioFeatureSetting: setTempoSettings
+      };
+      //case "instrumentalness":
+      //  return {
+      //    audioFeatureSetting: instrumentalnessSettings,
+      //    setAudioFeatureSetting: setInstrumentalnessSettings
+      //  };
+    case "key":
+      return {
+        audioFeatureSetting: keySettings,
+        setAudioFeatureSetting: setKeySettings
+      };
+    case "mode":
+      return {
+        audioFeatureSetting: modeSettings,
+        setAudioFeatureSetting: setModeSettings
+      };
+    case "duration_ms":
+      return {
+        audioFeatureSetting: durationSettings,
+        setAudioFeatureSetting: setDurationSettings
+      };
+    case "time_signature":
+      return {
+        audioFeatureSetting: timeSignatureSettings,
+        setAudioFeatureSetting: setTimeSignatureSettings
+      };
+    default:
+      return {
           audioFeatureSetting: {min: 0, max: 1},
           setAudioFeatureSetting: () => {}
         };
@@ -303,13 +309,16 @@ const featureNameToSettingsTypeMap: Record<keyof AudioFeatures, SettingsType> = 
               id={feature[0]} 
               type="checkbox">
             </input>
-            <label className="text-2xl text-green-50" htmlFor={feature[0]}> {feature[1]} ({audioFeatures[feature[0]]})</label>
+            <label className="text-2xl text-green-50 pl-2" htmlFor={feature[0]}> 
+              {feature[1]} : <b className="text-green-600">{audioFeatureReadableData[feature[0]]}</b>
+            </label>
             {checkedBoxes.includes(feature[0]) && 
             ((featureNameToSettingsTypeMap[feature[0]] === SettingsType.PERCENTAGE_MIN_MAX &&
               <FeatureSettingsBox 
                 featureName={feature[0]} 
                 audioFeatureSetting={getSettingsForFeature(feature[0]).audioFeatureSetting as {min: number, max: number}}
-                setAudioFeatureSetting={getSettingsForFeature(feature[0]).setAudioFeatureSetting as React.Dispatch<React.SetStateAction<{min: number, max: number}>>}/>
+                setAudioFeatureSetting={getSettingsForFeature(feature[0]).setAudioFeatureSetting as React.Dispatch<React.SetStateAction<{min: number, max: number}>>}
+              />
             ) ||
             (featureNameToSettingsTypeMap[feature[0]] === SettingsType.BOOL &&
               <BoolFeatureSettingsBox
@@ -334,6 +343,12 @@ const featureNameToSettingsTypeMap: Record<keyof AudioFeatures, SettingsType> = 
     </div>
       <div className="flex flex-col items-center">
       <button 
+        disabled={acousticnessSettings.min >= acousticnessSettings.max ||
+          danceabilitySettings.min >= danceabilitySettings.max ||
+          energySettings.min >= energySettings.max ||
+          valenceSettings.min >= valenceSettings.max ||
+          tempoSettings.min >= tempoSettings.max ||
+          durationSettings.min >= durationSettings.max}
         onClick={()=>{
           const submissionJSON = JSON.stringify(
             {settings:checkedBoxes,
@@ -345,7 +360,7 @@ const featureNameToSettingsTypeMap: Record<keyof AudioFeatures, SettingsType> = 
                 liveness: livenessSettings,
                 valence: valenceSettings,
                 tempo: tempoSettings,
-                instrumentalness: instrumentalnessSettings,
+                //instrumentalness: instrumentalnessSettings,
                 key: keySettings,
                 mode: modeSettings,
                 duration_ms: durationSettings,
@@ -360,7 +375,7 @@ const featureNameToSettingsTypeMap: Record<keyof AudioFeatures, SettingsType> = 
           setIsLoadingRecs(true)
           
         }}
-        className=" max-h-[10vh] bg-green-50 hover:bg-green-200 text-stone-900 text-xl rounded-xl font-bold p-2 w-1/2 text-center flex justify-center items-center"
+        className=" max-h-[10vh] bg-green-50 hover:bg-green-200 text-stone-900 text-xl rounded-xl font-bold p-2 w-1/2 text-center flex justify-center items-center disabled:bg-gray-400 disabled:text-gray-600"
         >Recommend!
       </button>
       

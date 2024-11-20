@@ -250,11 +250,11 @@ export async function requestSpotifyRec(
         lowerLimit = audioFeatureSettings.valence.min;
         targetValue = (audioFeatureSettings.valence.max + audioFeatureSettings.valence.min) / 2;
         break;
-      case 'instrumentalness':
-        upperLimit = audioFeatureSettings.instrumentalness.max;
-        lowerLimit = audioFeatureSettings.instrumentalness.min;
-        targetValue = (audioFeatureSettings.instrumentalness.max + audioFeatureSettings.instrumentalness.min) / 2;
-        break;
+      //case 'instrumentalness':
+      //  upperLimit = audioFeatureSettings.instrumentalness.max;
+      //  lowerLimit = audioFeatureSettings.instrumentalness.min;
+      //  targetValue = (audioFeatureSettings.instrumentalness.max + audioFeatureSettings.instrumentalness.min) / 2;
+      //  break;
       case 'tempo':
         upperLimit = audioFeatureSettings.tempo.max;
         lowerLimit = audioFeatureSettings.tempo.min;
@@ -292,7 +292,7 @@ export async function requestSpotifyRec(
         }
     }
     
-      queryOptionSuffix+=`&target_${name}=${targetValue}`
+      queryOptionSuffix+= name === "duration_ms" ? `` : `&target_${name}=${targetValue}`
       queryOptionSuffix+=`&min_${name}=${ lowerLimit }`
       queryOptionSuffix+=`&max_${name}=${ upperLimit}`
       
@@ -355,12 +355,17 @@ export async function requestSpotifyTrackAudioFeatures(accessToken:string, track
   }
 }
 
-export async function requestSaveStatus (accessToken:string|null,tracks: ITrack[] ) {
-    if(accessToken === null ||accessToken === undefined || accessToken === "") {
-      return [];
-    }
+export async function requestSaveStatus (accessToken:string|null,tracks: ITrack[] ): Promise<boolean[]> {
 
-    let queryString: string="";
+  if(tracks.length === 0){
+    return [];
+  }
+
+  if(accessToken === null ||accessToken === undefined || accessToken === "") {
+    return [];
+  }
+
+  let queryString: string="";
 
     for(let i=0; i<tracks.length;i++){
       queryString = queryString + tracks[i].id+","

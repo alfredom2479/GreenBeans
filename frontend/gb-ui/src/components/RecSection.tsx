@@ -54,15 +54,13 @@ export default function RecSection(){
 
   const currAudioFeatures = useAudioFeatures();
 
-
-
   const [acousticnessSettings, setAcousticnessSettings] = useState<{min:number, max:number}>({min: 0, max: 1});
   const [danceabilitySettings, setDanceabilitySettings] = useState<{min:number, max:number}>({min: 0, max: 1});
   const [energySettings, setEnergySettings] = useState<{min:number, max:number}>({min: 0, max: 1});
   const [livenessSettings, setLivenessSettings] = useState<boolean>(false);
   const [valenceSettings, setValenceSettings] = useState<{min:number, max:number}>({min: 0, max: 1});
   const [tempoSettings, setTempoSettings] = useState<{min:number, max:number}>({min: 0, max: 200});
-  const [instrumentalnessSettings, setInstrumentalnessSettings] = useState<{min:number, max:number}>({min: 0, max: 1});
+  //const [instrumentalnessSettings, setInstrumentalnessSettings] = useState<{min:number, max:number}>({min: 0, max: 1});
   const [timeSignatureSettings, setTimeSignatureSettings] = useState<number>(currAudioFeatures.time_signature || 4);
   const [keySettings, setKeySettings] = useState<number>(currAudioFeatures.key || 0);
   const [modeSettings, setModeSettings] = useState<boolean>(currAudioFeatures.mode === 0 ? false: true);
@@ -113,11 +111,12 @@ export default function RecSection(){
     setLivenessSettings(false);
     setValenceSettings({min: 0, max: 1});
     setTempoSettings({min: 0, max: 200});
-    setInstrumentalnessSettings({min: 0, max: 1});
+    //setInstrumentalnessSettings({min: 0, max: 1});
     setTimeSignatureSettings(currAudioFeatures.time_signature || 4);
     setKeySettings(currAudioFeatures.key || 0);
     setModeSettings(currAudioFeatures.mode === 0 ? false: true);
     setDurationSettings({min: 0, max: 600});
+    setIsSelectingOptions(false);
 
 
     const testFunc = async (token:string,id:string,isLoggedIn:boolean)=>{
@@ -148,20 +147,20 @@ export default function RecSection(){
       let data = null;
       data = await requestSpotifyRec(token,
         id,
-        checkedBoxes,
+        [],
         currAudioFeatures,
         {
-          time_signature: timeSignatureSettings,
-          key: keySettings,
-          mode: modeSettings,
-          acousticness: acousticnessSettings,
-          danceability: danceabilitySettings,
-          energy: energySettings,
-          liveness: livenessSettings,
-          valence: valenceSettings,
-          tempo: tempoSettings,
-          instrumentalness: instrumentalnessSettings,
-          duration_ms: durationSettings
+          time_signature: 4,
+          key: 0,
+          mode: true,
+          acousticness: {min: 0, max: 1},
+          danceability: {min: 0, max: 1},
+          energy: {min: 0, max: 1},
+          liveness: false,
+          valence: {min: 0, max: 1},
+          tempo: {min: 0, max: 200},
+          //instrumentalness: instrumentalnessSettings,
+          duration_ms: {min: 0, max: 600}
         },
         isLoggedIn);
 
@@ -279,8 +278,8 @@ export default function RecSection(){
               setValenceSettings={setValenceSettings}
               tempoSettings={tempoSettings}
               setTempoSettings={setTempoSettings}
-              instrumentalnessSettings={instrumentalnessSettings}
-              setInstrumentalnessSettings={setInstrumentalnessSettings}
+              //instrumentalnessSettings,
+              //setInstrumentalnessSettings,
               keySettings={keySettings}
               setKeySettings={setKeySettings}
               modeSettings={modeSettings}

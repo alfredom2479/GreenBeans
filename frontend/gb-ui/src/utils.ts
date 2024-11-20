@@ -257,9 +257,6 @@ const isAudioFeatures =(possibleAudioFeatures:any):AudioFeatures|null =>{
   if('time_signature' in possibleAudioFeatures && typeof possibleAudioFeatures.time_signature === 'number'){
     tempAudioFeatures.time_signature = possibleAudioFeatures.time_signature;
   }
-  if('instrumentalness' in possibleAudioFeatures && typeof possibleAudioFeatures.instrumentalness === 'number'){
-    tempAudioFeatures.instrumentalness = possibleAudioFeatures.instrumentalness;
-  }
   if('key' in possibleAudioFeatures && typeof possibleAudioFeatures.key=== 'number'){
     tempAudioFeatures.key = possibleAudioFeatures.key;
   }
@@ -269,6 +266,91 @@ const isAudioFeatures =(possibleAudioFeatures:any):AudioFeatures|null =>{
   return(tempAudioFeatures);
 }
 
+const getAudioFeatureReadableData = (audioFeatures:AudioFeatures):Record<keyof AudioFeatures, string>=>{
+
+  const intToKeyMap:Record<number,string> = {
+    0:"C",
+    1:"C#/Db",
+    2:"D",
+    3:"D#/Eb",
+    4:"E",
+    5:"F",
+    6:"F#/Gb",
+    7:"G",
+    8:"G#/Ab",
+    9:"A",
+    10:"A#/Bb",
+    11:"B"
+  }
+
+  let acousticnessReadable:string = 'N/A';
+  let danceabilityReadable:string = 'N/A';
+  let energyReadable:string = 'N/A';
+  let livenessReadable:string = 'N/A';
+  let durationReadable:string = 'N/A';
+  let keyReadable:string = 'N/A';
+  let modeReadable:string = 'N/A';
+  let valenceReadable:string = 'N/A';
+  let tempoReadable:string = 'N/A';
+
+  if(audioFeatures.acousticness !== undefined){
+    acousticnessReadable = (Math.round(audioFeatures.acousticness*1000)/10).toString()+ "%";
+  }
+  if(audioFeatures.danceability !== undefined){
+    danceabilityReadable = (Math.round(audioFeatures.danceability*1000)/10).toString()+ "%";
+  }
+  if(audioFeatures.energy !== undefined){
+    energyReadable = (Math.round(audioFeatures.energy*1000)/10).toString()+ "%";
+  }
+  if(audioFeatures.liveness !== undefined){
+    livenessReadable = audioFeatures.liveness >= .8 ? "Yes" : "No";
+  }
+  if(audioFeatures.valence !== undefined){
+    valenceReadable = (Math.round(audioFeatures.valence*1000)/10).toString()+ "%";
+  }
+  if(audioFeatures.duration_ms !== undefined){
+    durationReadable = formatSecondsToMinutesAndSeconds(audioFeatures.duration_ms/1000);
+  }
+  if(audioFeatures.key !== undefined){
+    keyReadable = intToKeyMap[audioFeatures.key] ?? 'N/A';
+  }
+  if(audioFeatures.mode !== undefined){
+    modeReadable = audioFeatures.mode === 1 ? "Major" : "Minor";
+  }
+  if(audioFeatures.tempo !== undefined){
+    tempoReadable = Math.round(audioFeatures.tempo).toString() + " bpm";
+  }
+
+  const readableData: Record<keyof AudioFeatures, string> = {
+    id: audioFeatures.id,
+    acousticness: acousticnessReadable,
+    danceability: danceabilityReadable,
+    energy: energyReadable,
+    liveness: livenessReadable,
+    valence: valenceReadable,
+    tempo: tempoReadable,
+    duration_ms: durationReadable,
+    time_signature: audioFeatures.time_signature?.toString()+ "/4" ?? 'N/A',
+    //instrumentalness: audioFeatures.instrumentalness?.toString()+ " / 1" ?? 'N/A',
+    key: keyReadable,
+    mode: modeReadable
+  };
+  return readableData;
+}
+
+function formatSecondsToMinutesAndSeconds(seconds: number): string {
+  const roundedSeconds = Math.round(seconds);
+  const minutes = Math.floor(roundedSeconds / 60);
+  const remainingSeconds = roundedSeconds % 60;
+  
+  const paddedMinutes = minutes.toString().padStart(2, '0');
+  const paddedSeconds = remainingSeconds.toString().padStart(2, '0');
+
+  return `${paddedMinutes}:${paddedSeconds}`;
+}
+
+
+
 export {
   parseListLoaderData,
   isTrack,
@@ -276,5 +358,7 @@ export {
   isAudioFeatures,
   addTracksToDidb,
   getTrackListFromDidb,
-  clearAllDexieTables
+  clearAllDexieTables,
+  getAudioFeatureReadableData,
+  formatSecondsToMinutesAndSeconds
 }
