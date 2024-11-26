@@ -1,4 +1,4 @@
-import { AudioFeatures, ITrack, audioFeatureNames } from "./interfaces";
+import { AudioFeatures, ITrack, audioFeatureNames, AudioFeatureSettings } from "./interfaces";
 
 enum RequestMethods {
   Post = 'POST',
@@ -190,11 +190,16 @@ export async function requestSpotifyTrack(accessToken:string, trackId:string, is
   }
 }
 
-export async function requestSpotifyRec(accessToken:string, trackId:string, selectedOptions: string[],audioFeatures:AudioFeatures, isLoggedIn: boolean){
+export async function requestSpotifyRec(
+  accessToken:string, 
+  trackId:string, 
+  selectedOptions: string[],
+  audioFeatures:AudioFeatures, 
+  audioFeatureSettings:AudioFeatureSettings,
+  isLoggedIn: boolean
+){
 
-  //temp fix while my they free me from quota jail
-  //return "oops"
-
+  console.log(audioFeatureSettings);
   let queryOptionSuffix:string = trackId;
 
   for(let i =0; i < audioFeatureNames.length; i++ ){
@@ -209,21 +214,71 @@ export async function requestSpotifyRec(accessToken:string, trackId:string, sele
     
     let upperLimit: number = featureValue;
     let lowerLimit: number = featureValue;
+    let targetValue: number = featureValue;
 
     switch(audioFeatureNames[i]){
+      case 'acousticness':
+        upperLimit = audioFeatureSettings.acousticness.max;
+        lowerLimit = audioFeatureSettings.acousticness.min;
+        targetValue = (audioFeatureSettings.acousticness.max + audioFeatureSettings.acousticness.min) / 2;
+        console.log(targetValue);
+        break;
+      case 'danceability':
+        upperLimit = audioFeatureSettings.danceability.max;
+        lowerLimit = audioFeatureSettings.danceability.min;
+        targetValue = (audioFeatureSettings.danceability.max + audioFeatureSettings.danceability.min) / 2;
+        break;
+      case 'energy':
+        upperLimit = audioFeatureSettings.energy.max;
+        lowerLimit = audioFeatureSettings.energy.min;
+        targetValue = (audioFeatureSettings.energy.max + audioFeatureSettings.energy.min) / 2;
+        break;
+      case 'liveness':
+        if(audioFeatureSettings.liveness === true){
+          upperLimit = 1;
+          lowerLimit = .8;
+          targetValue = 1;
+        }
+        else{
+          upperLimit = .8;
+          lowerLimit = 0;
+          targetValue = 0;
+        }
+        break;
+      case 'valence':
+        upperLimit = audioFeatureSettings.valence.max;
+        lowerLimit = audioFeatureSettings.valence.min;
+        targetValue = (audioFeatureSettings.valence.max + audioFeatureSettings.valence.min) / 2;
+        break;
+      //case 'instrumentalness':
+      //  upperLimit = audioFeatureSettings.instrumentalness.max;
+      //  lowerLimit = audioFeatureSettings.instrumentalness.min;
+      //  targetValue = (audioFeatureSettings.instrumentalness.max + audioFeatureSettings.instrumentalness.min) / 2;
+      //  break;
       case 'tempo':
-        upperLimit = +(featureValue + 10).toFixed(4);
-        lowerLimit = +(featureValue - 10).toFixed(4);
+        upperLimit = audioFeatureSettings.tempo.max;
+        lowerLimit = audioFeatureSettings.tempo.min;
+        targetValue = (audioFeatureSettings.tempo.max + audioFeatureSettings.tempo.min) / 2;
         break;
       case 'duration_ms':
-        upperLimit = +(featureValue + 30000).toFixed(1);
-        lowerLimit = +(featureValue - 30000).toFixed(1);
+        upperLimit = audioFeatureSettings.duration_ms.max*1000;
+        lowerLimit = audioFeatureSettings.duration_ms.min*1000;
+        targetValue = (audioFeatureSettings.duration_ms.max*1000 + audioFeatureSettings.duration_ms.min*1000) / 2;
         break;
       case 'time_signature' :
+        upperLimit = audioFeatureSettings.time_signature;
+        lowerLimit = audioFeatureSettings.time_signature;
+        targetValue = audioFeatureSettings.time_signature;
+        break
       case 'key':
+        upperLimit=audioFeatureSettings.key;
+        lowerLimit=audioFeatureSettings.key;
+        targetValue=audioFeatureSettings.key;
+        break;
       case 'mode':
-        upperLimit = featureValue;
-        lowerLimit = featureValue;
+        upperLimit = audioFeatureSettings.mode === true ? 1 : 0;
+        lowerLimit = audioFeatureSettings.mode === true ? 1 : 0;
+        targetValue = audioFeatureSettings.mode === true ? 1 : 0;
         break;
       
       default:
@@ -237,7 +292,7 @@ export async function requestSpotifyRec(accessToken:string, trackId:string, sele
         }
     }
     
-      queryOptionSuffix+=`&target_${name}=${featureValue}`
+      queryOptionSuffix+= name === "duration_ms" ? `` : `&target_${name}=${targetValue}`
       queryOptionSuffix+=`&min_${name}=${ lowerLimit }`
       queryOptionSuffix+=`&max_${name}=${ upperLimit}`
       
@@ -300,12 +355,17 @@ export async function requestSpotifyTrackAudioFeatures(accessToken:string, track
   }
 }
 
-export async function requestSaveStatus (accessToken:string|null,tracks: ITrack[] ) {
-    if(accessToken === null ||accessToken === undefined || accessToken === "") {
-      return [];
-    }
+export async function requestSaveStatus (accessToken:string|null,tracks: ITrack[] ): Promise<boolean[]> {
 
-    let queryString: string="";
+  if(tracks.length === 0){
+    return [];
+  }
+
+  if(accessToken === null ||accessToken === undefined || accessToken === "") {
+    return [];
+  }
+
+  let queryString: string="";
 
     for(let i=0; i<tracks.length;i++){
       queryString = queryString + tracks[i].id+","

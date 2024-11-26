@@ -32,7 +32,7 @@ export interface AudioFeatures{
   tempo?: number,
   duration_ms?: number,
   time_signature?: number,
-  instrumentalness?: number,
+  //instrumentalness?: number,
   key?: number,
   mode?: number
 }
@@ -46,10 +46,47 @@ export const audioFeatureNames: (keyof AudioFeatures)[] = [
     'tempo',
     'duration_ms',
     'time_signature',
-    'instrumentalness',
+    //'instrumentalness',
     'key',
     'mode'
   ]
+
+export interface AudioFeatureSettings  {
+  //useId?: boolean,
+  acousticness: {
+    min: number,
+    max: number
+  },
+  danceability: {
+    min: number,
+    max: number
+  },
+  energy: {
+    min: number,
+    max: number
+  },
+  liveness: boolean,
+  valence: {
+    min: number,
+    max: number
+  },
+  tempo: {
+    min:number,
+    max:number
+  },
+  time_signature: number,
+  //instrumentalness: {
+  //  min:number,
+  //  max:number
+  //},
+  key: number,
+  mode: boolean,
+  duration_ms: {
+    min:number,
+    max:number
+  }
+}
+
 
 export type ListenOnClickContextType = {
   handleListenOnClick:(songPreviewInfo:SongPreviewInfo|undefined) =>void

@@ -11,7 +11,7 @@ import AuthPage, {loader as tokensLoader} from "./pages/AuthPage";
 import TopPage,{loader as topPageLoader} from "./pages/TopPage"
 import TopOf, {loader as topDataLoader} from './components/lists/TopOf';
 import TrackPage,{loader as trackDataLoader} from './pages/TrackPage';
-import {action as getRecsAction} from './components/RecOptionsSection';
+import {action as getRecsAction} from './components/feature-settings/RecOptionsSection';
 import SavedPage,{loader as savedPageLoader} from './pages/SavedPage';
 import SavedTrackList,{loader as savedTracksLoader} from './components/lists/SavedTrackList';
 import LinkSearchPage, {action as searchLinkAction} from './pages/LinkSearchPage';

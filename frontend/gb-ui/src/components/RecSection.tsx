@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
-import { ITrack, SongPreviewInfo, TrackSaveState, useAudioFeatures, } from "../interfaces";
+import { ITrack, SongPreviewInfo, TrackSaveState, useAudioFeatures } from "../interfaces";
 import {  redirect, useActionData, useLoaderData } from "react-router-dom";
-import RecOptionsSection from "./RecOptionsSection";
+import RecOptionsSection from "./feature-settings/RecOptionsSection";
 import SongPreviewModal from "./modals/SongPreviewModal";
 import { isTrack } from "../utils";
 
@@ -54,6 +54,18 @@ export default function RecSection(){
 
   const currAudioFeatures = useAudioFeatures();
 
+  const [acousticnessSettings, setAcousticnessSettings] = useState<{min:number, max:number}>({min: 0, max: 1});
+  const [danceabilitySettings, setDanceabilitySettings] = useState<{min:number, max:number}>({min: 0, max: 1});
+  const [energySettings, setEnergySettings] = useState<{min:number, max:number}>({min: 0, max: 1});
+  const [livenessSettings, setLivenessSettings] = useState<boolean>(false);
+  const [valenceSettings, setValenceSettings] = useState<{min:number, max:number}>({min: 0, max: 1});
+  const [tempoSettings, setTempoSettings] = useState<{min:number, max:number}>({min: 0, max: 200});
+  //const [instrumentalnessSettings, setInstrumentalnessSettings] = useState<{min:number, max:number}>({min: 0, max: 1});
+  const [timeSignatureSettings, setTimeSignatureSettings] = useState<number>(currAudioFeatures.time_signature || 4);
+  const [keySettings, setKeySettings] = useState<number>(currAudioFeatures.key || 0);
+  const [modeSettings, setModeSettings] = useState<boolean>(currAudioFeatures.mode === 0 ? false: true);
+  const [durationSettings, setDurationSettings] = useState<{min:number, max:number}>({min: 0, max: 600});
+
   
   useEffect(()=>{
   if(Array.isArray(actionData)){
@@ -90,31 +102,22 @@ export default function RecSection(){
   
   useEffect(()=>{
 
-    /*
-    async function addTracksToDidb(trackList:ITrack[],trackListId:string){
-      const idList:string[] = [];
-      for(let i=0; i < trackList.length; i++){
-          try{
-            idList.push(trackList[i].id);
-            await didb.tracks.add(trackList[i]);
-            //console.log(res);
-          }
-          catch(err){
-            console.log("error adding track to dexie "+err);
-          }
-      }
-     try{
-      const res = await didb.track_lists.put(idList,trackListId);
-      console.log(res);
-     }
-     catch(err){
-      console.log("error adding track list to dexie ");
-      console.log(err);
-     }
-    } 
-    */
+    console.log(currAudioFeatures);
 
     setCheckedBoxes([]);
+    setAcousticnessSettings({min: 0, max: 1});
+    setDanceabilitySettings({min: 0, max: 1});
+    setEnergySettings({min: 0, max: 1});
+    setLivenessSettings(false);
+    setValenceSettings({min: 0, max: 1});
+    setTempoSettings({min: 0, max: 200});
+    //setInstrumentalnessSettings({min: 0, max: 1});
+    setTimeSignatureSettings(currAudioFeatures.time_signature || 4);
+    setKeySettings(currAudioFeatures.key || 0);
+    setModeSettings(currAudioFeatures.mode === 0 ? false: true);
+    setDurationSettings({min: 0, max: 600});
+    setIsSelectingOptions(false);
+
 
     const testFunc = async (token:string,id:string,isLoggedIn:boolean)=>{
       if(!ignore){
@@ -141,10 +144,25 @@ export default function RecSection(){
           return;
       }
 
-      console.log("the request to server part is running ");
-
       let data = null;
-      data = await requestSpotifyRec(token,id,[],{id},isLoggedIn);
+      data = await requestSpotifyRec(token,
+        id,
+        [],
+        currAudioFeatures,
+        {
+          time_signature: 4,
+          key: 0,
+          mode: true,
+          acousticness: {min: 0, max: 1},
+          danceability: {min: 0, max: 1},
+          energy: {min: 0, max: 1},
+          liveness: false,
+          valence: {min: 0, max: 1},
+          tempo: {min: 0, max: 200},
+          //instrumentalness: instrumentalnessSettings,
+          duration_ms: {min: 0, max: 600}
+        },
+        isLoggedIn);
 
       if(data.tracks && Array.isArray(data.tracks)){
         const trackData = data.tracks;
@@ -248,6 +266,28 @@ export default function RecSection(){
               audioFeatures={currAudioFeatures}
               setIsSelectingOptions={setIsSelectingOptions}
               setIsLoadingRecs={setIsLoadingRecs}
+              acousticnessSettings={acousticnessSettings}
+              setAcousticnessSettings={setAcousticnessSettings}
+              danceabilitySettings={danceabilitySettings}
+              setDanceabilitySettings={setDanceabilitySettings}
+              energySettings={energySettings}
+              setEnergySettings={setEnergySettings}
+              livenessSettings={livenessSettings}
+              setLivenessSettings={setLivenessSettings}
+              valenceSettings={valenceSettings}
+              setValenceSettings={setValenceSettings}
+              tempoSettings={tempoSettings}
+              setTempoSettings={setTempoSettings}
+              //instrumentalnessSettings,
+              //setInstrumentalnessSettings,
+              keySettings={keySettings}
+              setKeySettings={setKeySettings}
+              modeSettings={modeSettings}
+              setModeSettings={setModeSettings}
+              durationSettings={durationSettings}
+              setDurationSettings={setDurationSettings}
+              timeSignatureSettings={timeSignatureSettings}
+              setTimeSignatureSettings={setTimeSignatureSettings}
             />
           :
               <RecList
