@@ -19,7 +19,7 @@ export default function SideBar({setShowSidebar, currUser, setShowLogOutModal}:p
                   {currUser}
                 </div> 
               : null }
-            <SideBarNavItem path="/link-search" name="Link-Search" />
+            <SideBarNavItem path="/" name="Use Share-Link" />
             {currUser !== null ? 
                 <>
                   <SideBarNavItem path="/saved" name="My Saved Tracks"/>
