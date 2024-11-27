@@ -108,6 +108,9 @@ export default function SavedTrackList(){
     <div className="flex">
         <NavLink 
           to={`/saved/${prevPageNumber}`}
+          onClick={()=>{
+            if(pageNumber !== 0) setSavedTracksList([]);
+          }}
           className={({isPending,isTransitioning})=>[
             prevNextDefaultStyle,
             isPending ? "pointer-events-none" : "",
@@ -116,9 +119,12 @@ export default function SavedTrackList(){
           ].join(" ")}
             >prev
         </NavLink>
-        <div className="flex-1 text-center text-green-200 text-xl font-bold">page {pageNumber+1}</div>
+        <div className="flex-1 text-center items-center justify-center text-green-200 text-3xl font-bold">{pageNumber+1}</div>
         <NavLink 
           to={`/saved/${nextPageNumber}`}
+          onClick={()=>{
+            setSavedTracksList([]);
+          }}
           className={({isPending,isTransitioning})=>[
             prevNextDefaultStyle,
             isPending ? "pointer-events-none" : "",
