@@ -89,6 +89,8 @@ export default function SavedTrackList(){
   const {page} = useParams();
   const prevNextDefaultStyle = "flex-1 items-center justify-center bg-stone-900 hover:text-green-600 text-green-200 text-xl font-bold p-1  text-center border-white border-2  hover:border-green-300"
 
+  const [displayPageNumber, setDisplayPageNumber] = useState(0);
+
   let pageNumber:number = 0, nextPageNumber:number = 0, prevPageNumber:number = 0;
 
   if(typeof page === "string" ){
@@ -99,6 +101,7 @@ export default function SavedTrackList(){
   }
 
   useEffect(()=>{
+    setDisplayPageNumber(pageNumber);
     parseListLoaderData(loaderData,setSavedTracksList,false);
     if(listRef !== null && listRef.current !== null) listRef.current.scrollTo(0,0);
   },[loaderData]);
@@ -109,7 +112,10 @@ export default function SavedTrackList(){
         <NavLink 
           to={`/saved/${prevPageNumber}`}
           onClick={()=>{
-            if(pageNumber !== 0) setSavedTracksList([]);
+            if(pageNumber !== 0){
+              setSavedTracksList([]);
+              setDisplayPageNumber(prevPageNumber);
+            } 
           }}
           className={({isPending,isTransitioning})=>[
             prevNextDefaultStyle,
@@ -119,11 +125,12 @@ export default function SavedTrackList(){
           ].join(" ")}
             >prev
         </NavLink>
-        <div className="flex-1 text-center items-center justify-center text-green-200 text-3xl font-bold">{pageNumber+1}</div>
+        <div className="flex-1 text-center items-center justify-center text-green-200 text-3xl font-bold">{displayPageNumber+1}</div>
         <NavLink 
           to={`/saved/${nextPageNumber}`}
           onClick={()=>{
             setSavedTracksList([]);
+            setDisplayPageNumber(nextPageNumber);
           }}
           className={({isPending,isTransitioning})=>[
             prevNextDefaultStyle,

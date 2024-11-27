@@ -2,6 +2,7 @@ import {useEffect, useRef, useState} from "react";
 import { redirect,useLoaderData} from "react-router-dom";
 import type {Params} from 'react-router-dom';
 import TrackCard from "../TrackCard";
+import TopNavItem from "../navigation/TopNavItem";
 import { ITrack, TrackSaveState } from "../../interfaces";
 import { requestTopTracks } from '../../api';
 import {  parseListLoaderData, getTrackListFromDidb } from "../../utils";
@@ -69,6 +70,23 @@ export default function TopOf(){
   },[loadedData])
 
   return(
+    <>
+      <div className="basis-1/12 flex flex-col">
+        <nav className="flex flex-col justify-center font-bold  h-12">
+          <ul className={`flex text-stone-200`}>
+          <TopNavItem path="/top/month" name="30d" onClick={()=>{
+            setTopTracksList([]);
+          }}/>
+          <TopNavItem path="/top/sixmonths" name="6m" onClick={()=>{
+            setTopTracksList([]);
+          }}/>
+          <TopNavItem path="/top/alltime" name="y+" onClick={()=>{
+            setTopTracksList([]);
+          }}/>
+        </ul>
+      </nav>
+      </div>
+
       <div className="overflow-y-scroll" ref={listRef}>
         <ul>
           {topTracksList.map((track)=>{
@@ -80,7 +98,8 @@ export default function TopOf(){
             />
             </li>)
           })}
-        </ul>
-      </div>
+          </ul>
+        </div>
+    </>
   )
 }

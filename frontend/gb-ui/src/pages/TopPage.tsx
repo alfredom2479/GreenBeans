@@ -14,9 +14,11 @@ interface LoaderParams{
 }
 
 export async function loader({params}:LoaderParams){
+  /*
   if(!params.range){
     return redirect("/top/month");
   }
+    */
   return null;
 }
 
@@ -38,7 +40,7 @@ export default function TopPage(){
   return(
     <div className="h-[calc(100%-3.5rem)] w-full flex flex-col">
 
-      <div className="basis-1/12 flex flex-col">
+      {/* <div className="basis-1/12 flex flex-col">
         <nav className="flex flex-col justify-center font-bold  h-12">
           <ul className={`flex text-stone-200`}>
           <TopNavItem path="month" name="30d"/>
@@ -46,7 +48,7 @@ export default function TopPage(){
           <TopNavItem path="alltime" name="y+"/>
         </ul>
       </nav>
-      </div>
+      </div> */}
 
       <Outlet context={{handleListenOnClick} satisfies ListenOnClickContextType}/>
 
