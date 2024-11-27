@@ -87,9 +87,11 @@ export default function SavedTrackList(){
   const listRef = useRef<HTMLDivElement | null>(null);
   const {handleListenOnClick} = useHandleListenOnClick();
   const {page} = useParams();
-  const prevNextDefaultStyle = "flex-1 items-center justify-center bg-stone-900 hover:text-green-600 text-green-200 text-xl font-bold p-1  text-center border-white border-2 border-l-0 hover:border-green-300"
+  const prevNextDefaultStyle = "flex-1 items-center justify-center bg-stone-900 hover:text-green-600 text-green-200 text-xl font-bold p-1  text-center border-white border-2  hover:border-green-300"
 
-  let pageNumber, nextPageNumber, prevPageNumber:number = 0;
+  const [displayPageNumber, setDisplayPageNumber] = useState(0);
+
+  let pageNumber:number = 0, nextPageNumber:number = 0, prevPageNumber:number = 0;
 
   if(typeof page === "string" ){
     pageNumber = Number(page);
@@ -99,6 +101,7 @@ export default function SavedTrackList(){
   }
 
   useEffect(()=>{
+    setDisplayPageNumber(pageNumber);
     parseListLoaderData(loaderData,setSavedTracksList,false);
     if(listRef !== null && listRef.current !== null) listRef.current.scrollTo(0,0);
   },[loaderData]);
@@ -106,19 +109,29 @@ export default function SavedTrackList(){
   return(
   <div className="flex flex-col h-full ">
     <div className="flex">
-      {pageNumber !== 0 ?
         <NavLink 
           to={`/saved/${prevPageNumber}`}
+          onClick={()=>{
+            if(pageNumber !== 0){
+              setSavedTracksList([]);
+              setDisplayPageNumber(prevPageNumber);
+            } 
+          }}
           className={({isPending,isTransitioning})=>[
             prevNextDefaultStyle,
             isPending ? "pointer-events-none" : "",
-            isTransitioning ? "pointer-events-none" : ""
+            isTransitioning ? "pointer-events-none" : "",
+            pageNumber === 0 ? "pointer-events-none opacity-50" : ""
           ].join(" ")}
             >prev
         </NavLink>
-        : null}
+        <div className="flex-1 text-center items-center justify-center text-green-200 text-3xl font-bold">{displayPageNumber+1}</div>
         <NavLink 
           to={`/saved/${nextPageNumber}`}
+          onClick={()=>{
+            setSavedTracksList([]);
+            setDisplayPageNumber(nextPageNumber);
+          }}
           className={({isPending,isTransitioning})=>[
             prevNextDefaultStyle,
             isPending ? "pointer-events-none" : "",

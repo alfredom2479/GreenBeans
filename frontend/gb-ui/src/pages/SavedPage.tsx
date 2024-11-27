@@ -38,16 +38,6 @@ export default  function SavedPage(){
   return(
     <div className="h-[calc(100%-3.5rem)] w-full flex flex-col">
 
-      
-      {/* <div className="h-14 shrink-0 p-2 flex items-center justify-between text-right mx-2">
-        <a href='https://spotify.com' target='_blank'>
-          <img src={spotifyLogo} className='flex-1 h-10 grow-0' />
-        </a>
-        <h1 className="flex-1 basis-1/2 text-white font-bold text-4xl ">
-          Saved
-        </h1>
-      </div>
- */}
       <Outlet context={{handleListenOnClick} satisfies ListenOnClickContextType}/>
 
       {showModal ?
