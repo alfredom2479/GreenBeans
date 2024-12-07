@@ -70,12 +70,12 @@ const router = createBrowserRouter([
           }
         ]
       },
-      {
-        path: "link-search",
-        element: <LinkSearchPage/>,
-        action:searchLinkAction,
-        errorElement: <RootErrorBoundary/>
-      },
+      // {
+      //   path: "link-search",
+      //   element: <LinkSearchPage/>,
+      //   action:searchLinkAction,
+      //   errorElement: <RootErrorBoundary/>
+      // },
       {
         path: "/track",
         errorElement: <RootErrorBoundary/>,

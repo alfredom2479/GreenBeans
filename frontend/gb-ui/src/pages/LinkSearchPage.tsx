@@ -62,15 +62,16 @@ export default function LinkSearchPage(){
   },[actionData])
 
   return (
-    <div className="h-full w-full pb-16 flex flex-col ">
-      <div className="flex flex-col items-center justify-center w-full h-full">
+    <div className="h-full w-full flex flex-col ">
+      <div className="flex  flex-col items-center w-full h-full">
+        <div className="text-center text-4xl font-bold text-green-400 p-10">GreenBeans</div>
         <Form method='post'
           className='flex flex-col justify-center items-center w-full'>
-          <label htmlFor="spotify-link"></label>
+          <label htmlFor="spotify-link" className="text-xl text-green-50 mb-2">Paste a track's Spotify share link:</label>
           <input ref={searchInputRef} type="text" name="spotify-link" placeholder="https://open.spotify.com/track/06cqIVC8kRAT02qfHQT65v"
           className="text-xl h-10 w-10/12 px-1 rounded-xl"/>
           <button type='submit' className="w-40 h-12 mt-4 bg-green-200 font-bold text-xl rounded-lg hover:shadow-2xl hover:bg-green-500">
-            search
+            GO
           </button>
         </Form>
       </div>

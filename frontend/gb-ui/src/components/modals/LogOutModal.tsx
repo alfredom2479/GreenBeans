@@ -20,9 +20,6 @@ export default function LogOutModal({setShowModal}: {setShowModal: Dispatch<SetS
 
         <div className="flex flex-col text-xl ">
           <div className="font-bold">Log Out?</div>
-          <div className="">
-            When you log back in, on the Permissions Page, Click the <b><u>'not you?'</u></b> link if you would like to switch accounts.
-          </div>
           <div className="flex justify-center">
             <button  className="bg-red-950 text-white p-4 m-4 rounded-md"  
               type="submit" 
