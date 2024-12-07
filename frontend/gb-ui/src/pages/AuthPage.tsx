@@ -16,7 +16,7 @@ export async function loader({request}:FetchRequest){
     
     localStorage.setItem('access_token', access_token);
     localStorage.setItem('refresh_token',refresh_token);
-    return redirect("/top");
+    return redirect("/saved");
 }
 export default function AuthPage(){
 

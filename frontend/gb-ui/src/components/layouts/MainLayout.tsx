@@ -88,7 +88,7 @@ export default function NavBar(){
           </a>
         </div>
         
-        <h1 className="flex-1 text-white font-bold text-2xl text-right">
+        <h1 className="flex-1 text-white font-bold text-3xl text-right">
           {pageName}
         </h1>
       </div>
