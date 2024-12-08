@@ -169,17 +169,17 @@ export default function RecOptionsSection({
 
 
   const audioFeatureNames: [keyof AudioFeatures, string][] = [
-    ["duration_ms", "Duration"],
-    ["acousticness", "Acousticness"],
-    ["danceability", "Danceability"],
-    ["energy", "Energy"],
     ["valence", "Mood"],
+    ["energy", "Energy"],
+    ["danceability", "Danceability"],
+    ["acousticness", "Acousticness"],
     ["tempo", "Tempo"],
-    ["time_signature", "Time Signature"],
-    //["instrumentalness", "Instrumentalness"], instrumentalness only returns really low values
     ["key", "Key"],
     ["mode", "Mode"],
-    ["liveness", "Played Live?"],
+    ["duration_ms", "Duration"]
+    //["time_signature", "Time Signature"],
+    //["instrumentalness", "Instrumentalness"], instrumentalness only returns really low values
+    //["liveness", "Played Live?"],
   ]
 
   enum SettingsType{

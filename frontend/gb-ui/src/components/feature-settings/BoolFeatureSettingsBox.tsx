@@ -14,7 +14,7 @@ export default function BoolFeatureSettingsBox({
     const noLabel = featureName === "mode" ? "Minor" : "No";
 
     return (
-        <div className="flex gap-4">
+        <div className="pl-4 flex gap-4">
             <div>
                 <input 
                     type="radio" 
