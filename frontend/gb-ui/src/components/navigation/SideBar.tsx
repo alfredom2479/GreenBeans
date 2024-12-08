@@ -1,6 +1,7 @@
 import { Dispatch, SetStateAction } from "react"
 import SideBarNavItem from "./SidebarNavItem"
-
+import greenBeansLogo from "../../assets/beans-svgrepo-com.svg";
+import userIcon from "../../assets/user-svgrepo-com.svg";
 interface params{
   setShowSidebar: Dispatch<SetStateAction<boolean>>,
   currUser: string|null,
@@ -10,14 +11,18 @@ interface params{
 
 export default function SideBar({setShowSidebar, currUser, setShowLogOutModal}:params){
   return (
-    <div className="z-10 fixed h-full w-full left-0 top-0 flex bg-[rgba(0,0,0,.4)]"
+    <div className="z-10 fixed h-full w-full left-0 top-0 flex  bg-[rgba(0,0,0,.4)]"
       onClick={()=>{setShowSidebar(false)}}>
-        <div className="bg-stone-800 w-64 h-full p-2 ">
+        <div className="bg-stone-800 w-64 h-full p-2 pt-5 ">
           <nav className="flex flex-col text-white items-center text-2xl">
+            <img className="w-10 mb-5" src={greenBeansLogo}/>
             {currUser !== null ? 
-                <div className="text-3xl text-center font-bold mb-6 w-60 truncate">
-                  {currUser}
-                </div> 
+                <div className="flex justify-center border-b mb-6 pb-2 border-stone-400 w-full">
+                  <img className="flex w-8 mr-2" src={userIcon}/>
+                  <div className="flex text-3xl font-bold  truncate ">
+                      {currUser}
+                  </div> 
+                </div>
               : null }
             <SideBarNavItem path="/" name="Use Share Link" isDisabled={false}/>
             <SideBarNavItem path="/saved" name="My Saved Tracks" isDisabled={currUser === null}/>

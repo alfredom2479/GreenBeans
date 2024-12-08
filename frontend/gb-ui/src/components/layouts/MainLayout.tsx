@@ -5,9 +5,10 @@ import LogOutModal from "../modals/LogOutModal";
 import hamburgerSvg from '../../assets/hamburger3.svg';
 import spotifyLogo from "../../assets/spotify_logo.png";
 import SideBar from "../navigation/SideBar";
+import SideBarNavItem from "../navigation/SidebarNavItem";
 //import { deleteAllStores, openIDB } from "../../idb";
 import { clearAllDexieTables } from "../../utils";
-
+import userIcon from "../../assets/user-svgrepo-com.svg";
 //Loader checks for username locally, then on spotify, then clears indexedDB if needed.
 export async function loader(){
 
@@ -70,16 +71,45 @@ export default function NavBar(){
 
 
   return (
-    <div className="h-[100dvh] flex flex-col items-center ">
-      <div className="h-14 flex items-center justify-between w-full px-2">
+    <div className="flex">    
+    <div className="hidden lg:block bg-stone-900 pt-10 w-80 h-[100dvh] border-r border-stone-400 mr-1">
+      <nav className="flex flex-col text-white items-center text-2xl">
+        {currUser !== null ? 
+          <div className="flex justify-center border-b mb-6 pb-2 border-stone-400 w-full">
+            <img className="flex w-8 mr-2" src={userIcon}/>
+            <div className="flex text-3xl  font-bold truncate ">
+              {currUser}
+            </div> 
+          </div> 
+        : null}
+        <SideBarNavItem path="/" name="Use Share Link" isDisabled={false}/>
+        <SideBarNavItem path="/saved" name="My Saved Tracks" isDisabled={currUser === null}/>
+        <SideBarNavItem path="/top" name="My Top Tracks" isDisabled={currUser === null}/>
+        {currUser == null ?
+          <a className="flex justify-center items-center basis-32 grow text-center font-bold hover:text-green-400"
+            href="/api/auth/requestauth">
+              Log In
+          </a>
+        :
+          <button className="flex justify-center items-center basis-32 grow text-center font-bold hover:text-green-400"
+            onClick={()=>{setShowLogOutModal(true)}}>
+              Log Out
+          </button>
+        }
+      </nav>
+    </div>
+      <div className="h-[100dvh] flex flex-col items-center w-full ">
+        <div className="h-14 flex items-center justify-between w-full px-2">
         <div className="flex-1">
-          <button className="flex-1"
+        <button className="flex-1 lg:hidden"
             onClick={()=>{setShowSideBar(true)}} >
               <img className="flex-1 h-10"
                 src={hamburgerSvg}/>
           </button>
+          <div className="hidden lg:block text-green-600 text-4xl pl-2">GreenBeans</div>
         </div>
         <div className="flex flex-1 justify-center items-center">
+          <div className="text-stone-400 pr-2">Powered by </div>
           <a className="flex h-10 w-10"
             href='https://spotify.com' 
             target='_blank' >
@@ -102,6 +132,7 @@ export default function NavBar(){
           />
         : null}
       { showLogOutModal ? <LogOutModal setShowModal={setShowLogOutModal}/> : null }
+    </div>
     </div>
   )
 
