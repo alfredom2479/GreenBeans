@@ -106,7 +106,7 @@ export default function NavBar(){
               <img className="flex-1 h-10"
                 src={hamburgerSvg}/>
           </button>
-          <div className="hidden lg:block text-green-600 text-4xl pl-2">GreenBeans</div>
+          <div className="hidden lg:block text-green-600 text-4xl ">GreenBeans</div>
         </div>
         <div className="flex flex-1 justify-center items-center">
           <div className="text-stone-400 pr-2">Powered by </div>
