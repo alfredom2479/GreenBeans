@@ -15,6 +15,7 @@ interface SaveButtonParams{
 
 export default function SaveButton({trackInfo}:SaveButtonParams){
 
+
   const [saveButton,setSaveButton] = useState(
     <button
       className="flex-1 bg-neutral-600 text-black flex p-1 text-center items-center justify-center font-bold text-lg rounded-3xl m-2 shrink-0  w-10"
@@ -26,6 +27,7 @@ export default function SaveButton({trackInfo}:SaveButtonParams){
 
     useEffect(()=>{
       async function handleSaveOnClick(){
+        trackInfo.trackSaveState = TrackSaveState.Saved;
         setSaveButton(
           <button 
             className="flex-1 bg-green-400 text-black flex p-1 text-center items-center justify-center font-bold text-lg rounded-3xl m-2 shrink-0  w-10"
@@ -34,11 +36,11 @@ export default function SaveButton({trackInfo}:SaveButtonParams){
             <img src={trackSavedSvg} alt="saved" className="w-8"/>
           </button>
         );
-        
 
         try{
           const responseData = await saveSpotifyTrack(trackInfo.id);
           if(!responseData ){
+            trackInfo.trackSaveState = TrackSaveState.Saveable;
             setSaveButton(
               <button
                 className="flex-1 bg-stone-200 text-black flex p-1 text-center items-center justify-center font-bold text-lg rounded-3xl m-2 shrink-0  w-10"
@@ -50,6 +52,7 @@ export default function SaveButton({trackInfo}:SaveButtonParams){
             console.log("Save track request FAILED!");
           }
           else{
+            trackInfo.trackSaveState = TrackSaveState.Saved;
             setSaveButton(
               <button 
                 className="flex-1 bg-green-400 text-black flex p-1 text-center items-center justify-center font-bold text-lg rounded-3xl m-2 shrink-0  w-10"
@@ -58,8 +61,6 @@ export default function SaveButton({trackInfo}:SaveButtonParams){
                 <img src={trackSavedSvg} alt="saved" className="w-8"/>
               </button>
             );
-            //updateITrack(Stores.Tracks,{...trackInfo,trackSaveState:TrackSaveState.Saved});
-            //update track save status
             try{
               await didb.tracks.put({...trackInfo,trackSaveState:TrackSaveState.Saved});
             }

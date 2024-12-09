@@ -29,10 +29,9 @@ export default function TrackCard({track,popModal=handleDefaultModalError}:Track
   return(
     <>
     <div className="flex bg-stone-800 my-1 rounded-xl h-14">
-        <div 
-        className=" h-14 w-14 shrink-0">
-        <img className="bg-fill" src={track.image} />
-        </div>
+        <a className=" h-14 w-14 shrink-0" target="_blank" href={"https://open.spotify.com/track/"+track.id}>
+          <img className="bg-fill" src={track.image} />
+        </a>
 
         <div className="flex basis-7/12 flex-col shrink-1 grow-1 pl-2 overflow-hidden">
           <div className="flex-1 text-stone-200 font-bold overflow-x-hidden truncate">{track.name}</div> 

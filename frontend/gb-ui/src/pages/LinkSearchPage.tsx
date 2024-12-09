@@ -64,7 +64,7 @@ export default function LinkSearchPage(){
   return (
     <div className="h-full w-full flex flex-col ">
       <div className="flex  flex-col items-center w-full h-full">
-        <div className="text-center text-4xl font-bold text-green-400 p-10">GreenBeans</div>
+          <div className="text-center lg:text-7xl text-5xl text-green-600 p-10">GreenBeans</div>
         <Form method='post'
           className='flex flex-col justify-center items-center w-full'>
           <label htmlFor="spotify-link" className="text-xl text-green-50 mb-2">Paste a track's Spotify share link:</label>

@@ -184,7 +184,6 @@ export default function TrackPage(){
         }
       }
     }
-    console.log("spot url:"+trackData.spotify_url);
     
   },[loaderData])
 
@@ -193,7 +192,7 @@ export default function TrackPage(){
         <div className=" bg-stone-900 text-stone-200 flex h-32 w-full ">
 
           <div className=" shrink-0 flex items-center w-32 h-full">
-            <a href={trackData.spotify_url}>
+            <a href={"https://open.spotify.com/track/"+trackData.id} target="_blank">
             <img src={trackData.image} 
               className="flex-1 h-32 w-32 object-cover ">
             </img>
