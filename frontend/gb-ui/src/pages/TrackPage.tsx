@@ -214,7 +214,7 @@ export default function TrackPage(){
             </a>
           </div> */}
         </div> 
-            <Outlet context={currAudioFeatures satisfies AudioFeatures } />
+            <Outlet context={{currAudioFeatures:currAudioFeatures satisfies AudioFeatures, trackData:trackData satisfies ITrack }} />
     </div>
   )
 }

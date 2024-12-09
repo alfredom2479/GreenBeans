@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { ITrack, SongPreviewInfo, TrackSaveState, useAudioFeatures } from "../interfaces";
+import { ITrack, SongPreviewInfo, TrackSaveState, useAudioFeatures, useTrackData } from "../interfaces";
 import {  redirect, useActionData, useLoaderData } from "react-router-dom";
 import RecOptionsSection from "./feature-settings/RecOptionsSection";
 import SongPreviewModal from "./modals/SongPreviewModal";
@@ -9,6 +9,7 @@ import type {Params} from "react-router-dom";
 import {  requestSaveStatus, requestSpotifyRec } from "../api";
 import RecList from "./lists/RecList";
 import { addTracksToDidb, getTrackListFromDidb } from "../utils";
+import listenSvg from "../assets/listen.svg";
 //import { getData, Stores } from "../idb";
 
 interface LoaderParams{
@@ -52,7 +53,10 @@ export default function RecSection(){
 
   const [isSelectingOptions, setIsSelectingOptions] = useState<boolean>(false);
 
-  const currAudioFeatures = useAudioFeatures();
+  const currAudioFeatures = useAudioFeatures().currAudioFeatures;
+  const trackData = useAudioFeatures().trackData;
+
+  console.log(currAudioFeatures);
 
   const [acousticnessSettings, setAcousticnessSettings] = useState<{min:number, max:number}>({min: 0, max: 1});
   const [danceabilitySettings, setDanceabilitySettings] = useState<{min:number, max:number}>({min: 0, max: 1});
@@ -102,8 +106,6 @@ export default function RecSection(){
   
   useEffect(()=>{
 
-    console.log(currAudioFeatures);
-
     setCheckedBoxes([]);
     setAcousticnessSettings({min: 0, max: 1});
     setDanceabilitySettings({min: 0, max: 1});
@@ -137,7 +139,6 @@ export default function RecSection(){
       }
       //console.log(idbTrackListData);
 
-      console.log(ignore)
       if(didbTrackListData !== null ){
           setRecList(didbTrackListData);
           setIsLoadingRecs(false)
@@ -231,6 +232,7 @@ export default function RecSection(){
 
 
   function handleListenOnClick(songPreviewInfo:SongPreviewInfo|undefined){
+    console.log(songPreviewInfo);
     if(songPreviewInfo === undefined){
       return;
     }
@@ -242,17 +244,25 @@ export default function RecSection(){
 
   return(
     <>
-    <nav className=" font-bold bg-stone-200 max-h-14">
-          <ul className={`flex text-stone-900 h-full`}>
-            <li className={`flex-1 flex justify-center `}>
+    <nav className=" font-bold bg-green-50 max-h-14">
+          <ul className={`flex  h-full`}>
+            <li className="flex-1 flex justify-center bg-stone-100 border-1  border-stone-900">
+              <button 
+                onClick={()=>handleListenOnClick({name:trackData.name,artist:trackData.artist,url:trackData.url?trackData.url:""})}
+                disabled={trackData.url === null || trackData.url === undefined}
+                className="bg-white w-full text-center flex items-center justify-center disabled:bg-stone-600 disabled:cursor-not-allowed">
+                <img src={listenSvg} alt="listen" className="w-6"/>
+              </button>
+            </li>
+            <li className={` flex-[2_2_0%] flex justify-center `}>
               <button onClick={()=>setIsSelectingOptions(false)}
-                className={!isSelectingOptions ? "text-stone-950 bg-green-400 text-center w-full" : "text-center w-full"}>
+                className={!isSelectingOptions ? " bg-green-200 text-center w-full " : "text-center w-full "}>
                 Recommendations
               </button>
             </li>
-            <li className={`flex-1 flex justify-center `}>
+            <li className={` flex-[2_2_0%] flex justify-center `}>
               <button onClick={()=>setIsSelectingOptions(true)}  
-                className={isSelectingOptions ? "text-stone-950 bg-green-400 text-center w-full" : "text-center w-full"}>
+                className={isSelectingOptions ? " bg-green-200 text-center w-full " : "text-center w-full "}>
                 Options
               </button>
             </li>
