@@ -100,6 +100,3 @@ export function useAudioFeatures(){
   return useOutletContext<{currAudioFeatures:AudioFeatures, trackData:ITrack}>();
 }
 
-export function useTrackData(){
-  return useOutletContext<ITrack>();
-}

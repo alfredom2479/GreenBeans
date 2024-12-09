@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { ITrack, SongPreviewInfo, TrackSaveState, useAudioFeatures, useTrackData } from "../interfaces";
+import { ITrack, SongPreviewInfo, TrackSaveState, useAudioFeatures } from "../interfaces";
 import {  redirect, useActionData, useLoaderData } from "react-router-dom";
 import RecOptionsSection from "./feature-settings/RecOptionsSection";
 import SongPreviewModal from "./modals/SongPreviewModal";
@@ -56,7 +56,6 @@ export default function RecSection(){
   const currAudioFeatures = useAudioFeatures().currAudioFeatures;
   const trackData = useAudioFeatures().trackData;
 
-  console.log(currAudioFeatures);
 
   const [acousticnessSettings, setAcousticnessSettings] = useState<{min:number, max:number}>({min: 0, max: 1});
   const [danceabilitySettings, setDanceabilitySettings] = useState<{min:number, max:number}>({min: 0, max: 1});
