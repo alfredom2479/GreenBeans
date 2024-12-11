@@ -97,5 +97,6 @@ export function useHandleListenOnClick(){
 }
 
 export function useAudioFeatures(){
-  return useOutletContext<AudioFeatures>();
+  return useOutletContext<{currAudioFeatures:AudioFeatures, trackData:ITrack}>();
 }
+
