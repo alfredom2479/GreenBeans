@@ -15,9 +15,10 @@ function handleDefaultModalError(songPreviewInfo:SongPreviewInfo | undefined ){
 interface TrackCardParams{
   track : ITrack,
   popModal: (songPreviewInfo:SongPreviewInfo | undefined) =>void,
+  hideSaveButton: boolean,
 }
 
-export default function TrackCard({track,popModal=handleDefaultModalError}:TrackCardParams){
+export default function TrackCard({track,popModal=handleDefaultModalError,hideSaveButton=false}:TrackCardParams){
 
   const defaultTrackCardOptionString  = "flex-1 bg-stone-200 hover:bg-green-400 text-black flex p-1 text-center "
     + "items-center justify-center font-bold text-lg rounded-3xl m-2 shrink-0  w-10"
@@ -63,7 +64,7 @@ export default function TrackCard({track,popModal=handleDefaultModalError}:Track
               </button>
           }
 
-           <SaveButton trackInfo={track}/>
+           {!hideSaveButton && <SaveButton trackInfo={track}/>}
 
         </div>
       </div> 

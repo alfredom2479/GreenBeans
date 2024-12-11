@@ -93,6 +93,7 @@ export default function TopOf(){
             return (
             <li key={track.id}>
             <TrackCard 
+              hideSaveButton={true}
               track={{...track,trackSaveState:TrackSaveState.CantSave}}
               popModal={handleListenOnClick}
             />

@@ -96,6 +96,8 @@ export default function TrackPage(){
   const [trackData, setTrackData] = useState<ITrack>({id:"",name: "", artist: "", image:"",trackSaveState:TrackSaveState.CantSave});
   const [currAudioFeatures,setCurrAudioFeatures] = useState<AudioFeatures>({id:""});
 
+  console.log(trackData);
+
     
   useEffect(()=>{
 
@@ -208,13 +210,8 @@ export default function TrackPage(){
             </div>
           </div>
 
-          {/* <div className=" flex flex-1 basis-1/6 ">
-            <a href={trackData.spotify_url} target="_blank" className=" hover:bg-white w-full flex items-center justify-center p-2">
-              <img src={spotifyLogo} className="h-12"/>
-            </a>
-          </div> */}
         </div> 
-            <Outlet context={{currAudioFeatures:currAudioFeatures satisfies AudioFeatures, trackData:trackData satisfies ITrack }} />
+        <Outlet context={{currAudioFeatures:currAudioFeatures satisfies AudioFeatures, trackData:trackData satisfies ITrack }} />
     </div>
   )
 }
