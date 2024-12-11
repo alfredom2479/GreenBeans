@@ -60,11 +60,8 @@ export default function RecSection(){
   const [acousticnessSettings, setAcousticnessSettings] = useState<{min:number, max:number}>({min: 0, max: 1});
   const [danceabilitySettings, setDanceabilitySettings] = useState<{min:number, max:number}>({min: 0, max: 1});
   const [energySettings, setEnergySettings] = useState<{min:number, max:number}>({min: 0, max: 1});
-  const [livenessSettings, setLivenessSettings] = useState<boolean>(false);
   const [valenceSettings, setValenceSettings] = useState<{min:number, max:number}>({min: 0, max: 1});
   const [tempoSettings, setTempoSettings] = useState<{min:number, max:number}>({min: 0, max: 200});
-  //const [instrumentalnessSettings, setInstrumentalnessSettings] = useState<{min:number, max:number}>({min: 0, max: 1});
-  const [timeSignatureSettings, setTimeSignatureSettings] = useState<number>(currAudioFeatures.time_signature || 4);
   const [keySettings, setKeySettings] = useState<number>(currAudioFeatures.key || 0);
   const [modeSettings, setModeSettings] = useState<boolean>(currAudioFeatures.mode === 0 ? false: true);
   const [durationSettings, setDurationSettings] = useState<{min:number, max:number}>({min: 0, max: 600});
@@ -109,11 +106,8 @@ export default function RecSection(){
     setAcousticnessSettings({min: 0, max: 1});
     setDanceabilitySettings({min: 0, max: 1});
     setEnergySettings({min: 0, max: 1});
-    setLivenessSettings(false);
     setValenceSettings({min: 0, max: 1});
     setTempoSettings({min: 0, max: 200});
-    //setInstrumentalnessSettings({min: 0, max: 1});
-    setTimeSignatureSettings(currAudioFeatures.time_signature || 4);
     setKeySettings(currAudioFeatures.key || 0);
     setModeSettings(currAudioFeatures.mode === 0 ? false: true);
     setDurationSettings({min: 0, max: 600});
@@ -150,16 +144,13 @@ export default function RecSection(){
         [],
         currAudioFeatures,
         {
-          time_signature: 4,
           key: 0,
           mode: true,
           acousticness: {min: 0, max: 1},
           danceability: {min: 0, max: 1},
           energy: {min: 0, max: 1},
-          liveness: false,
           valence: {min: 0, max: 1},
           tempo: {min: 0, max: 200},
-          //instrumentalness: instrumentalnessSettings,
           duration_ms: {min: 0, max: 600}
         },
         isLoggedIn);
@@ -255,13 +246,13 @@ export default function RecSection(){
             </li>
             <li className={` flex-[2_2_0%] flex justify-center `}>
               <button onClick={()=>setIsSelectingOptions(false)}
-                className={!isSelectingOptions ? " bg-green-200 text-center w-full " : "text-center w-full "}>
+                className={!isSelectingOptions ? " bg-green-400 text-center w-full " : "text-center w-full "}>
                 Recommendations
               </button>
             </li>
             <li className={` flex-[2_2_0%] flex justify-center `}>
               <button onClick={()=>setIsSelectingOptions(true)}  
-                className={isSelectingOptions ? " bg-green-200 text-center w-full " : "text-center w-full "}>
+                className={isSelectingOptions ? " bg-green-400 text-center w-full " : "text-center w-full "}>
                 Options
               </button>
             </li>
@@ -281,22 +272,16 @@ export default function RecSection(){
               setDanceabilitySettings={setDanceabilitySettings}
               energySettings={energySettings}
               setEnergySettings={setEnergySettings}
-              livenessSettings={livenessSettings}
-              setLivenessSettings={setLivenessSettings}
               valenceSettings={valenceSettings}
               setValenceSettings={setValenceSettings}
               tempoSettings={tempoSettings}
               setTempoSettings={setTempoSettings}
-              //instrumentalnessSettings,
-              //setInstrumentalnessSettings,
               keySettings={keySettings}
               setKeySettings={setKeySettings}
               modeSettings={modeSettings}
               setModeSettings={setModeSettings}
               durationSettings={durationSettings}
               setDurationSettings={setDurationSettings}
-              timeSignatureSettings={timeSignatureSettings}
-              setTimeSignatureSettings={setTimeSignatureSettings}
             />
           :
               <RecList

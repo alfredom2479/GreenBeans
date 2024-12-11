@@ -27,12 +27,9 @@ export interface AudioFeatures{
   acousticness?: number,
   danceability?: number,
   energy?: number,
-  liveness?: number,
   valence?: number,
   tempo?: number,
   duration_ms?: number,
-  time_signature?: number,
-  //instrumentalness?: number,
   key?: number,
   mode?: number
 }
@@ -41,12 +38,9 @@ export const audioFeatureNames: (keyof AudioFeatures)[] = [
     'acousticness' ,
     'danceability' ,
     'energy' ,
-    'liveness' ,
     'valence' ,
     'tempo',
     'duration_ms',
-    'time_signature',
-    //'instrumentalness',
     'key',
     'mode'
   ]
@@ -65,7 +59,6 @@ export interface AudioFeatureSettings  {
     min: number,
     max: number
   },
-  liveness: boolean,
   valence: {
     min: number,
     max: number
@@ -74,11 +67,6 @@ export interface AudioFeatureSettings  {
     min:number,
     max:number
   },
-  time_signature: number,
-  //instrumentalness: {
-  //  min:number,
-  //  max:number
-  //},
   key: number,
   mode: boolean,
   duration_ms: {

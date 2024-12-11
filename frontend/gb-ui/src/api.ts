@@ -233,28 +233,11 @@ export async function requestSpotifyRec(
         lowerLimit = audioFeatureSettings.energy.min;
         targetValue = (audioFeatureSettings.energy.max + audioFeatureSettings.energy.min) / 2;
         break;
-      case 'liveness':
-        if(audioFeatureSettings.liveness === true){
-          upperLimit = 1;
-          lowerLimit = .8;
-          targetValue = 1;
-        }
-        else{
-          upperLimit = .8;
-          lowerLimit = 0;
-          targetValue = 0;
-        }
-        break;
       case 'valence':
         upperLimit = audioFeatureSettings.valence.max;
         lowerLimit = audioFeatureSettings.valence.min;
         targetValue = (audioFeatureSettings.valence.max + audioFeatureSettings.valence.min) / 2;
         break;
-      //case 'instrumentalness':
-      //  upperLimit = audioFeatureSettings.instrumentalness.max;
-      //  lowerLimit = audioFeatureSettings.instrumentalness.min;
-      //  targetValue = (audioFeatureSettings.instrumentalness.max + audioFeatureSettings.instrumentalness.min) / 2;
-      //  break;
       case 'tempo':
         upperLimit = audioFeatureSettings.tempo.max;
         lowerLimit = audioFeatureSettings.tempo.min;
@@ -265,11 +248,6 @@ export async function requestSpotifyRec(
         lowerLimit = audioFeatureSettings.duration_ms.min*1000;
         targetValue = (audioFeatureSettings.duration_ms.max*1000 + audioFeatureSettings.duration_ms.min*1000) / 2;
         break;
-      case 'time_signature' :
-        upperLimit = audioFeatureSettings.time_signature;
-        lowerLimit = audioFeatureSettings.time_signature;
-        targetValue = audioFeatureSettings.time_signature;
-        break
       case 'key':
         upperLimit=audioFeatureSettings.key;
         lowerLimit=audioFeatureSettings.key;

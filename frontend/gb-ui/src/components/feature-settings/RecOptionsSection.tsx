@@ -32,12 +32,9 @@ export async function action({params,request}:IURLParams){
     acousticness: {min: 0, max: 1},
     danceability: {min: 0, max: 1},
     energy: {min: 0, max: 1},
-    liveness: false,
     valence: {min: 0, max: 1},
     tempo: {min: 0, max: 200},
-    //instrumentalness: {min: 0, max: 1},
     duration_ms: {min: 0, max: 600},
-    time_signature: 4,
     key: 0,
     mode: false
   };
@@ -115,22 +112,16 @@ interface RecOptionsSectionProps{
   setDanceabilitySettings: React.Dispatch<React.SetStateAction<{min:number, max:number}>>,
   energySettings: {min:number, max:number},
   setEnergySettings: React.Dispatch<React.SetStateAction<{min:number, max:number}>>,
-  livenessSettings: boolean,
-  setLivenessSettings: React.Dispatch<React.SetStateAction<boolean>>,
   valenceSettings: {min:number, max:number},
   setValenceSettings: React.Dispatch<React.SetStateAction<{min:number, max:number}>>,
   tempoSettings: {min:number, max:number},
   setTempoSettings: React.Dispatch<React.SetStateAction<{min:number, max:number}>>,
-  //instrumentalnessSettings,
-  //setInstrumentalnessSettings,
   keySettings: number,
   setKeySettings: React.Dispatch<React.SetStateAction<number>>,
   modeSettings: boolean,
   setModeSettings: React.Dispatch<React.SetStateAction<boolean>>,
   durationSettings: {min:number, max:number},
   setDurationSettings: React.Dispatch<React.SetStateAction<{min:number, max:number}>>,
-  timeSignatureSettings: number,
-  setTimeSignatureSettings: React.Dispatch<React.SetStateAction<number>>,
 }
 
 export default function RecOptionsSection({
@@ -145,22 +136,16 @@ export default function RecOptionsSection({
   setDanceabilitySettings,
   energySettings,
   setEnergySettings,
-  livenessSettings,
-  setLivenessSettings,
   valenceSettings,
   setValenceSettings,
   tempoSettings,
   setTempoSettings,
-  //instrumentalnessSettings,
-  //setInstrumentalnessSettings,
   keySettings,
   setKeySettings,
   modeSettings,
   setModeSettings,
   durationSettings,
   setDurationSettings,
-  timeSignatureSettings,
-  setTimeSignatureSettings
 }:RecOptionsSectionProps){
 
   const submit = useSubmit();
@@ -193,13 +178,9 @@ const featureNameToSettingsTypeMap: Record<keyof AudioFeatures, SettingsType> = 
   "acousticness": SettingsType.PERCENTAGE_MIN_MAX,
   "danceability": SettingsType.PERCENTAGE_MIN_MAX,
   "energy": SettingsType.PERCENTAGE_MIN_MAX,
-  //liveness is a weird case, api takes a float between 0 and 1 but setting will be treated as a boolean
-  "liveness": SettingsType.BOOL, 
   "valence": SettingsType.PERCENTAGE_MIN_MAX,
   "tempo": SettingsType.PERCENTAGE_MIN_MAX,
   "duration_ms": SettingsType.PERCENTAGE_MIN_MAX, //need to convert ms to seconds
-  "time_signature": SettingsType.OPTIONS,
-  //"instrumentalness": SettingsType.PERCENTAGE_MIN_MAX,
   "key": SettingsType.OPTIONS,
   "mode": SettingsType.BOOL,
 }
@@ -224,11 +205,6 @@ const getSettingsForFeature = (featureName: keyof AudioFeatures) => {
         audioFeatureSetting: energySettings,
         setAudioFeatureSetting: setEnergySettings
       };
-    case "liveness":
-      return {
-        audioFeatureSetting: livenessSettings,
-        setAudioFeatureSetting: setLivenessSettings
-      };
     case "valence":
       return {
         audioFeatureSetting: valenceSettings,
@@ -239,11 +215,6 @@ const getSettingsForFeature = (featureName: keyof AudioFeatures) => {
         audioFeatureSetting: tempoSettings,
         setAudioFeatureSetting: setTempoSettings
       };
-      //case "instrumentalness":
-      //  return {
-      //    audioFeatureSetting: instrumentalnessSettings,
-      //    setAudioFeatureSetting: setInstrumentalnessSettings
-      //  };
     case "key":
       return {
         audioFeatureSetting: keySettings,
@@ -258,11 +229,6 @@ const getSettingsForFeature = (featureName: keyof AudioFeatures) => {
       return {
         audioFeatureSetting: durationSettings,
         setAudioFeatureSetting: setDurationSettings
-      };
-    case "time_signature":
-      return {
-        audioFeatureSetting: timeSignatureSettings,
-        setAudioFeatureSetting: setTimeSignatureSettings
       };
     default:
       return {
@@ -356,14 +322,11 @@ const getSettingsForFeature = (featureName: keyof AudioFeatures) => {
                 acousticness: acousticnessSettings,
                 danceability: danceabilitySettings,
                 energy: energySettings,
-                liveness: livenessSettings,
                 valence: valenceSettings,
                 tempo: tempoSettings,
-                //instrumentalness: instrumentalnessSettings,
                 key: keySettings,
                 mode: modeSettings,
                 duration_ms: durationSettings,
-                time_signature: timeSignatureSettings
               } as AudioFeatureSettings
             });
           submit(
