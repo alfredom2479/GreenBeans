@@ -242,9 +242,6 @@ const isAudioFeatures =(possibleAudioFeatures:any):AudioFeatures|null =>{
   if('energy' in possibleAudioFeatures && typeof possibleAudioFeatures.energy === 'number'){
     tempAudioFeatures.energy = possibleAudioFeatures.energy;
   }
-  if('liveness' in possibleAudioFeatures && typeof possibleAudioFeatures.liveness=== 'number'){
-    tempAudioFeatures.liveness = possibleAudioFeatures.liveness;
-  }
   if('valence' in possibleAudioFeatures && typeof possibleAudioFeatures.valence === 'number'){
     tempAudioFeatures.valence = possibleAudioFeatures.valence;
   }
@@ -253,9 +250,6 @@ const isAudioFeatures =(possibleAudioFeatures:any):AudioFeatures|null =>{
   }
   if('duration_ms' in possibleAudioFeatures && typeof possibleAudioFeatures.duration_ms === 'number'){
     tempAudioFeatures.duration_ms = possibleAudioFeatures.duration_ms;
-  }
-  if('time_signature' in possibleAudioFeatures && typeof possibleAudioFeatures.time_signature === 'number'){
-    tempAudioFeatures.time_signature = possibleAudioFeatures.time_signature;
   }
   if('key' in possibleAudioFeatures && typeof possibleAudioFeatures.key=== 'number'){
     tempAudioFeatures.key = possibleAudioFeatures.key;
@@ -286,7 +280,6 @@ const getAudioFeatureReadableData = (audioFeatures:AudioFeatures):Record<keyof A
   let acousticnessReadable:string = 'N/A';
   let danceabilityReadable:string = 'N/A';
   let energyReadable:string = 'N/A';
-  let livenessReadable:string = 'N/A';
   let durationReadable:string = 'N/A';
   let keyReadable:string = 'N/A';
   let modeReadable:string = 'N/A';
@@ -301,9 +294,6 @@ const getAudioFeatureReadableData = (audioFeatures:AudioFeatures):Record<keyof A
   }
   if(audioFeatures.energy !== undefined){
     energyReadable = (Math.round(audioFeatures.energy*1000)/10).toString()+ "%";
-  }
-  if(audioFeatures.liveness !== undefined){
-    livenessReadable = audioFeatures.liveness >= .8 ? "Yes" : "No";
   }
   if(audioFeatures.valence !== undefined){
     valenceReadable = (Math.round(audioFeatures.valence*1000)/10).toString()+ "%";
@@ -326,12 +316,9 @@ const getAudioFeatureReadableData = (audioFeatures:AudioFeatures):Record<keyof A
     acousticness: acousticnessReadable,
     danceability: danceabilityReadable,
     energy: energyReadable,
-    liveness: livenessReadable,
     valence: valenceReadable,
     tempo: tempoReadable,
     duration_ms: durationReadable,
-    time_signature: audioFeatures.time_signature?.toString()+ "/4" ?? 'N/A',
-    //instrumentalness: audioFeatures.instrumentalness?.toString()+ " / 1" ?? 'N/A',
     key: keyReadable,
     mode: modeReadable
   };
