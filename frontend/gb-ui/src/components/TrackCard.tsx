@@ -20,16 +20,15 @@ interface TrackCardParams{
 
 export default function TrackCard({track,popModal=handleDefaultModalError,hideSaveButton=false}:TrackCardParams){
 
-  const defaultTrackCardOptionString  = "flex-1 bg-stone-200 hover:bg-green-400 text-black flex p-1 text-center "
-    + "items-center justify-center font-bold text-lg rounded-3xl shrink-0  w-10"
+  const defaultTrackCardOptionString  = "flex-1 bg-stone-400 hover:bg-green-400 text-black flex p-1 text-center "
+    + "items-center justify-center font-bold text-lg shrink-0  h-full"
 
-  const disabledTrackCardOptionString  = "flex-1 bg-neutral-600 text-black flex p-1 text-center "
-    + "items-center justify-center font-bold text-lg rounded-3xl shrink-0  w-10"
+  const disabledTrackCardOptionString  = "flex-1 bg-stone-600 text-black flex p-1 text-center "
+    + "items-center justify-center font-bold text-lg shrink-0  h-full"
 
 
   return(
-    <>
-    <div className="flex bg-stone-800 my-1 rounded-xl h-14">
+    <div className="flex bg-stone-800 my-1 rounded-xl h-14 ">
         <a className=" h-14 w-14 shrink-0" target="_blank" href={"https://open.spotify.com/track/"+track.id}>
           <img className="bg-fill" src={track.image} />
         </a>
@@ -39,15 +38,15 @@ export default function TrackCard({track,popModal=handleDefaultModalError,hideSa
           <div className="flex-1 text-stone-300 overflow-x-hidden truncate">{track.artist}</div>
         </div>
 
-        <div className=" flex basis-4/12 shrink-0 w-fit justify-evenly">
+        <div className=" flex basis-4/12 shrink-0 w-fit justify-between items-center ">
 
           <Link to={`/track/${track.id}`}
-          className={defaultTrackCardOptionString}
+            className={defaultTrackCardOptionString}
           >
             <img src={findRecsSvg} alt="recs" className="w-8"/>
           </Link>
 
-          {track.url!==null && track.url !==undefined && track.name !==null && track.name !== undefined && track.artist !== null && track.artist !== undefined ?
+          {track.url!==null && track.url !==undefined ?
             <button
               onClick={()=>popModal({name:track.name,artist: track.artist,url: track.url?track.url :""})}
               className={defaultTrackCardOptionString}
@@ -67,6 +66,5 @@ export default function TrackCard({track,popModal=handleDefaultModalError,hideSa
 
         </div>
       </div> 
-    </>
   )
 }
