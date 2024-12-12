@@ -9,6 +9,7 @@ import SideBarNavItem from "../navigation/SidebarNavItem";
 //import { deleteAllStores, openIDB } from "../../idb";
 import { clearAllDexieTables } from "../../utils";
 import userIcon from "../../assets/user-svgrepo-com.svg";
+import greenBeansLogo from "../../assets/beans-svgrepo-com.svg";
 //Loader checks for username locally, then on spotify, then clears indexedDB if needed.
 export async function loader(){
 
@@ -72,8 +73,10 @@ export default function NavBar(){
 
   return (
     <div className="flex">    
-    <div className="hidden lg:block bg-stone-900 pt-10 w-80 h-[100dvh] border-r border-stone-400 mr-1">
+    <div className="hidden lg:block bg-stone-900 pt-10 w-80 h-[100dvh] border-r border-stone-400 mr-1 p-2">
       <nav className="flex flex-col text-white items-center text-2xl">
+
+        <img className="w-10 mb-5" src={greenBeansLogo}/>
         {currUser !== null ? 
           <div className="flex justify-center border-b mb-6 pb-2 border-stone-400 w-full">
             <img className="flex w-8 mr-2" src={userIcon}/>

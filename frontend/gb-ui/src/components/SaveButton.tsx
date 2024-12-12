@@ -17,7 +17,7 @@ export default function SaveButton({trackInfo}:SaveButtonParams){
 
   const savedSaveButtonClassName= "flex-1 bg-green-400 text-black flex p-1 text-center items-center justify-center font-bold text-lg shrink-0  h-full"
   const disabledSaveButtonClassName= "flex-1 bg-neutral-600 text-black flex p-1 text-center items-center justify-center font-bold text-lg shrink-0  h-full"
-  const saveableSaveButtonClassName= "flex-1 bg-stone-400 text-black flex p-1 text-center items-center justify-center font-bold text-lg shrink-0  h-full hover:bg-green-400"
+  const saveableSaveButtonClassName= "flex-1 bg-stone-200 text-black flex p-1 text-center items-center justify-center font-bold text-lg shrink-0  h-full hover:bg-green-500"
 
 
   const [saveButton,setSaveButton] = useState(
