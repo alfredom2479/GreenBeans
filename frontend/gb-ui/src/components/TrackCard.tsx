@@ -20,7 +20,7 @@ interface TrackCardParams{
 
 export default function TrackCard({track,popModal=handleDefaultModalError,hideSaveButton=false}:TrackCardParams){
 
-  const defaultTrackCardOptionString  = "flex-1 bg-stone-400 hover:bg-green-400 text-black flex p-1 text-center "
+  const defaultTrackCardOptionString  = "flex-1 bg-stone-200 hover:bg-green-500 text-black flex p-1 text-center "
     + "items-center justify-center font-bold text-lg shrink-0  h-full"
 
   const disabledTrackCardOptionString  = "flex-1 bg-stone-600 text-black flex p-1 text-center "

@@ -234,25 +234,25 @@ export default function RecSection(){
 
   return(
     <>
-    <nav className=" font-bold bg-green-50 max-h-14">
+    <nav className=" font-bold bg-stone-200 max-h-14">
           <ul className={`flex  h-full`}>
             <li className="flex-1 flex justify-center bg-stone-100 border-1  border-stone-900">
               <button 
                 onClick={()=>handleListenOnClick({name:trackData.name,artist:trackData.artist,url:trackData.url?trackData.url:""})}
                 disabled={trackData.url === null || trackData.url === undefined}
-                className="bg-white w-full text-center flex items-center justify-center disabled:bg-stone-600 disabled:cursor-not-allowed">
+                className="bg-stone-200 w-full text-center flex items-center justify-center disabled:bg-stone-600 disabled:cursor-not-allowed hover:bg-green-500">
                 <img src={listenSvg} alt="listen" className="w-6"/>
               </button>
             </li>
             <li className={` flex-[2_2_0%] flex justify-center `}>
               <button onClick={()=>setIsSelectingOptions(false)}
-                className={!isSelectingOptions ? " bg-green-400 text-center w-full " : "text-center w-full "}>
+                className={!isSelectingOptions ? " bg-green-400 text-center w-full " : "text-center w-full hover:bg-green-500"}>
                 Recommendations
               </button>
             </li>
             <li className={` flex-[2_2_0%] flex justify-center `}>
               <button onClick={()=>setIsSelectingOptions(true)}  
-                className={isSelectingOptions ? " bg-green-400 text-center w-full " : "text-center w-full "}>
+                className={isSelectingOptions ? " bg-green-400 text-center w-full " : "text-center w-full hover:bg-green-500"}>
                 Options
               </button>
             </li>
