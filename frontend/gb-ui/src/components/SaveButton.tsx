@@ -15,10 +15,14 @@ interface SaveButtonParams{
 
 export default function SaveButton({trackInfo}:SaveButtonParams){
 
+  const savedSaveButtonClassName= "flex-1 bg-green-400 text-black flex p-1 text-center items-center justify-center font-bold text-lg shrink-0  h-full"
+  const disabledSaveButtonClassName= "flex-1 bg-neutral-600 text-black flex p-1 text-center items-center justify-center font-bold text-lg shrink-0  h-full"
+  const saveableSaveButtonClassName= "flex-1 bg-stone-400 text-black flex p-1 text-center items-center justify-center font-bold text-lg shrink-0  h-full hover:bg-green-400"
+
 
   const [saveButton,setSaveButton] = useState(
     <button
-      className="flex-1 bg-neutral-600 text-black flex p-1 text-center items-center justify-center font-bold text-lg rounded-3xl  shrink-0  w-10"
+      className={disabledSaveButtonClassName}
       disabled
     >
       <img src={addTrackSvg} alt="unsaveable" className="w-8"/>
@@ -30,7 +34,7 @@ export default function SaveButton({trackInfo}:SaveButtonParams){
         trackInfo.trackSaveState = TrackSaveState.Saved;
         setSaveButton(
           <button 
-            className="flex-1 bg-green-400 text-black flex p-1 text-center items-center justify-center font-bold text-lg rounded-3xl  shrink-0  w-10"
+            className={savedSaveButtonClassName}
             disabled
           >
             <img src={trackSavedSvg} alt="saved" className="w-8"/>
@@ -43,7 +47,7 @@ export default function SaveButton({trackInfo}:SaveButtonParams){
             trackInfo.trackSaveState = TrackSaveState.Saveable;
             setSaveButton(
               <button
-                className="flex-1 bg-stone-200 text-black flex p-1 text-center items-center justify-center font-bold text-lg rounded-3xl  shrink-0  w-10"
+                className={saveableSaveButtonClassName}
                 onClick={()=>handleSaveOnClick()}
               >
                 <img src={addTrackSvg} alt="save" className="w-8"/>
@@ -55,7 +59,7 @@ export default function SaveButton({trackInfo}:SaveButtonParams){
             trackInfo.trackSaveState = TrackSaveState.Saved;
             setSaveButton(
               <button 
-                className="flex-1 bg-green-400 text-black flex p-1 text-center items-center justify-center font-bold text-lg rounded-3xl  shrink-0  w-10"
+                className={savedSaveButtonClassName}
                 disabled
               >
                 <img src={trackSavedSvg} alt="saved" className="w-8"/>
@@ -79,7 +83,7 @@ export default function SaveButton({trackInfo}:SaveButtonParams){
     if(trackInfo.trackSaveState === TrackSaveState.Saveable){
       setSaveButton(
         <button
-          className="flex-1 bg-stone-200 text-black flex p-1 text-center items-center justify-center font-bold text-lg rounded-3xl  shrink-0  w-10"
+          className={saveableSaveButtonClassName}
           onClick={()=>handleSaveOnClick()}
         >
           <img src={addTrackSvg} alt="save" className="w-8"/>
@@ -89,7 +93,7 @@ export default function SaveButton({trackInfo}:SaveButtonParams){
     else if(trackInfo.trackSaveState === TrackSaveState.Saved){
       setSaveButton(
         <button 
-          className="flex-1 bg-green-400 text-black flex p-1 text-center items-center justify-center font-bold text-lg rounded-3xl  shrink-0  w-10"
+          className={savedSaveButtonClassName}
           disabled
         >
           <img src={trackSavedSvg} alt="saved" className="w-8"/>
