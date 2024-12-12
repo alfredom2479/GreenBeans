@@ -40,12 +40,6 @@ export default function TrackCard({track,popModal=handleDefaultModalError,hideSa
 
         <div className=" flex basis-4/12 shrink-0 w-fit justify-between items-center ">
 
-          <Link to={`/track/${track.id}`}
-            className={defaultTrackCardOptionString}
-          >
-            <img src={findRecsSvg} alt="recs" className="w-8"/>
-          </Link>
-
           {track.url!==null && track.url !==undefined ?
             <button
               onClick={()=>popModal({name:track.name,artist: track.artist,url: track.url?track.url :""})}
@@ -63,6 +57,13 @@ export default function TrackCard({track,popModal=handleDefaultModalError,hideSa
           }
 
            {!hideSaveButton && <SaveButton trackInfo={track}/>}
+
+          <Link to={`/track/${track.id}`}
+            className={defaultTrackCardOptionString}
+          >
+            <img src={findRecsSvg} alt="recs" className="w-8"/>
+          </Link>
+
 
         </div>
       </div> 
