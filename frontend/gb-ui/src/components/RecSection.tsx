@@ -240,19 +240,19 @@ export default function RecSection(){
               <button 
                 onClick={()=>handleListenOnClick({name:trackData.name,artist:trackData.artist,url:trackData.url?trackData.url:""})}
                 disabled={trackData.url === null || trackData.url === undefined}
-                className="bg-stone-200 w-full text-center flex items-center justify-center disabled:bg-stone-600 disabled:cursor-not-allowed hover:bg-green-500">
+                className="bg-stone-200 w-full text-center flex items-center justify-center disabled:bg-stone-600 disabled:cursor-not-allowed hover:bg-green-700">
                 <img src={listenSvg} alt="listen" className="w-6"/>
               </button>
             </li>
             <li className={` flex-[2_2_0%] flex justify-center `}>
               <button onClick={()=>setIsSelectingOptions(false)}
-                className={!isSelectingOptions ? " bg-green-400 text-center w-full " : "text-center w-full hover:bg-green-500"}>
-                Recommendations
+                className={!isSelectingOptions ? " bg-green-600 text-center w-full " : "text-center w-full hover:bg-green-700"}>
+                  Tracks
               </button>
             </li>
             <li className={` flex-[2_2_0%] flex justify-center `}>
               <button onClick={()=>setIsSelectingOptions(true)}  
-                className={isSelectingOptions ? " bg-green-400 text-center w-full " : "text-center w-full hover:bg-green-500"}>
+                className={isSelectingOptions ? " bg-green-600 text-center w-full " : "text-center w-full hover:bg-green-700"}>
                 Options
               </button>
             </li>

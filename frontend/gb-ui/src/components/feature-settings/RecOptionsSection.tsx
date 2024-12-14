@@ -338,7 +338,7 @@ const getSettingsForFeature = (featureName: keyof AudioFeatures) => {
           
         }}
         className=" max-h-[10vh] mb-4 bg-green-50 hover:bg-green-200 text-stone-900 text-xl rounded-xl font-bold p-2 w-1/2 text-center flex justify-center items-center disabled:bg-gray-400 disabled:text-gray-600"
-        >get recs
+        >get tracks
       </button>
       
       </div>

@@ -28,16 +28,16 @@ export default function FeatureSettingsBox({
   
 
   return (
-    <div className="p-4">
+    <div className="p-4 w-full">
         <div className="flex flex-col gap-4">
-         <div className="flex gap-4">
-          <div className="flex flex-col">
+         <div className="flex gap-4 max-w-2xl ">
+          <div className="flex flex-1 flex-col">
             <label htmlFor={`${featureName}-min`} className=" text-white">Min: {formatDisplayValue(audioFeatureSetting.min)}</label>
-            <input type="range" min="0" max={max} step={step} className="w-full" id={`${featureName}-min`} 
+            <input type="range" min="0" max={max} step={step} className="w-full " id={`${featureName}-min`} 
               value={audioFeatureSetting.min} onChange={(e) => handleValueChange(e, true)} />
           </div>
 
-          <div className="flex flex-col">
+          <div className="flex flex-1 flex-col">
             <label htmlFor={`${featureName}-max`} className=" text-white">Max: {formatDisplayValue(audioFeatureSetting.max)}</label>
             <input type="range" min="0" max={max} step={step} className="w-full" id={`${featureName}-max`} 
               value={audioFeatureSetting.max} onChange={(e) => handleValueChange(e, false)} />
