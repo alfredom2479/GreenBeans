@@ -62,7 +62,7 @@ export default function NavBar(){
     const urlPath:string = location.pathname;
     if (urlPath.includes("top")) setPageName("Top")
     else if (urlPath.includes("saved")) setPageName("Saved")
-    else if (urlPath.includes("track")) setPageName("Recs")
+    else if (urlPath.includes("track")) setPageName("Track")
     else setPageName("Link")
   },[location])
 
@@ -113,10 +113,10 @@ export default function NavBar(){
         </div>
         <div className="flex flex-1 justify-center items-center">
           <div className="text-stone-400 pr-2">Powered by </div>
-          <a className="flex h-10 w-10"
+          <a className="flex h-6 w-6"
             href='https://spotify.com' 
             target='_blank' >
-              <img className='flex-1 h-10 grow-0'
+              <img className='flex-1 h-6 grow-0'
                 src={spotifyLogo} />
           </a>
         </div>
