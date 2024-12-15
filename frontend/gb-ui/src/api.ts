@@ -199,7 +199,6 @@ export async function requestSpotifyRec(
   isLoggedIn: boolean
 ){
 
-  console.log(audioFeatureSettings);
   let queryOptionSuffix:string = trackId;
 
   for(let i =0; i < audioFeatureNames.length; i++ ){
@@ -221,7 +220,6 @@ export async function requestSpotifyRec(
         upperLimit = audioFeatureSettings.acousticness.max;
         lowerLimit = audioFeatureSettings.acousticness.min;
         targetValue = (audioFeatureSettings.acousticness.max + audioFeatureSettings.acousticness.min) / 2;
-        console.log(targetValue);
         break;
       case 'danceability':
         upperLimit = audioFeatureSettings.danceability.max;
@@ -289,7 +287,6 @@ export async function requestSpotifyRec(
       const res = await fetch(`/api/spotify/getrecs?querysuffix=${encodeURIComponent(queryOptionSuffix)}`,{
         method: "GET"
       });
-      //console.log(res);
       const data = await res.json();
       if(!res.ok){
         throw new Response("Request failed",{status:res.status});
