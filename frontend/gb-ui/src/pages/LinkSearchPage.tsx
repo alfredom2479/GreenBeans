@@ -29,24 +29,29 @@ export async function action({request}:ActionParams){
 
   let trackId:string|null = null;
 
-  const spotifyUrlIndex = spotifyLink.indexOf("spotify.com/track/");
+  let indexSearchString = "spotify.com/track/";
+  let spotifyUrlIndex = spotifyLink.indexOf(indexSearchString);
 
   if(spotifyUrlIndex <0){
-    return null;
+    //retry to fiind trackId. this pattern is found in 'spotify wrapped' links
+    indexSearchString = "track-id=";
+    spotifyUrlIndex = spotifyLink.indexOf(indexSearchString);
+    if(spotifyUrlIndex <0){
+      return "track not found"+spotifyLink;
+    }
   }
 
-  trackId = spotifyLink.substring(spotifyUrlIndex+18,spotifyUrlIndex+40);
+  trackId = spotifyLink.substring(spotifyUrlIndex+indexSearchString.length,spotifyUrlIndex+indexSearchString.length+22);
 
   //need try catch bc if not, Response will be uncaught
   try{
     const data = await requestSpotifyTrack(access_token,trackId,isLoggedIn);
     if(!data || data === undefined){
-      console.log("Track not found")
-      return "track not found"
+      return "track not found"+spotifyLink
     }
     return redirect(`/track/${trackId}`);
   }catch(err){
-    return "track not found";
+    return "track not found"+spotifyLink;
   }
 }
 
@@ -56,7 +61,7 @@ export default function LinkSearchPage(){
   const actionData = useActionData();
 
   useEffect(()=>{
-    if(actionData === "track not found" && searchInputRef.current !== null){
+    if(actionData && typeof actionData === "string" && actionData.includes("track not found") && searchInputRef.current !== null){
       searchInputRef.current.value = "TRACK NOT FOUND"
     }
   },[actionData])
