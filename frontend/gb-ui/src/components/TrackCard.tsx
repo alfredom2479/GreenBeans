@@ -42,7 +42,7 @@ export default function TrackCard({track,popModal=handleDefaultModalError,hideSa
 
           {track.url!==null && track.url !==undefined ?
             <button
-              onClick={()=>popModal({name:track.name,artist: track.artist,url: track.url?track.url :""})}
+              onClick={()=>popModal({name:track.name,artist: track.artist,url: track.url?track.url :"",image:track.image?track.image:""})}
               className={defaultTrackCardOptionString}
             >
               <img src={listenSvg} alt="listen" className="w-8"/>

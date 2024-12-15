@@ -24,7 +24,7 @@ export async function loader({params}:URLParams){
 export default  function SavedPage(){
 
   const [showModal, setShowModal] = useState(false);
-  const [modalSongPreviewInfo, setModalSongPreviewInfo] = useState<SongPreviewInfo>({name:"",artist:"",url:""});
+  const [modalSongPreviewInfo, setModalSongPreviewInfo] = useState<SongPreviewInfo>({name:"",artist:"",url:"",image:""});
 
   function handleListenOnClick(songPreviewInfo:SongPreviewInfo|undefined){
     if(songPreviewInfo === undefined){

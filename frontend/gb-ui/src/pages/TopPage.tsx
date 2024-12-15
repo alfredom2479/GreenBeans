@@ -7,7 +7,7 @@ import { ListenOnClickContextType, SongPreviewInfo } from "../interfaces";
 export default function TopPage(){
 
   const [showModal, setShowModal] = useState(false);
-  const [modalSongPreviewInfo, setModalSongPreviewInfo] = useState<SongPreviewInfo>({name:"",artist:"",url:""});
+  const [modalSongPreviewInfo, setModalSongPreviewInfo] = useState<SongPreviewInfo>({name:"",artist:"",url:"",image:""});
 
   function handleListenOnClick(songPreviewInfo:SongPreviewInfo|undefined){
     if(songPreviewInfo === undefined || songPreviewInfo === null){

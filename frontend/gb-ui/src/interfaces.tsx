@@ -19,7 +19,8 @@ export interface ITrack{
 export interface SongPreviewInfo{
   name: string,
   artist: string,
-  url: string
+  url: string,
+  image: string
 }
 
 export interface AudioFeatures{

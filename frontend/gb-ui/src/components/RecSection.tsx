@@ -44,7 +44,7 @@ export default function RecSection(){
   const [showModal,setShowModal] = useState(false);
   const [isLoadingRecs, setIsLoadingRecs] = useState(true);
   
-  const [modalSongPreviewInfo, setModalSongPreviewInfo] = useState<SongPreviewInfo>({name:"",artist:"",url:""});
+  const [modalSongPreviewInfo, setModalSongPreviewInfo] = useState<SongPreviewInfo>({name:"",artist:"",url:"",image:""});
   
   const loaderData = useLoaderData();
   const actionData= useActionData();
@@ -124,13 +124,12 @@ export default function RecSection(){
 
       try{
         didbTrackListData= await getTrackListFromDidb(id) ;
-        //console.log(didbTrackListData);
       }
       catch(err){
         console.log("error getting track list from dexie ");
         console.log(err);
       }
-      //console.log(idbTrackListData);
+
 
       if(didbTrackListData !== null ){
           setRecList(didbTrackListData);
@@ -193,11 +192,10 @@ export default function RecSection(){
           }
          }
         if(!ignore){
-          //console.log(tempTrackList);
           setRecList(tempTrackList);
           if(didbTrackListData === null){
-            //addTrackList(Stores.TrackLists ,tempTrackList,id);
             addTracksToDidb(tempTrackList,id);
+            //addTracksToDidb(tempTrackList,id);
           }
           setIsLoadingRecs(false);
        }
@@ -222,7 +220,6 @@ export default function RecSection(){
 
 
   function handleListenOnClick(songPreviewInfo:SongPreviewInfo|undefined){
-    console.log(songPreviewInfo);
     if(songPreviewInfo === undefined){
       return;
     }
@@ -238,7 +235,7 @@ export default function RecSection(){
           <ul className={`flex  h-full`}>
             <li className="flex-1 flex justify-center bg-stone-100 border-1  border-stone-900">
               <button 
-                onClick={()=>handleListenOnClick({name:trackData.name,artist:trackData.artist,url:trackData.url?trackData.url:""})}
+                onClick={()=>handleListenOnClick({name:trackData.name,artist:trackData.artist,url:trackData.url?trackData.url:"",image:trackData.image?trackData.image:""})}
                 disabled={trackData.url === null || trackData.url === undefined}
                 className="bg-stone-200 w-full text-center flex items-center justify-center disabled:bg-stone-600 disabled:cursor-not-allowed hover:bg-green-700">
                 <img src={listenSvg} alt="listen" className="w-6"/>

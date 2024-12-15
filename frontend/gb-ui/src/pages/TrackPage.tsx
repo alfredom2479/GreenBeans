@@ -41,7 +41,6 @@ export async function loader({params}:IURLParams){
   let didbAudioFeatureData:AudioFeatures|null;
 
   try {
-    //console.log(didb);
     didbTrackData = await didb.tracks.get(trackId) || null;
   }
   catch(err){
@@ -57,8 +56,6 @@ export async function loader({params}:IURLParams){
     console.log("error getting audio features from dexie");
   }
 
-  //console.log(didbTrackData);
-  //console.log(didbAudioFeatureData);
 
   if(didbTrackData != null){
     usingIDBTrackData = true;
@@ -77,8 +74,6 @@ export async function loader({params}:IURLParams){
   }
 
   
-  //[trackLoaderData,audioFeatureLoaderData] = await Promise.all([requestSpotifyTrack(access_token, trackId, isLoggedIn),requestSpotifyTrackAudioFeatures(access_token,trackId, isLoggedIn)])
-  //console.log(trackLoaderData);
   return {
     trackLoaderData,
     audioFeatureLoaderData, 
@@ -96,8 +91,6 @@ export default function TrackPage(){
   const [trackData, setTrackData] = useState<ITrack>({id:"",name: "", artist: "", image:"",trackSaveState:TrackSaveState.CantSave});
   const [currAudioFeatures,setCurrAudioFeatures] = useState<AudioFeatures>({id:""});
 
-  console.log(trackData);
-
     
   useEffect(()=>{
 
@@ -108,8 +101,7 @@ export default function TrackPage(){
 
     async function addTrackToDexie(track:ITrack){
       try{
-        const res = await didb.tracks.add(track);
-        console.log(res);
+         await didb.tracks.add(track);
       }
       catch(err){
         console.log("error adding track to dexie "+err);
@@ -117,8 +109,7 @@ export default function TrackPage(){
     }
     async function addAudioFeaturesToDexie(audioFeatures:AudioFeatures){
      try{
-      const res = await didb.audio_features.add(audioFeatures);
-      console.log(res);
+      await didb.audio_features.add(audioFeatures);
      } 
      catch(err){
       console.log("error adding audio features to dexie "+err);
@@ -151,9 +142,6 @@ export default function TrackPage(){
         audioFeatureLoaderData = {};
     }
 
-    //console.log(trackLoaderData);
-    //console.log(audioFeatureLoaderData);
-
     if(typeof trackLoaderData === 'object' && trackLoaderData ){
 
       let possibleTrack: ITrack |null = null;
@@ -167,10 +155,8 @@ export default function TrackPage(){
       //some golang influence lol
       
       if(possibleTrack != null){
-        //console.log(possibleTrack);
         setTrackData(possibleTrack);
         if(!usingIDBTrackData){
-          //addITrack(Stores.Tracks, possibleTrack);
           addTrackToDexie(possibleTrack);
         }
       }
@@ -180,7 +166,6 @@ export default function TrackPage(){
         if (possibleAudioFeatures != null){
           setCurrAudioFeatures(possibleAudioFeatures);
           if(!usingIDBFeatureData){
-            //addAudioFeatures(Stores.AudioFeatures,possibleAudioFeatures);
             addAudioFeaturesToDexie(possibleAudioFeatures);
           }
         }
