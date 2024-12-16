@@ -9,7 +9,7 @@ const didb = new Dexie('greenbeansIDB') as Dexie & {
     last_updated: Table<number,string>;
 };
 
-didb.version(2).stores({
+didb.version(3).stores({
   tracks:'id',
   audio_features: 'id',
   track_lists: '',
