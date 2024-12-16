@@ -235,7 +235,7 @@ export default function RecSection(){
           <ul className={`flex  h-full`}>
             <li className="flex-1 flex justify-center bg-stone-100 border-1  border-stone-900">
               <button 
-                onClick={()=>handleListenOnClick({name:trackData.name,artist:trackData.artist,url:trackData.url?trackData.url:"",image:trackData.image?trackData.image:""})}
+                onClick={()=>handleListenOnClick({name:trackData.name,artist:trackData.artist,url:trackData.url?trackData.url:"",image:trackData.image?trackData.image[0]:""})}
                 disabled={trackData.url === null || trackData.url === undefined}
                 className="bg-stone-200 w-full text-center flex items-center justify-center disabled:bg-stone-600 disabled:cursor-not-allowed hover:bg-green-700">
                 <img src={listenSvg} alt="listen" className="w-6"/>

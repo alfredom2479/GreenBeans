@@ -99,6 +99,7 @@ export async function requestMySpotifyAccount(accessToken:string){
       "https://api.spotify.com/v1/me",
       accessToken,
       RequestMethods.Get);
+    console.log(data);
     return data;
 }
 

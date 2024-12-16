@@ -10,7 +10,7 @@ export interface ITrack{
   id: string,
   name: string,
   artist: string,
-  image: string
+  image: string[]
   url?: string,
   spotify_url?:string,
   trackSaveState: TrackSaveState
