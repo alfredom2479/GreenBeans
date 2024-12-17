@@ -10,6 +10,7 @@ import axios from "axios";
 let clientCredsAuthToken = "";
 
 const getSpotifyTrackInfo = asyncHandler(async (req:Request,res:Response)=>{
+  console.log("getSpotifyTrackInfo");
 
   const {id} = req.query
 
@@ -18,15 +19,19 @@ const getSpotifyTrackInfo = asyncHandler(async (req:Request,res:Response)=>{
     return;
   }
 
+  console.log(" before sending request");
   const data = await sendRequest(
     "Spotify Track Info",
     "https://api.spotify.com/v1/tracks/"+id
   )
+  console.log("back from sendRequest");
 
   if(data === null){
     res.status(500).json({error:{message:"Server could not make succesful request to spotify api",status:500}});
   }
+  console.log("sending track data")
   res.status(200).json({result:data});
+  console.log(data);
 })
 
 const getSpotifyTrackAudioFeatures = asyncHandler(async (req:Request,res:Response)=>{
@@ -45,7 +50,9 @@ const getSpotifyTrackAudioFeatures = asyncHandler(async (req:Request,res:Respons
   if(data === null ){
     res.status(500).json({error: {message:"Server could not make a succesful request to spotify track audio features", status: 500}});
   }
+  console.log(data);
   res.status(200).json({result:data});
+  console.log("u can do stuff after sending response!")
 })
 
 const getSpotifyRecs = asyncHandler(async (req:Request,res:Response)=>{
@@ -76,7 +83,7 @@ const getSpotifyRecs = asyncHandler(async (req:Request,res:Response)=>{
 
 
 const sendRequest = async (requestName: string, completeEndpoint:string, ) =>{
-  console.log(clientCredsAuthToken)
+  console.log(requestName,completeEndpoint);
   try{
     const {data, status} = await axios.get(
       completeEndpoint,
