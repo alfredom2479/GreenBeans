@@ -159,7 +159,7 @@ export async function saveSpotifyTrack( trackId:string) :Promise<Response|null>{
     false
   );
 
-  console.log(data);
+  //console.log(data);
   return data;
 
 }
