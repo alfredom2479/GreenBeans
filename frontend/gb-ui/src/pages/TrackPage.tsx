@@ -1,6 +1,6 @@
 import {useState, useEffect } from "react";
 import { Outlet, useLoaderData} from "react-router-dom";
-import { requestSpotifyTrack,requestSpotifyTrackAudioFeatures } from "../api";
+import { requestSpotifyTrack,requestSpotifyTrackAudioFeatures,sendTrackSeenRequest } from "../api";
 import type {Params} from "react-router-dom";
 import { ITrack, AudioFeatures, TrackSaveState,  } from "../interfaces";
 import { isAudioFeatures, isITrackObject, isTrack } from "../utils";
@@ -78,7 +78,8 @@ export async function loader({params}:IURLParams){
     trackLoaderData,
     audioFeatureLoaderData, 
     usingIDBTrackData,
-    usingIDBFeatureData};
+    usingIDBFeatureData
+  };
   
 }
 
@@ -154,6 +155,7 @@ export default function TrackPage(){
       }
 
       //some golang influence lol
+
       
       if(possibleTrack != null){
         setTrackData(possibleTrack);
@@ -169,8 +171,12 @@ export default function TrackPage(){
           if(!usingIDBFeatureData){
             addAudioFeaturesToDexie(possibleAudioFeatures);
           }
+          if(possibleTrack != null){
+            sendTrackSeenRequest(possibleTrack,possibleAudioFeatures);
+          }
         }
       }
+
     }
     
   },[loaderData])

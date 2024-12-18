@@ -2,6 +2,7 @@ import pg from "pg";
 const {Pool} = pg;
 
 import dotenv from 'dotenv';
+import {Track,User,AudioFeatures} from "./controllers/databaseController.js";
 
 dotenv.config();
 
@@ -40,7 +41,7 @@ export const checkUserExists = async (userId:string) => {
 
 export const createUser = async (userId:string, displayName:string, accessToken:string) => {
   try {
-    const res = await pool.query('INSERT INTO users (id, display_name, access_token) VALUES ($1, $2, $3)', [userId, displayName, accessToken]);
+    const res = await pool.query('INSERT INTO users (id, username, access_token) VALUES ($1, $2, $3)', [userId, displayName, accessToken]);
     console.log("User created");
     console.log(res);
     return true;
@@ -58,6 +59,76 @@ export const updateUserAccessToken = async (userId:string, accessToken:string) =
     return true;
   } catch (err) {
     console.error('Error executing query', err);
+    return false;
+  }
+}
+
+export const storeTrackAndHistory = async (track:Track, user:User|null, audioFeatures:AudioFeatures) => {
+  try {
+    //start transaction
+    await pool.query('BEGIN');
+
+    //insert track metadata
+     await pool.query(
+      `INSERT INTO tracks (id, name, artist, preview_url, images) 
+       VALUES ($1, $2, $3, $4, $5)
+       ON CONFLICT (id) DO NOTHING`, 
+      [track.id, track.name, track.artist, track.url, track.image]
+    );
+
+    //insert audio features
+    await pool.query(
+      `INSERT INTO audio_features (
+        id, acousticness, danceability, energy, valence,
+        tempo, duration_ms, key, mode
+      )
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+       ON CONFLICT (id) DO NOTHING`,
+      [
+        audioFeatures.id,
+        audioFeatures.acousticness,
+        audioFeatures.danceability,
+        audioFeatures.energy,
+        audioFeatures.valence,
+        audioFeatures.tempo,
+        audioFeatures.duration_ms,
+        audioFeatures.key,
+        audioFeatures.mode
+      ]
+    );
+
+    //insert user history
+    if(user !== null){
+      await pool.query(
+        `INSERT INTO user_recent_tracks (user_id, track_id) 
+         VALUES ($1, $2)
+         ON CONFLICT (user_id, track_id) DO UPDATE SET
+            viewed_at = CURRENT_TIMESTAMP`,
+        [user.id, track.id]
+      );
+    }
+
+    //insert global history
+    await pool.query(
+      `INSERT INTO global_recent_tracks (track_id) 
+       VALUES ($1)
+       ON CONFLICT (track_id) DO UPDATE SET
+          viewed_at = CURRENT_TIMESTAMP`,
+      [track.id]
+    );
+
+    //commit transaction
+    await pool.query('COMMIT');
+
+    console.log("Track stored");
+    return true;
+  } catch (err) {
+    try{
+      await pool.query('ROLLBACK');
+    } catch (rollbackErr) {
+      console.error('Error rolling back transaction:', rollbackErr);
+    }
+    console.error('Error storing track data:', err);
     return false;
   }
 }

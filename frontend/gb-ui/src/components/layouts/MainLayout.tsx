@@ -33,10 +33,11 @@ export async function loader(){
   
   try{
     const data = await requestMySpotifyAccount(access_token);
-    if(data && data.display_name){
+    if(data && data.display_name && data.id){
       //await deleteAllStores();
       await clearAllDexieTables();
       localStorage.setItem("greenbeans_user",data.display_name);
+      localStorage.setItem("greenbeans_user_id",data.id);
       return data.display_name;
     }
     return null

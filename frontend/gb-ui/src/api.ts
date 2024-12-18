@@ -359,6 +359,66 @@ export async function requestSaveStatus (accessToken:string|null,tracks: ITrack[
     return data;
 }
 
+export async function sendTrackSeenRequest(track:ITrack,audioFeatures:AudioFeatures){
+
+  let isLoggedIn:boolean = true;
+
+  const accessToken:string|null = localStorage.getItem("access_token");
+  const displayName:string|null = localStorage.getItem("greenbeans_user");
+  const userId:string|null = localStorage.getItem("greenbeans_user_id");
+
+  if(accessToken === null || accessToken === undefined || accessToken === ""){
+    isLoggedIn = false;
+  }
+  else if(displayName === null || displayName === undefined || displayName === ""){
+    isLoggedIn = false;
+  }
+  else if(userId === null || userId === undefined || userId === ""){
+    isLoggedIn = false;
+  }
+
+  let payload = null;
+
+  if(isLoggedIn === false){
+    payload = {
+      track:track,
+      audioFeatures:audioFeatures,
+    }
+  }
+  else{
+    payload = {
+      user:{id:userId,displayName:displayName, access_token:accessToken},
+      track:track,
+      audioFeatures:audioFeatures,
+    }
+  }
+
+  try{
+    const res = await fetch('/api/history/trackseen',{
+      method: RequestMethods.Post,
+      headers: {
+        'Authorization':  'Bearer '+ accessToken,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    })
+    if(!res.ok){
+      //throw new Response("Request failed",{status:res.status})
+      console.log("history request failed",{status:res.status})
+    }
+    try{
+      console.log(await res.json());
+    }catch(err){
+      console.log("history returned non json",{status:500})
+      console.log(res);
+    }
+  }catch(err){
+    //throw new Response("Request failed",{status:500})
+    console.log("history request failed",{status:500})
+  }
+
+}
+
 async function sendRequest(endpoint:string, accessToken:string,requestMethod:RequestMethods,expectsJson:boolean=true){
 
   console.log('request to '+endpoint)
