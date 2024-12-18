@@ -33,14 +33,20 @@ export default function FeatureSettingsBox({
          <div className="flex gap-4 max-w-2xl ">
           <div className="flex flex-1 flex-col">
             <label htmlFor={`${featureName}-min`} className=" text-white">Min: {formatDisplayValue(audioFeatureSetting.min)}</label>
-            <input type="range" min="0" max={max} step={step} className="w-full " id={`${featureName}-min`} 
-              value={audioFeatureSetting.min} onChange={(e) => handleValueChange(e, true)} />
+            <input type="range" min="0" max={max} step={step} 
+              className="w-full h-2 appearance-none cursor-pointer rounded-lg bg-gray-700" 
+              id={`${featureName}-min`} 
+              value={audioFeatureSetting.min} 
+              onChange={(e) => handleValueChange(e, true)} />
           </div>
 
           <div className="flex flex-1 flex-col">
             <label htmlFor={`${featureName}-max`} className=" text-white">Max: {formatDisplayValue(audioFeatureSetting.max)}</label>
-            <input type="range" min="0" max={max} step={step} className="w-full" id={`${featureName}-max`} 
-              value={audioFeatureSetting.max} onChange={(e) => handleValueChange(e, false)} />
+            <input type="range" min="0" max={max} step={step} 
+              className="w-full h-2 appearance-none cursor-pointer rounded-lg bg-gray-700" 
+              id={`${featureName}-max`} 
+              value={audioFeatureSetting.max} 
+              onChange={(e) => handleValueChange(e, false)} />
           </div>
           </div>
 
