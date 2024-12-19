@@ -178,6 +178,8 @@ export default function TrackPage(){
       }
 
     }
+    //console.log("currAudioFeatures",currAudioFeatures);
+    //console.log("trackData",loaderData);
     
   },[loaderData])
 
