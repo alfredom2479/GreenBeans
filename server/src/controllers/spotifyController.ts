@@ -18,12 +18,10 @@ const getSpotifyTrackInfo = asyncHandler(async (req:Request,res:Response)=>{
     return;
   }
 
-  console.log(" before sending request");
   const data = await sendRequest(
     "Spotify Track Info",
     "https://api.spotify.com/v1/tracks/"+id
   )
-  console.log("back from sendRequest");
 
   if(data === null){
     res.status(500).json({error:{message:"Server could not make succesful request to spotify api",status:500}});

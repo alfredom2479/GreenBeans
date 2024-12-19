@@ -3,7 +3,7 @@ import {
     Response,
     request
 } from "express";
-import axios from "axios";
+import axios, {AxiosResponse} from "axios";
 import asyncHandler from "express-async-handler";
 import {testDatabaseQuery,
     checkUserExists,
@@ -98,16 +98,18 @@ const testDatabase = asyncHandler(async (req:Request,res:Response)=>{
     res.status(200).json({message:"database test"});
 })
 
+
 const storeTrack = asyncHandler(async (req:Request,res:Response)=>{
+    //This function sends response early because history doesnt HAVE to be updated
+    //every return is indicative of a fail state that does not have to be
+    //dealt with
 
     res.status(200).json({message:"history updating...maybe?"});
 
-    let loggedInUserMadeRequest = true;
+    let loggedInUserMadeRequest:boolean = true;
     //refactor this so that loggedInUser decides the flow of this logic
 
     const {user,track, audioFeatures} = req.body;
-    console.log(req.body);
-    console.log(user);
     if(!isUser(user)){
         console.error('Invalid user object received');
         loggedInUserMadeRequest = false;
@@ -125,28 +127,31 @@ const storeTrack = asyncHandler(async (req:Request,res:Response)=>{
 
     if (loggedInUserMadeRequest){
         // Check if user exists in database
-        const existingUser = await checkUserExists(user.id);
+        const existingUser:User|null = await checkUserExists(user.id);
 
         if (existingUser === null) {
             //check if user access token belongs toan actual spotify user
-            const response = await getSpotifyUser(user.access_token);
-            console.log("response: ");
-            console.log(response);
+            const response:AxiosResponse|null = await getSpotifyUser(user.access_token);
             //check if spotify access token's user id matches the id of user object
-            if (!response || response.id === undefined || response.id !== user.id) {
+            if (!response || !response.data || response.data.id === undefined || response.data.id !== user.id) {
                 //if not, yurr done (someone is up to no good )
                 return;
             }
             //if user ids match, add the user to the database
-            await createUser(user.id, user.displayName, user.access_token);
+            try{
+                await createUser(user.id, user.displayName, user.access_token);
+            }catch(err){
+                console.error("Error creating user: "+err);
+                return;
+            }
         }
         else{
             // compare access token from request with access token from database
             const dbAccessToken = existingUser.access_token;
             if (dbAccessToken !== user.access_token) {
                 //if access tokens don't match, check if access token belongs to claimed spotify user
-                const response = await getSpotifyUser(user.access_token);
-                if (!response || response.id === undefined || response.id !== user.id) {
+                const response:AxiosResponse|null = await getSpotifyUser(user.access_token);
+                if (!response || !response.data || response.data.id === undefined || response.data.id !== user.id) {
                     return;
                 }
                 //if access token belongs to claimed spotify user, update the access token in the database
@@ -156,14 +161,14 @@ const storeTrack = asyncHandler(async (req:Request,res:Response)=>{
 
     }
 
-    const finalResult = await storeTrackAndHistory(track,loggedInUserMadeRequest ? user : null, audioFeatures);
-    console.log("finalResult: "+finalResult);
+    const finalResult:boolean = await storeTrackAndHistory(track,loggedInUserMadeRequest ? user : null, audioFeatures);
+    console.log("was history updated? for user and track: ",user.id, track.id, finalResult);
     
 })
 
-const getSpotifyUser = async (accessToken:string) => {
+const getSpotifyUser = async (accessToken:string):Promise<AxiosResponse|null> => {
     try{
-        const response = await axios.get('https://api.spotify.com/v1/me', {
+        const response:AxiosResponse = await axios.get('https://api.spotify.com/v1/me', {
             headers: {
                 'Authorization': `Bearer ${accessToken}`
             }

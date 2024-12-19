@@ -16,8 +16,8 @@ const createPool = () => new Pool({
 
 let pool = createPool();
 
-const MAX_RETRIES = 5;
-const RETRY_DELAY = 5000;
+const MAX_RETRIES:number = 5;
+const RETRY_DELAY:number = 5000;
 
 export const testDatabaseQuery = async () => {
   const res = await pool.query('SELECT NOW()', (err, res) => {
@@ -29,7 +29,7 @@ export const testDatabaseQuery = async () => {
   });
 };
 
-export const checkUserExists = async (userId:string) => {
+export const checkUserExists = async (userId:string):Promise<User|null> => {
   try {
     const res = await pool.query('SELECT * FROM users WHERE id = $1', [userId]);
     return res.rows.length > 0 ? res.rows[0] : null;
@@ -39,7 +39,7 @@ export const checkUserExists = async (userId:string) => {
   }
 }
 
-export const createUser = async (userId:string, displayName:string, accessToken:string) => {
+export const createUser = async (userId:string, displayName:string, accessToken:string):Promise<boolean> => {
   try {
     const res = await pool.query('INSERT INTO users (id, username, access_token) VALUES ($1, $2, $3)', [userId, displayName, accessToken]);
     console.log("User created");
@@ -51,7 +51,7 @@ export const createUser = async (userId:string, displayName:string, accessToken:
   }
 }
 
-export const updateUserAccessToken = async (userId:string, accessToken:string) => {
+export const updateUserAccessToken = async (userId:string, accessToken:string):Promise<boolean> => {
   try {
     const res = await pool.query('UPDATE users SET access_token = $1 WHERE id = $2', [accessToken, userId]);
     console.log("User access token updated");
@@ -63,7 +63,7 @@ export const updateUserAccessToken = async (userId:string, accessToken:string) =
   }
 }
 
-export const storeTrackAndHistory = async (track:Track, user:User|null, audioFeatures:AudioFeatures) => {
+export const storeTrackAndHistory = async (track:Track, user:User|null, audioFeatures:AudioFeatures):Promise<boolean> => {
   try {
     //start transaction
     await pool.query('BEGIN');
@@ -135,7 +135,7 @@ export const storeTrackAndHistory = async (track:Track, user:User|null, audioFea
 
 const handleDatabaseError = async (err:Error) => {
   console.error('Database connection error', err);
-  let retries = 0;
+  let retries:number = 0;
 
   const attemptReconnect = async () => {
     if (retries >= MAX_RETRIES) {

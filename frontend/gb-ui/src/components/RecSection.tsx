@@ -338,7 +338,7 @@ export default function RecSection(){
             <li className={` flex-[2_2_0%] flex justify-center `}>
               <button onClick={()=>setIsSelectingOptions(true)}  
                 className={isSelectingOptions ? " bg-green-600 text-center w-full " : "text-center w-full hover:bg-green-700"}>
-                Options
+                  Preferences
               </button>
             </li>
             
