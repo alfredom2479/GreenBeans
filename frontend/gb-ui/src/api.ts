@@ -99,6 +99,7 @@ export async function requestMySpotifyAccount(accessToken:string){
       "https://api.spotify.com/v1/me",
       accessToken,
       RequestMethods.Get);
+    console.log(data);
     return data;
 }
 
@@ -158,7 +159,7 @@ export async function saveSpotifyTrack( trackId:string) :Promise<Response|null>{
     false
   );
 
-  console.log(data);
+  //console.log(data);
   return data;
 
 }
@@ -198,7 +199,7 @@ export async function requestSpotifyRec(
   audioFeatureSettings:AudioFeatureSettings,
   isLoggedIn: boolean
 ){
-
+  console.log("audioFeatureSettings",audioFeatureSettings);
   let queryOptionSuffix:string = trackId;
 
   for(let i =0; i < audioFeatureNames.length; i++ ){
@@ -211,66 +212,67 @@ export async function requestSpotifyRec(
     const featureValue: number | undefined |string = audioFeatures[name] ;
     if(featureValue === undefined || typeof featureValue === 'string') continue;
     
-    let upperLimit: number = featureValue;
-    let lowerLimit: number = featureValue;
+    //let upperLimit: number = featureValue;
+    //let lowerLimit: number = featureValue;
     let targetValue: number = featureValue;
 
     switch(audioFeatureNames[i]){
       case 'acousticness':
-        upperLimit = audioFeatureSettings.acousticness.max;
-        lowerLimit = audioFeatureSettings.acousticness.min;
-        targetValue = (audioFeatureSettings.acousticness.max + audioFeatureSettings.acousticness.min) / 2;
+        //upperLimit = audioFeatureSettings.acousticness.max;
+        //lowerLimit = audioFeatureSettings.acousticness.min;
+        targetValue = audioFeatureSettings.acousticness;
         break;
       case 'danceability':
-        upperLimit = audioFeatureSettings.danceability.max;
-        lowerLimit = audioFeatureSettings.danceability.min;
-        targetValue = (audioFeatureSettings.danceability.max + audioFeatureSettings.danceability.min) / 2;
+        //upperLimit = audioFeatureSettings.danceability.max;
+        //lowerLimit = audioFeatureSettings.danceability.min;
+        targetValue = audioFeatureSettings.danceability;
         break;
       case 'energy':
-        upperLimit = audioFeatureSettings.energy.max;
-        lowerLimit = audioFeatureSettings.energy.min;
-        targetValue = (audioFeatureSettings.energy.max + audioFeatureSettings.energy.min) / 2;
+        //upperLimit = audioFeatureSettings.energy.max;
+        //lowerLimit = audioFeatureSettings.energy.min;
+        targetValue = audioFeatureSettings.energy;
         break;
       case 'valence':
-        upperLimit = audioFeatureSettings.valence.max;
-        lowerLimit = audioFeatureSettings.valence.min;
-        targetValue = (audioFeatureSettings.valence.max + audioFeatureSettings.valence.min) / 2;
+        //upperLimit = audioFeatureSettings.valence.max;
+        //lowerLimit = audioFeatureSettings.valence.min;
+        targetValue = audioFeatureSettings.valence;
         break;
       case 'tempo':
-        upperLimit = audioFeatureSettings.tempo.max;
-        lowerLimit = audioFeatureSettings.tempo.min;
-        targetValue = (audioFeatureSettings.tempo.max + audioFeatureSettings.tempo.min) / 2;
+        //upperLimit = audioFeatureSettings.tempo.max;
+        //lowerLimit = audioFeatureSettings.tempo.min;
+        targetValue = audioFeatureSettings.tempo;
         break;
       case 'duration_ms':
-        upperLimit = audioFeatureSettings.duration_ms.max*1000;
-        lowerLimit = audioFeatureSettings.duration_ms.min*1000;
-        targetValue = (audioFeatureSettings.duration_ms.max*1000 + audioFeatureSettings.duration_ms.min*1000) / 2;
+        //upperLimit = audioFeatureSettings.duration_ms.max*1000;
+        //lowerLimit = audioFeatureSettings.duration_ms.min*1000;
+        targetValue = audioFeatureSettings.duration_ms*1000;
         break;
       case 'key':
-        upperLimit=audioFeatureSettings.key;
-        lowerLimit=audioFeatureSettings.key;
+        //upperLimit=audioFeatureSettings.key;
+        //lowerLimit=audioFeatureSettings.key;
         targetValue=audioFeatureSettings.key;
         break;
       case 'mode':
-        upperLimit = audioFeatureSettings.mode === true ? 1 : 0;
-        lowerLimit = audioFeatureSettings.mode === true ? 1 : 0;
+        //upperLimit = audioFeatureSettings.mode === true ? 1 : 0;
+        //lowerLimit = audioFeatureSettings.mode === true ? 1 : 0;
         targetValue = audioFeatureSettings.mode === true ? 1 : 0;
         break;
       
       default:
-        upperLimit = +(featureValue + .15).toFixed(4);
-        lowerLimit = +(featureValue - .15).toFixed(4);
-        if(upperLimit > 1){
-          upperLimit =1;
-        }
-        if(lowerLimit < 0){
-          lowerLimit=0;
-        }
+        targetValue = featureValue;
+        //upperLimit = +(featureValue + .15).toFixed(4);
+        //lowerLimit = +(featureValue - .15).toFixed(4);
+        //if(upperLimit > 1){
+        //  upperLimit =1;
+        //}
+        //if(lowerLimit < 0){
+        //  lowerLimit=0;
+        //}
     }
     
-      queryOptionSuffix+= name === "duration_ms" ? `` : `&target_${name}=${targetValue}`
-      queryOptionSuffix+=`&min_${name}=${ lowerLimit }`
-      queryOptionSuffix+=`&max_${name}=${ upperLimit}`
+      queryOptionSuffix+=  `&target_${name}=${targetValue}`
+      //queryOptionSuffix+=`&min_${name}=${ lowerLimit }`
+      //queryOptionSuffix+=`&max_${name}=${ upperLimit}`
       
   }
 
@@ -356,6 +358,66 @@ export async function requestSaveStatus (accessToken:string|null,tracks: ITrack[
       RequestMethods.Get
     );
     return data;
+}
+
+export async function sendTrackSeenRequest(track:ITrack,audioFeatures:AudioFeatures){
+
+  let isLoggedIn:boolean = true;
+
+  const accessToken:string|null = localStorage.getItem("access_token");
+  const displayName:string|null = localStorage.getItem("greenbeans_user");
+  const userId:string|null = localStorage.getItem("greenbeans_user_id");
+
+  if(accessToken === null || accessToken === undefined || accessToken === ""){
+    isLoggedIn = false;
+  }
+  else if(displayName === null || displayName === undefined || displayName === ""){
+    isLoggedIn = false;
+  }
+  else if(userId === null || userId === undefined || userId === ""){
+    isLoggedIn = false;
+  }
+
+  let payload = null;
+
+  if(isLoggedIn === false){
+    payload = {
+      track:track,
+      audioFeatures:audioFeatures,
+    }
+  }
+  else{
+    payload = {
+      user:{id:userId,displayName:displayName, access_token:accessToken},
+      track:track,
+      audioFeatures:audioFeatures,
+    }
+  }
+
+  try{
+    const res = await fetch('/api/history/trackseen',{
+      method: RequestMethods.Post,
+      headers: {
+        'Authorization':  'Bearer '+ accessToken,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    })
+    if(!res.ok){
+      //throw new Response("Request failed",{status:res.status})
+      console.log("history request failed",{status:res.status})
+    }
+    try{
+      console.log(await res.json());
+    }catch(err){
+      console.log("history returned non json",{status:500})
+      console.log(res);
+    }
+  }catch(err){
+    //throw new Response("Request failed",{status:500})
+    console.log("history request failed",{status:500})
+  }
+
 }
 
 async function sendRequest(endpoint:string, accessToken:string,requestMethod:RequestMethods,expectsJson:boolean=true){

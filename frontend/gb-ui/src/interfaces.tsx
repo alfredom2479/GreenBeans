@@ -10,7 +10,7 @@ export interface ITrack{
   id: string,
   name: string,
   artist: string,
-  image: string
+  image: string[]
   url?: string,
   spotify_url?:string,
   trackSaveState: TrackSaveState
@@ -47,33 +47,15 @@ export const audioFeatureNames: (keyof AudioFeatures)[] = [
   ]
 
 export interface AudioFeatureSettings  {
-  //useId?: boolean,
-  acousticness: {
-    min: number,
-    max: number
-  },
-  danceability: {
-    min: number,
-    max: number
-  },
-  energy: {
-    min: number,
-    max: number
-  },
-  valence: {
-    min: number,
-    max: number
-  },
-  tempo: {
-    min:number,
-    max:number
-  },
+  id: string,
+  acousticness: number,
+  danceability: number,
+  energy: number,
+  valence: number,
+  tempo: number,
   key: number,
   mode: boolean,
-  duration_ms: {
-    min:number,
-    max:number
-  }
+  duration_ms: number
 }
 
 
@@ -85,7 +67,7 @@ export function useHandleListenOnClick(){
   return useOutletContext<ListenOnClickContextType>();
 }
 
-export function useAudioFeatures(){
+export function useTrackAndAudioFeatures(){
   return useOutletContext<{currAudioFeatures:AudioFeatures, trackData:ITrack}>();
 }
 

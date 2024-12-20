@@ -1,6 +1,6 @@
 import {useState, useEffect } from "react";
 import { Outlet, useLoaderData} from "react-router-dom";
-import { requestSpotifyTrack,requestSpotifyTrackAudioFeatures } from "../api";
+import { requestSpotifyTrack,requestSpotifyTrackAudioFeatures,sendTrackSeenRequest } from "../api";
 import type {Params} from "react-router-dom";
 import { ITrack, AudioFeatures, TrackSaveState,  } from "../interfaces";
 import { isAudioFeatures, isITrackObject, isTrack } from "../utils";
@@ -78,7 +78,8 @@ export async function loader({params}:IURLParams){
     trackLoaderData,
     audioFeatureLoaderData, 
     usingIDBTrackData,
-    usingIDBFeatureData};
+    usingIDBFeatureData
+  };
   
 }
 
@@ -88,11 +89,12 @@ export default function TrackPage(){
 
   const loaderData = useLoaderData();
 
-  const [trackData, setTrackData] = useState<ITrack>({id:"",name: "", artist: "", image:"",trackSaveState:TrackSaveState.CantSave});
+  const [trackData, setTrackData] = useState<ITrack>({id:"",name: "", artist: "", image:[],trackSaveState:TrackSaveState.CantSave});
   const [currAudioFeatures,setCurrAudioFeatures] = useState<AudioFeatures>({id:""});
 
     
   useEffect(()=>{
+
 
     let trackLoaderData: object|null = {};
     let audioFeatureLoaderData: object|null = {};
@@ -149,10 +151,11 @@ export default function TrackPage(){
         possibleTrack = isITrackObject(trackLoaderData);
       }
       else{
-        possibleTrack = isTrack(trackLoaderData,1);
+        possibleTrack = isTrack(trackLoaderData);
       }
 
       //some golang influence lol
+
       
       if(possibleTrack != null){
         setTrackData(possibleTrack);
@@ -168,9 +171,15 @@ export default function TrackPage(){
           if(!usingIDBFeatureData){
             addAudioFeaturesToDexie(possibleAudioFeatures);
           }
+          if(possibleTrack != null){
+            sendTrackSeenRequest(possibleTrack,possibleAudioFeatures);
+          }
         }
       }
+
     }
+    //console.log("currAudioFeatures",currAudioFeatures);
+    //console.log("trackData",loaderData);
     
   },[loaderData])
 
@@ -180,7 +189,7 @@ export default function TrackPage(){
 
           <div className=" shrink-0 flex items-center w-32 h-full">
             <a href={"https://open.spotify.com/track/"+trackData.id} target="_blank">
-            <img src={trackData.image} 
+            <img src={trackData.image[0]} 
               className="flex-1 h-32 w-32 object-cover ">
             </img>
             </a>

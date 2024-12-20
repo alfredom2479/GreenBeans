@@ -72,7 +72,7 @@ export default function SaveButton({trackInfo}:SaveButtonParams){
               console.log("error adding track to dexie ");
               console.log(err);
             }
-            sessionStorage.setItem("last_track_saved_time",""+Date.now());
+            sessionStorage.setItem("last_track_saved_time",Date.now().toString());
           }
         }catch(err){
           console.log("Error saving track");

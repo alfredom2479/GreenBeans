@@ -1,13 +1,13 @@
-import { AudioFeatures } from "../../interfaces";
+import { AudioFeatures, AudioFeatureSettings } from "../../interfaces";
 
 export default function OptionFeatureSettBox({
     featureName, 
-    audioFeatureSetting, 
+    audioFeatureSettings, 
     setAudioFeatureSetting
 }:{
     featureName:keyof AudioFeatures, 
-    audioFeatureSetting:number, 
-    setAudioFeatureSetting:React.Dispatch<React.SetStateAction<number>>
+    audioFeatureSettings:AudioFeatureSettings, 
+    setAudioFeatureSetting:React.Dispatch<React.SetStateAction<AudioFeatureSettings>>
 }){
 
     const options: [number, string][] =  
@@ -21,8 +21,11 @@ export default function OptionFeatureSettBox({
                         type="radio" 
                         id={`${featureName}-${option[0]}`}
                         name={featureName}
-                        checked={audioFeatureSetting === option[0]}
-                        onChange={() => setAudioFeatureSetting(option[0])}
+                        checked={audioFeatureSettings[featureName] === option[0]}
+                        onChange={() => setAudioFeatureSetting(prev => ({
+                            ...prev,
+                            [featureName]: option[0]
+                        }))}
                     />
                     <label className="text-2xl text-green-50" htmlFor={`${featureName}-${option[0]}`}> {option[1]}</label>
                 </div>

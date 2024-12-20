@@ -6,6 +6,7 @@ import type {Params} from "react-router-dom";
 import { ITrack, useHandleListenOnClick, TrackSaveState } from "../../interfaces";
 import {  parseListLoaderData, getTrackListFromDidb } from "../../utils";
 import { didb } from "../../dexiedb";
+import refreshSvg from "../../assets/refresh-ccw-svgrepo-com.svg";
 interface URLParams{params:Params}
 
 export async function loader({params}:URLParams){
@@ -66,8 +67,7 @@ export async function loader({params}:URLParams){
     if(data.items.length === 0 && pageNumber !== 0) return redirect("/saved/0");
       //addLastUpdatedTime(Stores.LastUpdated,Date.now(),id);
       try{
-        const res = await didb.last_updated.put(Date.now(),id);
-        console.log(res);
+        await didb.last_updated.put(Date.now(),id);
       }
       catch(err){
         console.log("error adding last updated time to dexie: "+id+" -> "+Date.now());
@@ -87,7 +87,7 @@ export default function SavedTrackList(){
   const listRef = useRef<HTMLDivElement | null>(null);
   const {handleListenOnClick} = useHandleListenOnClick();
   const {page} = useParams();
-  const prevNextDefaultStyle = "flex-1 items-center justify-center bg-stone-900 hover:text-green-600 text-green-200 text-xl font-bold p-1  text-center border-white border-2  hover:border-green-300"
+  const prevNextDefaultStyle = "flex-1 items-center justify-center bg-stone-900 hover:text-green-600 text-green-200 text-xl font-bold p-1  text-center border-stone-600 border-2  hover:border-green-300"
 
   const [displayPageNumber, setDisplayPageNumber] = useState(0);
 
@@ -109,6 +109,16 @@ export default function SavedTrackList(){
   return(
   <div className="flex flex-col h-full ">
     <div className="flex">
+        <div className="flex-1 text-center items-center justify-center text-green-200 text-3xl font-bold">{displayPageNumber+1}</div>
+        <button 
+          className="flex-[.5_.5_0%] flex justify-center items-center  p-1 border-stone-600 border-2 hover:border-green-300"
+          onClick={() => {
+            sessionStorage.setItem('last_track_saved_time', Date.now().toString());
+            window.location.reload();
+          }}
+        >
+          <img src={refreshSvg} alt="refresh" className="w-8"/>
+        </button>
         <NavLink 
           to={`/saved/${prevPageNumber}`}
           onClick={()=>{
@@ -125,7 +135,6 @@ export default function SavedTrackList(){
           ].join(" ")}
             >prev
         </NavLink>
-        <div className="flex-1 text-center items-center justify-center text-green-200 text-3xl font-bold">{displayPageNumber+1}</div>
         <NavLink 
           to={`/saved/${nextPageNumber}`}
           onClick={()=>{

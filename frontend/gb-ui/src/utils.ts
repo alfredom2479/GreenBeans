@@ -43,8 +43,7 @@ const addTracksToDidb = async (trackList:ITrack[],trackListId:string)=>{
     }
   }
   try{
-    const res = await didb.track_lists.put(idList,trackListId);
-    console.log(res);
+    await didb.track_lists.put(idList,trackListId);
   }
   catch(err){
     console.log("error adding track list to dexie ");
@@ -115,9 +114,9 @@ async function clearAllDexieTables() {
 }
 
 // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-const isTrack = (possibleTrack: any, size:number=0): ITrack|null=>{
+const isTrack = (possibleTrack: any ): ITrack|null=>{
 
-  const tempTrack:ITrack = {id: "", name:"",artist:"",image:"",trackSaveState:TrackSaveState.CantSave} ;
+  const tempTrack:ITrack = {id: "", name:"",artist:"",image:[],trackSaveState:TrackSaveState.CantSave} ;
 
   if(possibleTrack === null || possibleTrack === undefined){
     return null;
@@ -139,20 +138,15 @@ const isTrack = (possibleTrack: any, size:number=0): ITrack|null=>{
     return null;
   }
 
-  const maxImgSize:number = size === 1 ? 1000 :500;
+  //const maxImgSize:number = size === 1 ? 1000 :500;
   
   if(possibleTrack.album && possibleTrack.album.images &&
-    Array.isArray(possibleTrack.album.images) && possibleTrack.album.images.length > 0){
-      const albumImages = possibleTrack.album.images;
+    Array.isArray(possibleTrack.album.images) ){
 
-      let i = 0 
-      for(i = 0; i < albumImages.length; i++){
-        if(albumImages[i].height < maxImgSize){
-          break;
-        }
+      for(let i = 0; i < possibleTrack.album.images.length; i++){
+        tempTrack.image.push(possibleTrack.album.images[i].url);
       }
-      
-      tempTrack.image = albumImages[i].url; 
+
   }
 
   if(possibleTrack.preview_url){
@@ -174,7 +168,7 @@ const isITrackObject = (possibleITrack:any):ITrack|null=>{
     id: "", 
     name:"",
     artist:"",
-    image:"",
+    image:[],
     trackSaveState:TrackSaveState.CantSave
   };
 
@@ -201,7 +195,7 @@ const isITrackObject = (possibleITrack:any):ITrack|null=>{
       return null;
     }
 
-    if(possibleITrack.image && typeof possibleITrack.image === "string"){
+    if(possibleITrack.image && Array.isArray(possibleITrack.image) ){
       tempTrack.image = possibleITrack.image;
     }
     else{
@@ -287,16 +281,16 @@ const getAudioFeatureReadableData = (audioFeatures:AudioFeatures):Record<keyof A
   let tempoReadable:string = 'N/A';
 
   if(audioFeatures.acousticness !== undefined){
-    acousticnessReadable = (Math.round(audioFeatures.acousticness*1000)/10).toString()+ "%";
+    acousticnessReadable = (Math.round(audioFeatures.acousticness*100)).toString()+ "%";
   }
   if(audioFeatures.danceability !== undefined){
-    danceabilityReadable = (Math.round(audioFeatures.danceability*1000)/10).toString()+ "%";
+    danceabilityReadable = (Math.round(audioFeatures.danceability*100)).toString()+ "%";
   }
   if(audioFeatures.energy !== undefined){
-    energyReadable = (Math.round(audioFeatures.energy*1000)/10).toString()+ "%";
+    energyReadable = (Math.round(audioFeatures.energy*100)).toString()+ "%";
   }
   if(audioFeatures.valence !== undefined){
-    valenceReadable = (Math.round(audioFeatures.valence*1000)/10).toString()+ "%";
+    valenceReadable = (Math.round(audioFeatures.valence*100)).toString()+ "%";
   }
   if(audioFeatures.duration_ms !== undefined){
     durationReadable = formatSecondsToMinutesAndSeconds(audioFeatures.duration_ms/1000);

@@ -29,12 +29,13 @@ export async function action({params,request}:IURLParams){
   let audioFeatures:AudioFeatures = {id:""};
   let settings:string[] = [];
   let audioFeatureSettings:AudioFeatureSettings = {
-    acousticness: {min: 0, max: 1},
-    danceability: {min: 0, max: 1},
-    energy: {min: 0, max: 1},
-    valence: {min: 0, max: 1},
-    tempo: {min: 0, max: 200},
-    duration_ms: {min: 0, max: 600},
+    id: "",
+    acousticness: 0,
+    danceability: 0,
+    energy: 0,
+    valence: 0,
+    tempo: 0,
+    duration_ms: 0,
     key: 0,
     mode: false
   };
@@ -44,7 +45,7 @@ export async function action({params,request}:IURLParams){
   settings = requestJson.settings;
   audioFeatureSettings = requestJson.audioFeatureSettings;
 
-  console.log(audioFeatureSettings);
+  //console.log(audioFeatureSettings);
 
   const data = await requestSpotifyRec(
     access_token,
@@ -106,22 +107,26 @@ interface RecOptionsSectionProps{
   audioFeatures: AudioFeatures,
   setIsSelectingOptions: React.Dispatch<boolean>
   setIsLoadingRecs: React.Dispatch<boolean>,
-  acousticnessSettings: {min:number, max:number},
-  setAcousticnessSettings: React.Dispatch<React.SetStateAction<{min:number, max:number}>>,
-  danceabilitySettings: {min:number, max:number},
-  setDanceabilitySettings: React.Dispatch<React.SetStateAction<{min:number, max:number}>>,
-  energySettings: {min:number, max:number},
-  setEnergySettings: React.Dispatch<React.SetStateAction<{min:number, max:number}>>,
-  valenceSettings: {min:number, max:number},
-  setValenceSettings: React.Dispatch<React.SetStateAction<{min:number, max:number}>>,
-  tempoSettings: {min:number, max:number},
-  setTempoSettings: React.Dispatch<React.SetStateAction<{min:number, max:number}>>,
+  audioSettings: AudioFeatureSettings,
+  setAudioSettings: React.Dispatch<React.SetStateAction<AudioFeatureSettings>>,
+  /*
+  acousticnessSettings: number,
+  setAcousticnessSettings: React.Dispatch<React.SetStateAction<number>>,
+  danceabilitySettings: number,
+  setDanceabilitySettings: React.Dispatch<React.SetStateAction<number>>,
+  energySettings: number,
+  setEnergySettings: React.Dispatch<React.SetStateAction<number>>,
+  valenceSettings: number,
+  setValenceSettings: React.Dispatch<React.SetStateAction<number>>,
+  tempoSettings: number,
+  setTempoSettings: React.Dispatch<React.SetStateAction<number>>,
   keySettings: number,
   setKeySettings: React.Dispatch<React.SetStateAction<number>>,
   modeSettings: boolean,
   setModeSettings: React.Dispatch<React.SetStateAction<boolean>>,
-  durationSettings: {min:number, max:number},
-  setDurationSettings: React.Dispatch<React.SetStateAction<{min:number, max:number}>>,
+  durationSettings: number,
+  setDurationSettings: React.Dispatch<React.SetStateAction<number>>,
+  */
 }
 
 export default function RecOptionsSection({
@@ -130,6 +135,9 @@ export default function RecOptionsSection({
   audioFeatures, 
   setIsSelectingOptions, 
   setIsLoadingRecs,
+  audioSettings,
+  setAudioSettings,
+  /*
   acousticnessSettings,
   setAcousticnessSettings,
   danceabilitySettings,
@@ -146,13 +154,12 @@ export default function RecOptionsSection({
   setModeSettings,
   durationSettings,
   setDurationSettings,
+  */
 }:RecOptionsSectionProps){
 
   const submit = useSubmit();
 
  
-
-
   const audioFeatureNames: [keyof AudioFeatures, string][] = [
     ["valence", "Mood"],
     ["energy", "Energy"],
@@ -161,7 +168,7 @@ export default function RecOptionsSection({
     ["tempo", "Tempo"],
     ["key", "Key"],
     ["mode", "Mode"],
-    ["duration_ms", "Duration"]
+    //["duration_ms", "Duration"]
     //["time_signature", "Time Signature"],
     //["instrumentalness", "Instrumentalness"], instrumentalness only returns really low values
     //["liveness", "Played Live?"],
@@ -187,56 +194,57 @@ const featureNameToSettingsTypeMap: Record<keyof AudioFeatures, SettingsType> = 
 
 const audioFeatureReadableData = getAudioFeatureReadableData(audioFeatures);
 
-
+/*
 const getSettingsForFeature = (featureName: keyof AudioFeatures) => {
   switch(featureName) {
     case "acousticness":
       return {
-        audioFeatureSetting: acousticnessSettings,
-        setAudioFeatureSetting: setAcousticnessSettings
+        audioFeatureSetting: audioSettings.acousticness,
+        setAudioFeatureSetting: setAudioSettings
       };
     case "danceability":
       return {
-        audioFeatureSetting: danceabilitySettings,
-        setAudioFeatureSetting: setDanceabilitySettings
+        audioFeatureSetting: audioSettings.danceability,
+        setAudioFeatureSetting: setAudioSettings
       };
     case "energy":
       return {
-        audioFeatureSetting: energySettings,
-        setAudioFeatureSetting: setEnergySettings
+        audioFeatureSetting: audioSettings.energy,
+        setAudioFeatureSetting: setAudioSettings
       };
     case "valence":
       return {
-        audioFeatureSetting: valenceSettings,
-        setAudioFeatureSetting: setValenceSettings
+        audioFeatureSetting: audioSettings.valence,
+        setAudioFeatureSetting: setAudioSettings
       };
     case "tempo":
       return {
-        audioFeatureSetting: tempoSettings,
-        setAudioFeatureSetting: setTempoSettings
+        audioFeatureSetting: audioSettings.tempo,
+        setAudioFeatureSetting: setAudioSettings
       };
     case "key":
       return {
-        audioFeatureSetting: keySettings,
-        setAudioFeatureSetting: setKeySettings
+        audioFeatureSetting: audioSettings.key,
+        setAudioFeatureSetting: setAudioSettings
       };
     case "mode":
       return {
-        audioFeatureSetting: modeSettings,
-        setAudioFeatureSetting: setModeSettings
+        audioFeatureSetting: audioSettings.mode,
+        setAudioFeatureSetting: setAudioSettings
       };
     case "duration_ms":
       return {
-        audioFeatureSetting: durationSettings,
-        setAudioFeatureSetting: setDurationSettings
+        audioFeatureSetting: audioSettings.duration_ms,
+        setAudioFeatureSetting: setAudioSettings
       };
     default:
       return {
-          audioFeatureSetting: {min: 0, max: 1},
+          audioFeatureSetting: 0,
           setAudioFeatureSetting: () => {}
         };
     }
   }
+  */
 
   
   const isSettingPicked = (setting:string)=>{
@@ -256,6 +264,9 @@ const getSettingsForFeature = (featureName: keyof AudioFeatures) => {
 
     setCheckedBoxes(newSettings)
   }
+  //console.log(audioSettings);
+
+    //console.log(getSettingsForFeature("acousticness"));
   
   return(
     <>
@@ -281,21 +292,22 @@ const getSettingsForFeature = (featureName: keyof AudioFeatures) => {
             ((featureNameToSettingsTypeMap[feature[0]] === SettingsType.PERCENTAGE_MIN_MAX &&
               <FeatureSettingsBox 
                 featureName={feature[0]} 
-                audioFeatureSetting={getSettingsForFeature(feature[0]).audioFeatureSetting as {min: number, max: number}}
-                setAudioFeatureSetting={getSettingsForFeature(feature[0]).setAudioFeatureSetting as React.Dispatch<React.SetStateAction<{min: number, max: number}>>}
+                audioFeatureSettings={audioSettings}
+                setAudioFeatureSetting={setAudioSettings}
               />
             ) ||
             (featureNameToSettingsTypeMap[feature[0]] === SettingsType.BOOL &&
               <BoolFeatureSettingsBox
                 featureName={feature[0]}
-                audioFeatureSetting={getSettingsForFeature(feature[0]).audioFeatureSetting as boolean}
-                setAudioFeatureSetting={getSettingsForFeature(feature[0]).setAudioFeatureSetting as React.Dispatch<React.SetStateAction<boolean>>}/>
+                audioFeatureSettings={audioSettings}
+                setAudioFeatureSetting={setAudioSettings}
+              />
             ) ||
             (featureNameToSettingsTypeMap[feature[0]] === SettingsType.OPTIONS &&
               <OptionFeatureSettBox
                 featureName={feature[0]}
-                audioFeatureSetting={getSettingsForFeature(feature[0]).audioFeatureSetting as number}
-                setAudioFeatureSetting={getSettingsForFeature(feature[0]).setAudioFeatureSetting as React.Dispatch<React.SetStateAction<number>>}/>
+                audioFeatureSettings={audioSettings}
+                setAudioFeatureSetting={setAudioSettings}/>
             ))}
             <br/>
           </div>
@@ -308,25 +320,25 @@ const getSettingsForFeature = (featureName: keyof AudioFeatures) => {
     </div>
       <div className="flex flex-col items-center">
       <button 
-        disabled={acousticnessSettings.min >= acousticnessSettings.max ||
-          danceabilitySettings.min >= danceabilitySettings.max ||
-          energySettings.min >= energySettings.max ||
-          valenceSettings.min >= valenceSettings.max ||
-          tempoSettings.min >= tempoSettings.max ||
-          durationSettings.min >= durationSettings.max}
+        disabled={audioSettings.acousticness > 1 ||
+          audioSettings.danceability > 1 ||
+          audioSettings.energy > 1 ||
+          audioSettings.valence > 1 ||
+          audioSettings.tempo > 200 ||
+          audioSettings.duration_ms > 600000}
         onClick={()=>{
           const submissionJSON = JSON.stringify(
             {settings:checkedBoxes,
               audioFeatures,
               audioFeatureSettings: {
-                acousticness: acousticnessSettings,
-                danceability: danceabilitySettings,
-                energy: energySettings,
-                valence: valenceSettings,
-                tempo: tempoSettings,
-                key: keySettings,
-                mode: modeSettings,
-                duration_ms: durationSettings,
+                acousticness: audioSettings.acousticness,
+                danceability: audioSettings.danceability,
+                energy: audioSettings.energy,
+                valence: audioSettings.valence,
+                tempo: audioSettings.tempo,
+                key: audioSettings.key,
+                mode: audioSettings.mode,
+                duration_ms: audioSettings.duration_ms,
               } as AudioFeatureSettings
             });
           submit(

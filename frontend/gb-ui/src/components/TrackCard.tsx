@@ -30,7 +30,7 @@ export default function TrackCard({track,popModal=handleDefaultModalError,hideSa
   return(
     <div className="flex bg-stone-800 my-1 rounded-xl h-14 ">
         <a className=" h-14 w-14 shrink-0" target="_blank" href={"https://open.spotify.com/track/"+track.id}>
-          <img className="bg-fill" src={track.image} />
+          <img className="bg-fill" src={track.image.length >1 ? track.image[1] : track.image[0]} />
         </a>
 
         <div className="flex basis-7/12 flex-col shrink-1 grow-1 pl-2 overflow-hidden">
@@ -42,7 +42,7 @@ export default function TrackCard({track,popModal=handleDefaultModalError,hideSa
 
           {track.url!==null && track.url !==undefined ?
             <button
-              onClick={()=>popModal({name:track.name,artist: track.artist,url: track.url?track.url :"",image:track.image?track.image:""})}
+              onClick={()=>popModal({name:track.name,artist: track.artist,url: track.url?track.url :"", image:track.image[0]})}
               className={defaultTrackCardOptionString}
             >
               <img src={listenSvg} alt="listen" className="w-8"/>
