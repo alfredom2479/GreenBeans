@@ -72,7 +72,8 @@ export default function RecSection(){
       tempo: currAudioFeatures.tempo || 0,
       key: currAudioFeatures.key || 0,
       mode: currAudioFeatures.mode === 0 ? false: true,
-      duration_ms: currAudioFeatures.duration_ms || 0
+      duration_ms: currAudioFeatures.duration_ms || 0,
+      popularity: 50
     }
   );
   //console.log("currAudioFeatures",currAudioFeatures);
@@ -134,17 +135,18 @@ export default function RecSection(){
           acousticness: currAudioFeatures.acousticness || 0,
           danceability: currAudioFeatures.danceability || 0,
           energy: currAudioFeatures.energy || 0,
-        valence: currAudioFeatures.valence || 0,
-        tempo: currAudioFeatures.tempo || 0,
-        key: currAudioFeatures.key || 0,
-        mode: currAudioFeatures.mode === 0 ? false: true,
-          duration_ms: currAudioFeatures.duration_ms ? currAudioFeatures.duration_ms : 0
+          valence: currAudioFeatures.valence || 0,
+          tempo: currAudioFeatures.tempo || 0,
+          key: currAudioFeatures.key || 0,
+          mode: currAudioFeatures.mode === 0 ? false: true,
+          duration_ms: currAudioFeatures.duration_ms ? currAudioFeatures.duration_ms : 0,
+          popularity: 50 
         }
       );
     }
 
-    console.log("currAudioFeatures",currAudioFeatures);
-    console.log("audioSettings",audioSettings);
+    //console.log("currAudioFeatures",currAudioFeatures);
+    //console.log("audioSettings",audioSettings);
   },[currAudioFeatures])
 
   
@@ -163,43 +165,15 @@ export default function RecSection(){
           tempo: currAudioFeatures.tempo || 0,
           key: currAudioFeatures.key || 0,
           mode: currAudioFeatures.mode === 0 ? false: true,
-          duration_ms: currAudioFeatures.duration_ms || 0
+          duration_ms: currAudioFeatures.duration_ms || 0,
+          popularity: 50 
         }
       )
     }
-    /*
-    setAudioSettings(
-      {
-        id: currAudioFeatures.id,
-        acousticness: currAudioFeatures.acousticness || 0,
-        danceability: currAudioFeatures.danceability || 0,
-        energy: currAudioFeatures.energy || 0,
-        valence: currAudioFeatures.valence || 0,
-        tempo: currAudioFeatures.tempo || 0,
-        key: currAudioFeatures.key || 0,
-        mode: currAudioFeatures.mode === 0 ? false: true,
-        duration_ms: currAudioFeatures.duration_ms || 0
-      }
-    );
-    */
-    /*
-    setAcousticnessSettings(currAudioFeatures.acousticness || 0);
-    setDanceabilitySettings(currAudioFeatures.danceability || 0);
-    setEnergySettings(currAudioFeatures.energy || 0);
-    setValenceSettings(currAudioFeatures.valence || 0);
-    setTempoSettings(currAudioFeatures.tempo || 0);
-    setKeySettings(currAudioFeatures.key || 0);
-    setModeSettings(currAudioFeatures.mode === 0 ? false: true);
-    setDurationSettings(currAudioFeatures.duration_ms ? currAudioFeatures.duration_ms/1000 : 0);
-    setIsSelectingOptions(false);
-    */
-
-    //console.log(currAudioFeatures);
-    //console.log(audioSettings);
 
 
     const getAndSetDefaultRecs = async (token:string,id:string,isLoggedIn:boolean)=>{
-      console.log(" in getAndSetDefaultRecs");
+      //console.log(" in getAndSetDefaultRecs");
       if(!ignore){
         setIsLoadingRecs(true);
       }
@@ -236,7 +210,8 @@ export default function RecSection(){
           energy: 0,
           valence: 0,
           tempo: 0,
-          duration_ms: 0
+          duration_ms: 0,
+          popularity: .50 
         },
         isLoggedIn);
 
@@ -353,24 +328,6 @@ export default function RecSection(){
               setIsLoadingRecs={setIsLoadingRecs}
               audioSettings={audioSettings}
               setAudioSettings={setAudioSettings}
-              /*
-              acousticnessSettings={acousticnessSettings}
-              setAcousticnessSettings={setAcousticnessSettings}
-              danceabilitySettings={danceabilitySettings}
-              setDanceabilitySettings={setDanceabilitySettings}
-              energySettings={energySettings}
-              setEnergySettings={setEnergySettings}
-              valenceSettings={valenceSettings}
-              setValenceSettings={setValenceSettings}
-              tempoSettings={tempoSettings}
-              setTempoSettings={setTempoSettings}
-              keySettings={keySettings}
-              setKeySettings={setKeySettings}
-              modeSettings={modeSettings}
-              setModeSettings={setModeSettings}
-              durationSettings={durationSettings}
-              setDurationSettings={setDurationSettings}
-              */
             />
           :
               <RecList

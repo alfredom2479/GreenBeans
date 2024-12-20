@@ -55,7 +55,8 @@ export interface AudioFeatureSettings  {
   tempo: number,
   key: number,
   mode: boolean,
-  duration_ms: number
+  duration_ms: number,
+  popularity: number
 }
 
 

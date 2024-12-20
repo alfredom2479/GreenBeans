@@ -37,7 +37,8 @@ export async function action({params,request}:IURLParams){
     tempo: 0,
     duration_ms: 0,
     key: 0,
-    mode: false
+    mode: false,
+    popularity: 50
   };
 
   const requestJson = await request.json();
@@ -94,7 +95,7 @@ export async function action({params,request}:IURLParams){
         }
       }
     }
-    console.log(tempTrackList);
+    //console.log(tempTrackList);
     return tempTrackList;
   }
 
@@ -109,24 +110,6 @@ interface RecOptionsSectionProps{
   setIsLoadingRecs: React.Dispatch<boolean>,
   audioSettings: AudioFeatureSettings,
   setAudioSettings: React.Dispatch<React.SetStateAction<AudioFeatureSettings>>,
-  /*
-  acousticnessSettings: number,
-  setAcousticnessSettings: React.Dispatch<React.SetStateAction<number>>,
-  danceabilitySettings: number,
-  setDanceabilitySettings: React.Dispatch<React.SetStateAction<number>>,
-  energySettings: number,
-  setEnergySettings: React.Dispatch<React.SetStateAction<number>>,
-  valenceSettings: number,
-  setValenceSettings: React.Dispatch<React.SetStateAction<number>>,
-  tempoSettings: number,
-  setTempoSettings: React.Dispatch<React.SetStateAction<number>>,
-  keySettings: number,
-  setKeySettings: React.Dispatch<React.SetStateAction<number>>,
-  modeSettings: boolean,
-  setModeSettings: React.Dispatch<React.SetStateAction<boolean>>,
-  durationSettings: number,
-  setDurationSettings: React.Dispatch<React.SetStateAction<number>>,
-  */
 }
 
 export default function RecOptionsSection({
@@ -137,24 +120,7 @@ export default function RecOptionsSection({
   setIsLoadingRecs,
   audioSettings,
   setAudioSettings,
-  /*
-  acousticnessSettings,
-  setAcousticnessSettings,
-  danceabilitySettings,
-  setDanceabilitySettings,
-  energySettings,
-  setEnergySettings,
-  valenceSettings,
-  setValenceSettings,
-  tempoSettings,
-  setTempoSettings,
-  keySettings,
-  setKeySettings,
-  modeSettings,
-  setModeSettings,
-  durationSettings,
-  setDurationSettings,
-  */
+  
 }:RecOptionsSectionProps){
 
   const submit = useSubmit();
@@ -168,10 +134,6 @@ export default function RecOptionsSection({
     ["tempo", "Tempo"],
     ["key", "Key"],
     ["mode", "Mode"],
-    //["duration_ms", "Duration"]
-    //["time_signature", "Time Signature"],
-    //["instrumentalness", "Instrumentalness"], instrumentalness only returns really low values
-    //["liveness", "Played Live?"],
   ]
 
   enum SettingsType{
@@ -194,58 +156,6 @@ const featureNameToSettingsTypeMap: Record<keyof AudioFeatures, SettingsType> = 
 
 const audioFeatureReadableData = getAudioFeatureReadableData(audioFeatures);
 
-/*
-const getSettingsForFeature = (featureName: keyof AudioFeatures) => {
-  switch(featureName) {
-    case "acousticness":
-      return {
-        audioFeatureSetting: audioSettings.acousticness,
-        setAudioFeatureSetting: setAudioSettings
-      };
-    case "danceability":
-      return {
-        audioFeatureSetting: audioSettings.danceability,
-        setAudioFeatureSetting: setAudioSettings
-      };
-    case "energy":
-      return {
-        audioFeatureSetting: audioSettings.energy,
-        setAudioFeatureSetting: setAudioSettings
-      };
-    case "valence":
-      return {
-        audioFeatureSetting: audioSettings.valence,
-        setAudioFeatureSetting: setAudioSettings
-      };
-    case "tempo":
-      return {
-        audioFeatureSetting: audioSettings.tempo,
-        setAudioFeatureSetting: setAudioSettings
-      };
-    case "key":
-      return {
-        audioFeatureSetting: audioSettings.key,
-        setAudioFeatureSetting: setAudioSettings
-      };
-    case "mode":
-      return {
-        audioFeatureSetting: audioSettings.mode,
-        setAudioFeatureSetting: setAudioSettings
-      };
-    case "duration_ms":
-      return {
-        audioFeatureSetting: audioSettings.duration_ms,
-        setAudioFeatureSetting: setAudioSettings
-      };
-    default:
-      return {
-          audioFeatureSetting: 0,
-          setAudioFeatureSetting: () => {}
-        };
-    }
-  }
-  */
-
   
   const isSettingPicked = (setting:string)=>{
     return checkedBoxes.includes(setting)
@@ -262,11 +172,10 @@ const getSettingsForFeature = (featureName: keyof AudioFeatures) => {
       newSettings.push(setting)
     }
 
+    //console.log(newSettings)
     setCheckedBoxes(newSettings)
   }
-  //console.log(audioSettings);
 
-    //console.log(getSettingsForFeature("acousticness"));
   
   return(
     <>
@@ -313,6 +222,25 @@ const getSettingsForFeature = (featureName: keyof AudioFeatures) => {
           </div>
         )
       })}
+      <div key="popularity" className="m-2">
+        <input 
+          onClick={()=>handleToggleSettingBox("popularity")} 
+          defaultChecked={isSettingPicked("popularity")} 
+          name="popularity" 
+          id="popularity" 
+          type="checkbox">
+        </input>
+        <label className="text-2xl text-green-50 pl-2" htmlFor="popularity"> 
+          Use Popularity 
+        </label>
+        {checkedBoxes.includes("popularity") && 
+          <FeatureSettingsBox 
+            featureName="popularity" 
+            audioFeatureSettings={audioSettings}
+            setAudioFeatureSetting={setAudioSettings}
+          />
+        }
+      </div>
       
       </div>
       </div>
@@ -339,6 +267,7 @@ const getSettingsForFeature = (featureName: keyof AudioFeatures) => {
                 key: audioSettings.key,
                 mode: audioSettings.mode,
                 duration_ms: audioSettings.duration_ms,
+                popularity: audioSettings.popularity
               } as AudioFeatureSettings
             });
           submit(

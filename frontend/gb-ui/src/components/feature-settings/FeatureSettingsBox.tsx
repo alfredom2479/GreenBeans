@@ -1,12 +1,12 @@
 import { AudioFeatures, AudioFeatureSettings } from "../../interfaces";
-import { formatSecondsToMinutesAndSeconds } from "../../utils";
+//import { formatSecondsToMinutesAndSeconds } from "../../utils";
 
 export default function FeatureSettingsBox({
   featureName, 
   audioFeatureSettings, 
   setAudioFeatureSetting,
 }:{
-  featureName:keyof AudioFeatures, 
+  featureName:keyof AudioFeatures | "popularity", 
   audioFeatureSettings:AudioFeatureSettings, 
   setAudioFeatureSetting:React.Dispatch<React.SetStateAction<AudioFeatureSettings>>,
 }){
@@ -15,12 +15,14 @@ export default function FeatureSettingsBox({
     if(featureName === "tempo"){
       return Math.round(value).toString() + "bpm";
     }
-    return featureName === "duration_ms" ? formatSecondsToMinutesAndSeconds(value/1000) 
-      : (Math.round(value * 100)).toString() + "%";
+    if(featureName === "popularity"){
+      return value.toString() + "%";
+    }
+    return (Math.round(value * 100)).toString() + "%";
   }
 
-  const step = featureName === "tempo" || featureName === "duration_ms" ? 1 : 0.01;
-  const max = featureName === "tempo" ? 200 : featureName === "duration_ms" ? 600000 : 1;
+  const step = featureName === "tempo" || featureName === "popularity" ? 1 : 0.01;
+  const max = featureName === "tempo" ? 200 : featureName === "popularity" ? 100 : 1;
 
 
   function handleValueChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -48,23 +50,10 @@ export default function FeatureSettingsBox({
               onChange={(e) => handleValueChange(e)} />
           </div>
 
-{/*
-          <div className="flex flex-1 flex-col">
-            <label htmlFor={`${featureName}-max`} className=" text-white">Max: {formatDisplayValue(audioFeatureSetting.max)}</label>
-            <input type="range" min="0" max={max} step={step} 
-              className="w-full h-2 appearance-none cursor-pointer rounded-lg bg-gray-700" 
-              id={`${featureName}-max`} 
-              value={audioFeatureSetting.max} 
-              onChange={(e) => handleValueChange(e, false)} />
-          </div>
-          */}
           </div>
 
-          {/*
-          {audioFeatureSetting.min >= audioFeatureSetting.max && <p className="flex text-red-500">Minimum value must be less than maximum value</p>}
-          */}
         </div>
       
     </div>
   )
-  }
+}
