@@ -54,8 +54,8 @@ export const createUser = async (userId:string, displayName:string, accessToken:
 export const updateUserAccessToken = async (userId:string, accessToken:string):Promise<boolean> => {
   try {
     const res = await pool.query('UPDATE users SET access_token = $1 WHERE id = $2', [accessToken, userId]);
-    console.log("User access token updated");
-    console.log(res);
+    //console.log("User access token updated");
+    //console.log(res);
     return true;
   } catch (err) {
     console.error('Error executing query', err);
@@ -120,7 +120,7 @@ export const storeTrackAndHistory = async (track:Track, user:User|null, audioFea
     //commit transaction
     await pool.query('COMMIT');
 
-    console.log("Track stored");
+    //console.log("Track stored");
     return true;
   } catch (err) {
     try{
