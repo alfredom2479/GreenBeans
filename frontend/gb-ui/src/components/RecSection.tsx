@@ -59,8 +59,6 @@ export default function RecSection(){
   //const currAudioFeatures = useAudioFeatures().currAudioFeatures;
   //const trackData = useAudioFeatures().trackData;
 
-  //console.log(useAudioFeatures());
-  //console.log("currAudioFeatures",currAudioFeatures);
 
   const [audioSettings,setAudioSettings] = useState<AudioFeatureSettings>(
     {
@@ -76,20 +74,6 @@ export default function RecSection(){
       popularity: 50
     }
   );
-  //console.log("currAudioFeatures",currAudioFeatures);
-  //console.log("audioSettings",audioSettings);
-
-  /*
-  const [acousticnessSettings, setAcousticnessSettings] = useState<number>(currAudioFeatures.acousticness || 0);
-  const [danceabilitySettings, setDanceabilitySettings] = useState<number>(currAudioFeatures.danceability || 0);
-  const [energySettings, setEnergySettings] = useState<number>(currAudioFeatures.energy || 0);
-  const [valenceSettings, setValenceSettings] = useState<number>(currAudioFeatures.valence || 0);
-  const [tempoSettings, setTempoSettings] = useState<number>(currAudioFeatures.tempo || 0);
-  const [keySettings, setKeySettings] = useState<number>(currAudioFeatures.key || 0);
-  const [modeSettings, setModeSettings] = useState<boolean>(currAudioFeatures.mode === 0 ? false: true);
-  const [durationSettings, setDurationSettings] = useState<number>(
-    currAudioFeatures.duration_ms ? currAudioFeatures.duration_ms/1000 : 0);
-    */
 
   
   useEffect(()=>{
@@ -299,7 +283,7 @@ export default function RecSection(){
             <li className="flex-1 flex justify-center bg-stone-100 border-1  border-stone-900">
               <button 
                 onClick={()=>handleListenOnClick({name:trackData.name,artist:trackData.artist,url:trackData.url?trackData.url:"",image:trackData.image?trackData.image[0]:""})}
-                disabled={trackData.url === null || trackData.url === undefined}
+                disabled={trackData.url === null || trackData.url === undefined || trackData.url === "" || trackData.url === " "}
                 className="bg-stone-200 w-full text-center flex items-center justify-center disabled:bg-stone-600 disabled:cursor-not-allowed hover:bg-green-700">
                 <img src={listenSvg} alt="listen" className="w-6"/>
               </button>
