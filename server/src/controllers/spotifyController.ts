@@ -85,7 +85,8 @@ const sendRequest = async (requestName: string, completeEndpoint:string, ) =>{
     if(status === 200){
       return data;
     }
-    throw Error("The returned status of first attempt was "+status);
+    return null;
+    //throw Error("The returned status of first attempt was "+status);
   }catch(err){
     await getNewSpotifyTokenPrivate();
 
@@ -97,7 +98,8 @@ const sendRequest = async (requestName: string, completeEndpoint:string, ) =>{
       if(status == 200){
         return data;
       }
-      throw Error("Returned status of second request attempt was "+status)
+      //throw Error("Returned status of second request attempt was "+status)
+      return null;
     }catch(err){
       console.log("Error making second request attempt to "+requestName+": "+err);
       return null;
