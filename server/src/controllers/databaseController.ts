@@ -60,8 +60,8 @@ const isTrack = (value: unknown): value is Track => {
         typeof value.name === 'string' &&
         'artist' in value &&
         typeof value.artist === 'string' &&
-        'url' in value &&
-        typeof value.url === 'string' &&
+        //'url' in value &&
+        //typeof value.url === 'string' &&
         'image' in value &&
         Array.isArray(value.image) &&
         value.image.every((image: string) => typeof image === 'string')
@@ -119,6 +119,11 @@ const storeTrack = asyncHandler(async (req:Request,res:Response)=>{
         console.error('Invalid track object received');
         return;
     }
+    //some valid tracks dont have preview urls
+    if(!track.url){
+        track.url = "";
+    }
+
     if(!isAudioFeatures(audioFeatures)){
         console.error('Invalid audio features object received');
         return;
