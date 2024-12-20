@@ -128,19 +128,21 @@ const storeTrack = asyncHandler(async (req:Request,res:Response)=>{
     if (loggedInUserMadeRequest){
         // Check if user exists in database
         const existingUser:User|null = await checkUserExists(user.id);
-
+        console.log("existingUser: ", existingUser);
         if (existingUser === null) {
             //check if user access token belongs toan actual spotify user
             try{
-                const response:AxiosResponse|null = await getSpotifyUser(user.access_token);
+                const response = await getSpotifyUser(user.access_token);
                 //check if spotify access token's user id matches the id of user object
-            if (!response || !response.data || response.data.id === undefined || response.data.id !== user.id) {
-                //if not, yurr done (someone is up to no good )
-                return;
-            }
+                if (!response || !response.id || response.id !== user.id) {
+                    //if not, yurr done (someone is up to no good )
+                    console.log("user access token does not belong to a spotify user");
+                    return;
+                }
             //if user ids match, add the user to the database
             const userWasCreated:boolean = await createUser(user.id, user.displayName, user.access_token);
             if(!userWasCreated){
+                console.log("user was not created");
                 return;
             }
             }catch(err){
@@ -174,13 +176,14 @@ const storeTrack = asyncHandler(async (req:Request,res:Response)=>{
     
 })
 
-const getSpotifyUser = async (accessToken:string):Promise<AxiosResponse|null> => {
+const getSpotifyUser = async (accessToken:string) => {
     try{
         const response:AxiosResponse = await axios.get('https://api.spotify.com/v1/me', {
             headers: {
                 'Authorization': `Bearer ${accessToken}`
             }
         });
+        //console.log("response: ", response.data);
         return response.data;
     }catch(err){
         console.log("Error getting spotify user: "+err);

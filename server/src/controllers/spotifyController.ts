@@ -76,7 +76,7 @@ const getSpotifyRecs = asyncHandler(async (req:Request,res:Response)=>{
 
 
 const sendRequest = async (requestName: string, completeEndpoint:string, ) =>{
-  console.log(requestName,completeEndpoint);
+  //console.log(requestName,completeEndpoint);
   try{
     const {data, status} = await axios.get(
       completeEndpoint,
