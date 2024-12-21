@@ -72,9 +72,7 @@ export async function action({params,request}:IURLParams){
     }
 
     if (!isLoggedIn){
-      for(let i=0; i < tempTrackList.length; i++){
-        tempTrackList[i].trackSaveState = TrackSaveState.CantSave;
-      }
+      tempTrackList.map(track => track.trackSaveState = TrackSaveState.CantSave);
     }
     else{
       const saveStatusData = await requestSaveStatus(access_token,tempTrackList);
