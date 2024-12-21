@@ -5,10 +5,12 @@ export default function FeatureSettingsBox({
   featureName, 
   audioFeatureSettings, 
   setAudioFeatureSetting,
+  featureSettingEnabled
 }:{
   featureName:keyof AudioFeatures | "popularity", 
   audioFeatureSettings:AudioFeatureSettings, 
   setAudioFeatureSetting:React.Dispatch<React.SetStateAction<AudioFeatureSettings>>,
+  featureSettingEnabled:boolean
 }){
 
   function formatDisplayValue(value:number):string{
@@ -39,12 +41,13 @@ export default function FeatureSettingsBox({
     <div className="p-4 w-full">
         <div className="flex flex-col gap-4">
          <div className="flex gap-4 max-w-2xl ">
-          <div className="flex flex-1 flex-col">
-            <label htmlFor={`${featureName}-preference`} className=" text-white"> 
+          <div className="flex flex-1 items-center">
+            <label htmlFor={`${featureName}-preference`} className=" text-white  lg:pr-6 flex-1 "> 
               {formatDisplayValue(audioFeatureSettings[featureName] as number)}
             </label>
             <input type="range" min="0" max={max} step={step} 
-              className="w-full h-2 appearance-none cursor-pointer rounded-lg bg-gray-700" 
+              className="w-full h-2 appearance-none cursor-pointer rounded-lg bg-gray-700 flex-[2_2_0%] disabled:bg-stone-800" 
+              disabled={!featureSettingEnabled}
               id={`${featureName}-preference`} 
               value={audioFeatureSettings[featureName] as number} 
               onChange={(e) => handleValueChange(e)} />

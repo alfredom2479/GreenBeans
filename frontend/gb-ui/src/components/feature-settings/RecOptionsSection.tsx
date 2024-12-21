@@ -186,23 +186,24 @@ const audioFeatureReadableData = getAudioFeatureReadableData(audioFeatures);
       {audioFeatureNames.map((feature)=>{
         //console.log(audioFeatures[feature[0]])
         return (
-          <div key={feature[0]} className="m-2">
+          <div key={feature[0]} className="flex m-2 lg:m-4 h-16 items-center">
             <input 
+              className="w-5 h-5 cursor-pointer accent-green-800 rounded-xl border-2 border-green-500 focus:ring-gray-500 focus:ring-2"
               onClick={()=>handleToggleSettingBox(feature[0])} 
               defaultChecked={isSettingPicked(feature[0])} 
               name={feature[0]} 
               id={feature[0]} 
               type="checkbox">
             </input>
-            <label className="text-2xl text-green-50 pl-2" htmlFor={feature[0]}> 
-              {feature[1]} : <b className="text-green-600">{audioFeatureReadableData[feature[0]]}</b>
+            <label className="text-lg w-56 h-16  lg:text-xl text-green-50 pl-2" htmlFor={feature[0]}> 
+              {feature[1]}  <br/> <b className="text-green-600">{audioFeatureReadableData[feature[0]]}</b>
             </label>
-            {checkedBoxes.includes(feature[0]) && 
-            ((featureNameToSettingsTypeMap[feature[0]] === SettingsType.PERCENTAGE_MIN_MAX &&
+            {((featureNameToSettingsTypeMap[feature[0]] === SettingsType.PERCENTAGE_MIN_MAX &&
               <FeatureSettingsBox 
                 featureName={feature[0]} 
                 audioFeatureSettings={audioSettings}
                 setAudioFeatureSetting={setAudioSettings}
+                featureSettingEnabled={checkedBoxes.includes(feature[0])}
               />
             ) ||
             (featureNameToSettingsTypeMap[feature[0]] === SettingsType.BOOL &&
@@ -210,34 +211,39 @@ const audioFeatureReadableData = getAudioFeatureReadableData(audioFeatures);
                 featureName={feature[0]}
                 audioFeatureSettings={audioSettings}
                 setAudioFeatureSetting={setAudioSettings}
+                featureSettingEnabled={checkedBoxes.includes(feature[0])}
               />
             ) ||
             (featureNameToSettingsTypeMap[feature[0]] === SettingsType.OPTIONS &&
               <OptionFeatureSettBox
                 featureName={feature[0]}
                 audioFeatureSettings={audioSettings}
-                setAudioFeatureSetting={setAudioSettings}/>
+                setAudioFeatureSetting={setAudioSettings}
+                featureSettingEnabled={checkedBoxes.includes(feature[0])}
+              />
             ))}
             <br/>
           </div>
         )
       })}
-      <div key="popularity" className="m-2">
+      <div key="popularity" className="flex m-2 lg:m-4 h-16 items-center">
         <input 
           onClick={()=>handleToggleSettingBox("popularity")} 
           defaultChecked={isSettingPicked("popularity")} 
           name="popularity" 
           id="popularity" 
-          type="checkbox">
+          type="checkbox"
+          className="w-5 h-5 cursor-pointer accent-green-800 rounded-xl border-2 border-green-500 focus:ring-gray-500 focus:ring-2"
+          >
         </input>
-        <label className="text-2xl text-green-50 pl-2" htmlFor="popularity"> 
-          Use Popularity 
+        <label className="text-lg w-56 lg:text-xl text-green-50 pl-2" htmlFor="popularity"> 
+          Popularity
         </label>
-        {checkedBoxes.includes("popularity") && 
-          <FeatureSettingsBox 
+        { <FeatureSettingsBox 
             featureName="popularity" 
             audioFeatureSettings={audioSettings}
             setAudioFeatureSetting={setAudioSettings}
+            featureSettingEnabled={checkedBoxes.includes("popularity")}
           />
         }
       </div>
@@ -278,8 +284,8 @@ const audioFeatureReadableData = getAudioFeatureReadableData(audioFeatures);
           setIsLoadingRecs(true)
           
         }}
-        className=" max-h-[10vh] mb-4 bg-green-50 hover:bg-green-200 text-stone-900 text-xl rounded-xl font-bold p-2 w-1/2 text-center flex justify-center items-center disabled:bg-gray-400 disabled:text-gray-600"
-        >get tracks
+        className=" max-h-[10vh] mb-4 bg-green-50 hover:bg-green-200 text-stone-900 text-lg lg:text-xl rounded-xl font-bold p-2 w-1/2 text-center flex justify-center items-center disabled:bg-gray-400 disabled:text-gray-600"
+        >Get New Tracks
       </button>
       
       </div>
