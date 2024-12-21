@@ -64,7 +64,8 @@ export default function NavBar(){
     if (urlPath.includes("top")) setPageName("Top")
     else if (urlPath.includes("saved")) setPageName("Saved")
     else if (urlPath.includes("track")) setPageName("Track")
-    else setPageName("Link")
+    else if (urlPath.includes("link")) setPageName("Link")
+    else setPageName("Search")
   },[location])
 
   useEffect(()=>{
