@@ -187,6 +187,7 @@ const audioFeatureReadableData = getAudioFeatureReadableData(audioFeatures);
         //console.log(audioFeatures[feature[0]])
         return (
           <div key={feature[0]} className="flex m-2 lg:m-4 h-16 items-center">
+            <div className="flex items-center w-56 h-16">
             <input 
               className="w-5 h-5 cursor-pointer accent-green-800 rounded-xl border-2 border-green-500 focus:ring-gray-500 focus:ring-2"
               onClick={()=>handleToggleSettingBox(feature[0])} 
@@ -195,9 +196,10 @@ const audioFeatureReadableData = getAudioFeatureReadableData(audioFeatures);
               id={feature[0]} 
               type="checkbox">
             </input>
-            <label className="text-lg w-56 h-16  lg:text-xl text-green-50 pl-2" htmlFor={feature[0]}> 
+            <label className="text-lg h-16  lg:text-xl text-green-50 px-2" htmlFor={feature[0]}> 
               {feature[1]}  <br/> <b className="text-green-600">{audioFeatureReadableData[feature[0]]}</b>
             </label>
+            </div>
             {((featureNameToSettingsTypeMap[feature[0]] === SettingsType.PERCENTAGE_MIN_MAX &&
               <FeatureSettingsBox 
                 featureName={feature[0]} 
@@ -227,6 +229,7 @@ const audioFeatureReadableData = getAudioFeatureReadableData(audioFeatures);
         )
       })}
       <div key="popularity" className="flex m-2 lg:m-4 h-16 items-center">
+        <div className="flex items-center w-56 h-16">
         <input 
           onClick={()=>handleToggleSettingBox("popularity")} 
           defaultChecked={isSettingPicked("popularity")} 
@@ -236,9 +239,10 @@ const audioFeatureReadableData = getAudioFeatureReadableData(audioFeatures);
           className="w-5 h-5 cursor-pointer accent-green-800 rounded-xl border-2 border-green-500 focus:ring-gray-500 focus:ring-2"
           >
         </input>
-        <label className="text-lg w-56 lg:text-xl text-green-50 pl-2" htmlFor="popularity"> 
+        <label className="text-lg lg:text-xl text-green-50 pl-2" htmlFor="popularity"> 
           Popularity
         </label>
+        </div>
         { <FeatureSettingsBox 
             featureName="popularity" 
             audioFeatureSettings={audioSettings}
