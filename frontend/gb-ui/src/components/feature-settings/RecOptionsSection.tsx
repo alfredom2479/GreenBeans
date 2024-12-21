@@ -37,7 +37,8 @@ export async function action({params,request}:IURLParams){
     tempo: 0,
     duration_ms: 0,
     key: 0,
-    mode: false
+    mode: false,
+    popularity: 50
   };
 
   const requestJson = await request.json();
@@ -94,7 +95,7 @@ export async function action({params,request}:IURLParams){
         }
       }
     }
-    console.log(tempTrackList);
+    //console.log(tempTrackList);
     return tempTrackList;
   }
 
@@ -109,24 +110,6 @@ interface RecOptionsSectionProps{
   setIsLoadingRecs: React.Dispatch<boolean>,
   audioSettings: AudioFeatureSettings,
   setAudioSettings: React.Dispatch<React.SetStateAction<AudioFeatureSettings>>,
-  /*
-  acousticnessSettings: number,
-  setAcousticnessSettings: React.Dispatch<React.SetStateAction<number>>,
-  danceabilitySettings: number,
-  setDanceabilitySettings: React.Dispatch<React.SetStateAction<number>>,
-  energySettings: number,
-  setEnergySettings: React.Dispatch<React.SetStateAction<number>>,
-  valenceSettings: number,
-  setValenceSettings: React.Dispatch<React.SetStateAction<number>>,
-  tempoSettings: number,
-  setTempoSettings: React.Dispatch<React.SetStateAction<number>>,
-  keySettings: number,
-  setKeySettings: React.Dispatch<React.SetStateAction<number>>,
-  modeSettings: boolean,
-  setModeSettings: React.Dispatch<React.SetStateAction<boolean>>,
-  durationSettings: number,
-  setDurationSettings: React.Dispatch<React.SetStateAction<number>>,
-  */
 }
 
 export default function RecOptionsSection({
@@ -137,24 +120,7 @@ export default function RecOptionsSection({
   setIsLoadingRecs,
   audioSettings,
   setAudioSettings,
-  /*
-  acousticnessSettings,
-  setAcousticnessSettings,
-  danceabilitySettings,
-  setDanceabilitySettings,
-  energySettings,
-  setEnergySettings,
-  valenceSettings,
-  setValenceSettings,
-  tempoSettings,
-  setTempoSettings,
-  keySettings,
-  setKeySettings,
-  modeSettings,
-  setModeSettings,
-  durationSettings,
-  setDurationSettings,
-  */
+  
 }:RecOptionsSectionProps){
 
   const submit = useSubmit();
@@ -168,10 +134,6 @@ export default function RecOptionsSection({
     ["tempo", "Tempo"],
     ["key", "Key"],
     ["mode", "Mode"],
-    //["duration_ms", "Duration"]
-    //["time_signature", "Time Signature"],
-    //["instrumentalness", "Instrumentalness"], instrumentalness only returns really low values
-    //["liveness", "Played Live?"],
   ]
 
   enum SettingsType{
@@ -194,58 +156,6 @@ const featureNameToSettingsTypeMap: Record<keyof AudioFeatures, SettingsType> = 
 
 const audioFeatureReadableData = getAudioFeatureReadableData(audioFeatures);
 
-/*
-const getSettingsForFeature = (featureName: keyof AudioFeatures) => {
-  switch(featureName) {
-    case "acousticness":
-      return {
-        audioFeatureSetting: audioSettings.acousticness,
-        setAudioFeatureSetting: setAudioSettings
-      };
-    case "danceability":
-      return {
-        audioFeatureSetting: audioSettings.danceability,
-        setAudioFeatureSetting: setAudioSettings
-      };
-    case "energy":
-      return {
-        audioFeatureSetting: audioSettings.energy,
-        setAudioFeatureSetting: setAudioSettings
-      };
-    case "valence":
-      return {
-        audioFeatureSetting: audioSettings.valence,
-        setAudioFeatureSetting: setAudioSettings
-      };
-    case "tempo":
-      return {
-        audioFeatureSetting: audioSettings.tempo,
-        setAudioFeatureSetting: setAudioSettings
-      };
-    case "key":
-      return {
-        audioFeatureSetting: audioSettings.key,
-        setAudioFeatureSetting: setAudioSettings
-      };
-    case "mode":
-      return {
-        audioFeatureSetting: audioSettings.mode,
-        setAudioFeatureSetting: setAudioSettings
-      };
-    case "duration_ms":
-      return {
-        audioFeatureSetting: audioSettings.duration_ms,
-        setAudioFeatureSetting: setAudioSettings
-      };
-    default:
-      return {
-          audioFeatureSetting: 0,
-          setAudioFeatureSetting: () => {}
-        };
-    }
-  }
-  */
-
   
   const isSettingPicked = (setting:string)=>{
     return checkedBoxes.includes(setting)
@@ -262,11 +172,10 @@ const getSettingsForFeature = (featureName: keyof AudioFeatures) => {
       newSettings.push(setting)
     }
 
+    //console.log(newSettings)
     setCheckedBoxes(newSettings)
   }
-  //console.log(audioSettings);
 
-    //console.log(getSettingsForFeature("acousticness"));
   
   return(
     <>
@@ -277,23 +186,24 @@ const getSettingsForFeature = (featureName: keyof AudioFeatures) => {
       {audioFeatureNames.map((feature)=>{
         //console.log(audioFeatures[feature[0]])
         return (
-          <div key={feature[0]} className="m-2">
+          <div key={feature[0]} className="flex m-2 lg:m-4 h-16 items-center">
             <input 
+              className="w-5 h-5 cursor-pointer accent-green-800 rounded-xl border-2 border-green-500 focus:ring-gray-500 focus:ring-2"
               onClick={()=>handleToggleSettingBox(feature[0])} 
               defaultChecked={isSettingPicked(feature[0])} 
               name={feature[0]} 
               id={feature[0]} 
               type="checkbox">
             </input>
-            <label className="text-2xl text-green-50 pl-2" htmlFor={feature[0]}> 
-              {feature[1]} : <b className="text-green-600">{audioFeatureReadableData[feature[0]]}</b>
+            <label className="text-lg w-56 h-16  lg:text-xl text-green-50 pl-2" htmlFor={feature[0]}> 
+              {feature[1]}  <br/> <b className="text-green-600">{audioFeatureReadableData[feature[0]]}</b>
             </label>
-            {checkedBoxes.includes(feature[0]) && 
-            ((featureNameToSettingsTypeMap[feature[0]] === SettingsType.PERCENTAGE_MIN_MAX &&
+            {((featureNameToSettingsTypeMap[feature[0]] === SettingsType.PERCENTAGE_MIN_MAX &&
               <FeatureSettingsBox 
                 featureName={feature[0]} 
                 audioFeatureSettings={audioSettings}
                 setAudioFeatureSetting={setAudioSettings}
+                featureSettingEnabled={checkedBoxes.includes(feature[0])}
               />
             ) ||
             (featureNameToSettingsTypeMap[feature[0]] === SettingsType.BOOL &&
@@ -301,18 +211,42 @@ const getSettingsForFeature = (featureName: keyof AudioFeatures) => {
                 featureName={feature[0]}
                 audioFeatureSettings={audioSettings}
                 setAudioFeatureSetting={setAudioSettings}
+                featureSettingEnabled={checkedBoxes.includes(feature[0])}
               />
             ) ||
             (featureNameToSettingsTypeMap[feature[0]] === SettingsType.OPTIONS &&
               <OptionFeatureSettBox
                 featureName={feature[0]}
                 audioFeatureSettings={audioSettings}
-                setAudioFeatureSetting={setAudioSettings}/>
+                setAudioFeatureSetting={setAudioSettings}
+                featureSettingEnabled={checkedBoxes.includes(feature[0])}
+              />
             ))}
             <br/>
           </div>
         )
       })}
+      <div key="popularity" className="flex m-2 lg:m-4 h-16 items-center">
+        <input 
+          onClick={()=>handleToggleSettingBox("popularity")} 
+          defaultChecked={isSettingPicked("popularity")} 
+          name="popularity" 
+          id="popularity" 
+          type="checkbox"
+          className="w-5 h-5 cursor-pointer accent-green-800 rounded-xl border-2 border-green-500 focus:ring-gray-500 focus:ring-2"
+          >
+        </input>
+        <label className="text-lg w-56 lg:text-xl text-green-50 pl-2" htmlFor="popularity"> 
+          Popularity
+        </label>
+        { <FeatureSettingsBox 
+            featureName="popularity" 
+            audioFeatureSettings={audioSettings}
+            setAudioFeatureSetting={setAudioSettings}
+            featureSettingEnabled={checkedBoxes.includes("popularity")}
+          />
+        }
+      </div>
       
       </div>
       </div>
@@ -339,6 +273,7 @@ const getSettingsForFeature = (featureName: keyof AudioFeatures) => {
                 key: audioSettings.key,
                 mode: audioSettings.mode,
                 duration_ms: audioSettings.duration_ms,
+                popularity: audioSettings.popularity
               } as AudioFeatureSettings
             });
           submit(
@@ -349,8 +284,8 @@ const getSettingsForFeature = (featureName: keyof AudioFeatures) => {
           setIsLoadingRecs(true)
           
         }}
-        className=" max-h-[10vh] mb-4 bg-green-50 hover:bg-green-200 text-stone-900 text-xl rounded-xl font-bold p-2 w-1/2 text-center flex justify-center items-center disabled:bg-gray-400 disabled:text-gray-600"
-        >get tracks
+        className=" max-h-[10vh] mb-4 bg-green-50 hover:bg-green-200 text-stone-900 text-lg lg:text-xl rounded-xl font-bold p-2 w-1/2 text-center flex justify-center items-center disabled:bg-gray-400 disabled:text-gray-600"
+        >Get New Tracks
       </button>
       
       </div>

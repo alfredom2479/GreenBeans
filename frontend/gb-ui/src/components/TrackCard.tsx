@@ -40,7 +40,7 @@ export default function TrackCard({track,popModal=handleDefaultModalError,hideSa
 
         <div className=" flex basis-4/12 shrink-0 w-fit justify-between items-center ">
 
-          {track.url!==null && track.url !==undefined ?
+          {track.url!==null && track.url !==undefined && track.url !== ""&& track.url !== " " ?
             <button
               onClick={()=>popModal({name:track.name,artist: track.artist,url: track.url?track.url :"", image:track.image[0]})}
               className={defaultTrackCardOptionString}

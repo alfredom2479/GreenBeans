@@ -191,6 +191,7 @@ export async function requestSpotifyTrack(accessToken:string, trackId:string, is
   }
 }
 
+//this function is such a mess lmao. fix it at some point
 export async function requestSpotifyRec(
   accessToken:string, 
   trackId:string, 
@@ -199,7 +200,9 @@ export async function requestSpotifyRec(
   audioFeatureSettings:AudioFeatureSettings,
   isLoggedIn: boolean
 ){
-  console.log("audioFeatureSettings",audioFeatureSettings);
+  //console.log("audioFeatureSettings",audioFeatureSettings);
+  //console.log("selectedOptions",selectedOptions);
+
   let queryOptionSuffix:string = trackId;
 
   for(let i =0; i < audioFeatureNames.length; i++ ){
@@ -212,69 +215,46 @@ export async function requestSpotifyRec(
     const featureValue: number | undefined |string = audioFeatures[name] ;
     if(featureValue === undefined || typeof featureValue === 'string') continue;
     
-    //let upperLimit: number = featureValue;
-    //let lowerLimit: number = featureValue;
     let targetValue: number = featureValue;
 
     switch(audioFeatureNames[i]){
       case 'acousticness':
-        //upperLimit = audioFeatureSettings.acousticness.max;
-        //lowerLimit = audioFeatureSettings.acousticness.min;
         targetValue = audioFeatureSettings.acousticness;
         break;
       case 'danceability':
-        //upperLimit = audioFeatureSettings.danceability.max;
-        //lowerLimit = audioFeatureSettings.danceability.min;
         targetValue = audioFeatureSettings.danceability;
         break;
       case 'energy':
-        //upperLimit = audioFeatureSettings.energy.max;
-        //lowerLimit = audioFeatureSettings.energy.min;
         targetValue = audioFeatureSettings.energy;
         break;
       case 'valence':
-        //upperLimit = audioFeatureSettings.valence.max;
-        //lowerLimit = audioFeatureSettings.valence.min;
         targetValue = audioFeatureSettings.valence;
         break;
       case 'tempo':
-        //upperLimit = audioFeatureSettings.tempo.max;
-        //lowerLimit = audioFeatureSettings.tempo.min;
         targetValue = audioFeatureSettings.tempo;
         break;
       case 'duration_ms':
-        //upperLimit = audioFeatureSettings.duration_ms.max*1000;
-        //lowerLimit = audioFeatureSettings.duration_ms.min*1000;
         targetValue = audioFeatureSettings.duration_ms*1000;
         break;
       case 'key':
-        //upperLimit=audioFeatureSettings.key;
-        //lowerLimit=audioFeatureSettings.key;
         targetValue=audioFeatureSettings.key;
         break;
       case 'mode':
-        //upperLimit = audioFeatureSettings.mode === true ? 1 : 0;
-        //lowerLimit = audioFeatureSettings.mode === true ? 1 : 0;
         targetValue = audioFeatureSettings.mode === true ? 1 : 0;
         break;
       
       default:
         targetValue = featureValue;
-        //upperLimit = +(featureValue + .15).toFixed(4);
-        //lowerLimit = +(featureValue - .15).toFixed(4);
-        //if(upperLimit > 1){
-        //  upperLimit =1;
-        //}
-        //if(lowerLimit < 0){
-        //  lowerLimit=0;
-        //}
     }
     
       queryOptionSuffix+=  `&target_${name}=${targetValue}`
-      //queryOptionSuffix+=`&min_${name}=${ lowerLimit }`
-      //queryOptionSuffix+=`&max_${name}=${ upperLimit}`
       
   }
+  if(selectedOptions.includes("popularity") ){
+    queryOptionSuffix+=`&target_popularity=${audioFeatureSettings.popularity }`
+  }
+
+  //console.log("queryOptionSuffix",queryOptionSuffix);
 
 
   if(isLoggedIn){
