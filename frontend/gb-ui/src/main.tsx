@@ -18,7 +18,7 @@ import LinkSearchPage, {action as searchLinkAction} from './pages/LinkSearchPage
 import MainLayout, {loader as loggedInCheckerLoader} from './components/layouts/MainLayout';
 import RootErrorBoundary from './components/error-components/RootErrorBoundary';
 import RecSection, {loader as preRecLoader} from './components/RecSection';
-
+import SearchPage, {action as searchAction} from './pages/SearchPage';
 const router = createBrowserRouter([
   {
     path: "/",
@@ -26,8 +26,14 @@ const router = createBrowserRouter([
     loader: loggedInCheckerLoader,
     errorElement: <RootErrorBoundary/>,
     children: [
+{
+        path: "/",
+        element: <SearchPage/>,
+        action:searchAction,
+        errorElement: <RootErrorBoundary/>
+      },
       {
-        path:"/",
+        path:"/link",
         element: <LinkSearchPage/>,
         action:searchLinkAction,
         errorElement: <RootErrorBoundary/>
@@ -70,6 +76,7 @@ const router = createBrowserRouter([
           }
         ]
       },
+      
       // {
       //   path: "link-search",
       //   element: <LinkSearchPage/>,

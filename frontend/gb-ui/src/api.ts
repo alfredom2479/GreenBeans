@@ -312,6 +312,42 @@ export async function requestSpotifyTrackAudioFeatures(accessToken:string, track
   }
 }
 
+export async function requestSpotifySearch(accessToken:string, searchQuery:string, isLoggedIn:boolean){
+
+  if(isLoggedIn){
+    const data = await sendRequest(
+      `https://api.spotify.com/v1/search?q=${encodeURIComponent(searchQuery)}&type=track`,
+      accessToken,
+      RequestMethods.Get
+    );
+    return data;
+  }
+  else{
+    try{
+      const res = await fetch(`/api/spotify/getsearch?query=${encodeURIComponent(searchQuery)}&type=track`,{
+        method: "GET"
+      });
+      const data = await res.json();
+      if(!res.ok){
+        throw new Response("Request failed",{status:res.status})
+      }
+      if(data.result){
+        return data.result;
+      }
+    else{
+        throw new Response("Bad data returned",{status:500})
+      }
+    }
+    catch(err){
+      console.log("error in requestSpotifySearch",err);
+      throw new Response("Request failed",{status:500})
+    }
+  }
+
+}
+
+
+
 export async function requestSaveStatus (accessToken:string|null,tracks: ITrack[] ): Promise<boolean[]> {
 
   if(tracks.length === 0){
@@ -339,6 +375,8 @@ export async function requestSaveStatus (accessToken:string|null,tracks: ITrack[
     );
     return data;
 }
+
+
 
 export async function sendTrackSeenRequest(track:ITrack,audioFeatures:AudioFeatures){
 
@@ -387,12 +425,15 @@ export async function sendTrackSeenRequest(track:ITrack,audioFeatures:AudioFeatu
       //throw new Response("Request failed",{status:res.status})
       console.log("history request failed",{status:res.status})
     }
+    console.log("history updated");
+    /*
     try{
       console.log(await res.json());
     }catch(err){
       console.log("history returned non json",{status:500})
       console.log(res);
     }
+    */
   }catch(err){
     //throw new Response("Request failed",{status:500})
     console.log("history request failed",{status:500})

@@ -74,6 +74,29 @@ const getSpotifyRecs = asyncHandler(async (req:Request,res:Response)=>{
     }
 )
 
+const searchForSpotifyTrack = asyncHandler(async (req:Request,res:Response)=>{
+
+  const {query} = req.query;
+
+  if(!query || typeof query !== "string" || query === ""){
+    res.status(400).json({error: {message: "Bad Request: missing query param", status: 400}});
+    return;
+  }
+
+  const requestURI = `https://api.spotify.com/v1/search?q=${encodeURIComponent(query)}&type=track`;
+
+  const data = await sendRequest(
+    "Spotify Search",
+    requestURI
+  )
+
+  if(data === null){
+    res.status(500).json({error: {message: "Server could not make a succesful request to spotify search", status: 500}});
+  }
+  res.status(200).json({result:data});
+
+})
+
 
 const sendRequest = async (requestName: string, completeEndpoint:string, ) =>{
   //console.log(requestName,completeEndpoint);
@@ -132,5 +155,6 @@ const authHeaderString = 'Basic '+ (Buffer.from(process.env.SPOTIFY_CLIENT_ID+
 export {
   getSpotifyTrackInfo,
   getSpotifyTrackAudioFeatures,
-  getSpotifyRecs
+  getSpotifyRecs,
+  searchForSpotifyTrack
 }

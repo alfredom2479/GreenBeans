@@ -86,7 +86,8 @@ export default function NavBar(){
             </div> 
           </div> 
         : null}
-        <SideBarNavItem path="/" name="Use Share Link" isDisabled={false}/>
+        <SideBarNavItem path="/" name="Search" isDisabled={false}/>
+        <SideBarNavItem path="/link" name="Use Share Link" isDisabled={false}/>
         <SideBarNavItem path="/saved" name="My Saved Tracks" isDisabled={currUser === null}/>
         <SideBarNavItem path="/top" name="My Top Tracks" isDisabled={currUser === null}/>
         {currUser == null ?

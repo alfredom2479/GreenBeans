@@ -1,4 +1,4 @@
-import {useEffect, useRef} from "react";
+import {useEffect, useRef, useState} from "react";
 import {Form, redirect, useActionData} from 'react-router-dom';
 import { requestSpotifyTrack } from '../api';
 
@@ -57,6 +57,8 @@ export async function action({request}:ActionParams){
 
 export default function LinkSearchPage(){
 
+  const [searchResultsLoading,setSearchResultsLoading] = useState(false);
+
   const searchInputRef = useRef<HTMLInputElement | null>(null);
   const actionData = useActionData();
 
@@ -64,18 +66,26 @@ export default function LinkSearchPage(){
     if(actionData && typeof actionData === "string" && actionData.includes("track not found") && searchInputRef.current !== null){
       searchInputRef.current.value = "TRACK NOT FOUND"
     }
-  },[actionData])
+    setSearchResultsLoading(false);
+  },[actionData,searchResultsLoading])
 
   return (
     <div className="h-full w-full flex flex-col ">
       <div className="flex  flex-col items-center w-full h-full">
           <div className="text-center lg:text-7xl text-5xl text-green-600 p-10">GreenBeans</div>
         <Form method='post'
+        onSubmit={()=>{setSearchResultsLoading(true)}}
           className='flex flex-col justify-center items-center w-full'>
           <label htmlFor="spotify-link" className="text-xl text-green-50 mb-2">Paste a track's Spotify share link:</label>
           <input ref={searchInputRef} type="text" name="spotify-link" placeholder="https://open.spotify.com/track/06cqIVC8kRAT02qfHQT65v"
           className="text-xl h-10 w-10/12 px-1 rounded-xl"/>
-          <button type='submit' className="w-40 h-12 mt-4 bg-green-200 font-bold text-xl rounded-lg hover:shadow-2xl hover:bg-green-500">
+          <button 
+          disabled={searchResultsLoading}
+          type='submit' 
+          className={`w-40 h-12 mt-4 font-bold text-xl rounded-lg hover:shadow-2xl 
+                     ${searchResultsLoading 
+                        ? "bg-green-100 cursor-not-allowed" 
+                        : "bg-green-200 hover:bg-green-500"}`}>
             GO
           </button>
         </Form>
