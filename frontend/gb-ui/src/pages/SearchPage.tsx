@@ -130,8 +130,8 @@ export default function SearchPage(){
                 </Form>
             </div>
             <div className="text-center lg:text-2xl text-xl text-stone-100 p-2">Search Results:</div>
-            <div className="h-full border-stone-100 border-2 rounded-lg overflow-y-scroll mx-5">
-                {searchResultsLoading ? <p className="text-stone-100">Loading...</p> :
+            <div className="h-full border-stone-100  rounded-lg overflow-y-scroll mx-2">
+                {searchResultsLoading ? <p className="text-stone-100 text-xl h-full w-full flex justify-center items-center">Loading...</p> :
                 <ul>
                         {searchResults.map((track)=>{
                             //console.log("track id",track.id);
