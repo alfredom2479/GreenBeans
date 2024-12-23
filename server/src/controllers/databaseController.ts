@@ -111,7 +111,7 @@ const storeTrack = asyncHandler(async (req:Request,res:Response)=>{
 
     const {user,track, audioFeatures} = req.body;
     if(!isUser(user)){
-        console.error('Invalid user object received');
+        console.error('History request made by non-user');
         loggedInUserMadeRequest = false;
         //return;
     }
@@ -148,6 +148,7 @@ const storeTrack = asyncHandler(async (req:Request,res:Response)=>{
             const userWasCreated:boolean = await createUser(user.id, user.displayName, user.access_token);
             if(!userWasCreated){
                 console.log("user was not created");
+
                 return;
             }
             }catch(err){
@@ -161,14 +162,17 @@ const storeTrack = asyncHandler(async (req:Request,res:Response)=>{
             if (dbAccessToken !== user.access_token) {
                 //if access tokens don't match, check if access token belongs to claimed spotify user
                 try{
-                    const response:AxiosResponse|null = await getSpotifyUser(user.access_token);
-                    if (!response || !response.data || response.data.id === undefined || response.data.id !== user.id) {
+                    const response = await getSpotifyUser(user.access_token);
+                    if (!response || !response.id  || response.id !== user.id) {
+                        console.log("response: ", response);
+                        console.log("history was not updated (bad response from spotify)",track.id);
                         return;
                     }
                     //if access token belongs to claimed spotify user, update the access token in the database
                     await updateUserAccessToken(user.id, user.access_token);
                 }catch(err){
                     console.error("Error updating user access token: "+err);
+                    console.log("history was not updated (axios or update error)",track.id);
                     return;
                 }
             }
@@ -176,8 +180,14 @@ const storeTrack = asyncHandler(async (req:Request,res:Response)=>{
 
     }
 
-    const finalResult:boolean = await storeTrackAndHistory(track,loggedInUserMadeRequest ? user : null, audioFeatures);
-    console.log("was history updated? for track: ", track.id, finalResult);
+    try{
+        const finalResult:boolean = await storeTrackAndHistory(track,loggedInUserMadeRequest ? user : null, audioFeatures);
+        console.log("was history updated? for track: ", track.id, finalResult);
+    }catch(err){
+        console.error("Error storing track and history: "+err);
+        console.log("history was not updated",track.id);
+        return;
+    }
     
 })
 
