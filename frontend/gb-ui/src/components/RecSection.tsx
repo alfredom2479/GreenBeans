@@ -279,7 +279,8 @@ export default function RecSection(){
 
   return(
     <>
-    <nav className=" font-bold bg-stone-200 max-h-14">
+    <div className="flex flex-col h-[calc(100%-8rem)]">
+    <nav className=" font-bold bg-stone-200 h-8  ">
           <ul className={`flex  h-full`}>
             <li className="flex-1 flex justify-center bg-stone-100 border-1  border-stone-900">
               <button 
@@ -304,6 +305,7 @@ export default function RecSection(){
             
           </ul>
         </nav>
+
   {isSelectingOptions
           ? <RecOptionsSection
               checkedBoxes={checkedBoxes}
@@ -321,6 +323,8 @@ export default function RecSection(){
                 isLoadingRecs={isLoadingRecs}
               />
 }
+
+        </div>
         {
           showModal 
             ? 

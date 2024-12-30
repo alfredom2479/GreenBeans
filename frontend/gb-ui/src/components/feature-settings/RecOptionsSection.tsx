@@ -176,15 +176,15 @@ const audioFeatureReadableData = getAudioFeatureReadableData(audioFeatures);
 
   
   return(
-    <>
-    <div className="flex flex-col justify-between max-w-full h-full py-2 overflow-y-scroll">
-      <div className="flex justify-items-center">
-      <div className="w-full">
+    // <>
+     <div className=" flex flex-col h-[calc(100%-2rem)]">
+    <div className=" flex flex-col justify-between max-w-full   overflow-y-scroll">
+      <div className="flex flex-col justify-items-center w-full">
 
       {audioFeatureNames.map((feature)=>{
         //console.log(audioFeatures[feature[0]])
         return (
-          <div key={feature[0]} className="flex m-2 lg:m-4 h-16 items-center">
+          <div key={feature[0]} className="flex m-2 lg:m-4  items-center">
             <div className="flex items-center w-56 h-16">
             <input 
               className="w-5 h-5 cursor-pointer accent-green-800 rounded-xl border-2 border-green-500 focus:ring-gray-500 focus:ring-2"
@@ -251,17 +251,10 @@ const audioFeatureReadableData = getAudioFeatureReadableData(audioFeatures);
       </div>
       
       </div>
-      </div>
       
     </div>
-      <div className="flex flex-col items-center">
+      <div className=" flex flex-col items-center justify-center p-2 ">
       <button 
-        disabled={audioSettings.acousticness > 1 ||
-          audioSettings.danceability > 1 ||
-          audioSettings.energy > 1 ||
-          audioSettings.valence > 1 ||
-          audioSettings.tempo > 200 ||
-          audioSettings.duration_ms > 600000}
         onClick={()=>{
           const submissionJSON = JSON.stringify(
             {settings:checkedBoxes,
@@ -286,11 +279,11 @@ const audioFeatureReadableData = getAudioFeatureReadableData(audioFeatures);
           setIsLoadingRecs(true)
           
         }}
-        className=" max-h-[10vh] mb-4 bg-green-50 hover:bg-green-200 text-stone-900 text-lg lg:text-xl rounded-xl font-bold p-2 w-1/2 text-center flex justify-center items-center disabled:bg-gray-400 disabled:text-gray-600"
+        className=" max-h-[10vh]  bg-green-50 hover:bg-green-200 text-stone-900 text-lg lg:text-xl rounded-xl font-bold p-2 w-1/2 text-center flex justify-center items-center disabled:bg-gray-400 disabled:text-gray-600"
         >Get New Tracks
       </button>
       
       </div>
-      </>
+      </div>
   )
 }
