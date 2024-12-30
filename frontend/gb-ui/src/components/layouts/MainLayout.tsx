@@ -93,6 +93,8 @@ export default function NavBar(){
         <SideBarNavItem path="/top" name="My Top Tracks" isDisabled={currUser === null}/>
         {currUser == null ?
           <a className="flex justify-center items-center basis-32 grow text-center font-bold hover:text-green-400"
+          //this might be causing req hang issue on mobile
+          //remember to update in both nav bars
             href="/api/auth/requestauth">
               Log In
           </a>

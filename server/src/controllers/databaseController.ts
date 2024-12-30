@@ -133,7 +133,7 @@ const storeTrack = asyncHandler(async (req:Request,res:Response)=>{
     if (loggedInUserMadeRequest){
         // Check if user exists in database
         const existingUser:User|null = await checkUserExists(user.id);
-        console.log("existingUser: ", existingUser);
+        //console.log("existingUser: ", existingUser);
         if (existingUser === null) {
             //check if user access token belongs toan actual spotify user
             try{

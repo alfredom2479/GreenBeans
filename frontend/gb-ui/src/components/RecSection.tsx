@@ -137,6 +137,7 @@ export default function RecSection(){
   useEffect(()=>{
 
     setCheckedBoxes([]);
+    setIsSelectingOptions(false);
 
     if(currAudioFeatures.id !== "" ){
       setAudioSettings(
