@@ -13,7 +13,7 @@ export default function RecList({listTracks,handleOnClick,isLoadingRecs}:CompPar
   const refreshToken:string|null = localStorage.getItem("refresh_token");
 
   return (
-    <div className="h-full overflow-y-scroll">
+    <div className="flex flex-col overflow-y-scroll h-[calc(100%-2rem)]">
       {isLoadingRecs  ? <p className="text-white">Loading...</p> :
         <ul>
           {listTracks.map((track)=>{
