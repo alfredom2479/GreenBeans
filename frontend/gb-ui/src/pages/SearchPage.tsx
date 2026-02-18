@@ -53,6 +53,8 @@ export async function action({request}:{request:Request}){
         return tempTrackList;
     }catch(err){
         console.log("error in requestSpotifySearch");
+        console.log(searchInput);
+        console.log(err);
         return "track not found"+searchInput;
     }
 }
@@ -114,8 +116,8 @@ export default function SearchPage(){
                 method='post' 
                 onSubmit={()=>{setSearchResultsLoading(true)}}
                     className=' flex flex-col justify-between items-center w-full '>
-                    <label htmlFor="spotify-link" className="text-xl text-green-50 pb-2">Search for a song you enjoy:</label>
-                    <input ref={searchInputRef} type="text" required maxLength={100} name="search-query" placeholder="Hot To Go Chappell Roan"
+                    <label htmlFor="spotify-link" className="text-xl text-green-50 pb-2">Search for a song you enjoy</label>
+                    <input ref={searchInputRef} type="text" required maxLength={100} name="search-query" placeholder="Song Name"
                     className="text-xl h-10 w-10/12 px-1 rounded-xl"/>
                     <button 
                     //onClick={()=>{setSearchResultsLoading(true)}}
@@ -129,7 +131,7 @@ export default function SearchPage(){
                     </button>
                 </Form>
             </div>
-            <div className="text-center lg:text-2xl text-xl text-stone-100 p-2">Search Results:</div>
+            {/* <div className="text-center lg:text-2xl text-xl text-stone-100 p-2">Search Results:</div> */}
             <div className="h-full border-stone-100  rounded-lg overflow-y-scroll mx-2">
                 {searchResultsLoading ? <p className="text-stone-100 text-xl h-full w-full flex justify-center items-center">Loading...</p> :
                 <ul>

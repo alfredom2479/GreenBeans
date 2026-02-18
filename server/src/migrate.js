@@ -1,5 +1,7 @@
 //import pool from "./db.ts";
 import pg from "pg";
+import dotenv from "dotenv";
+dotenv.config();
 const {Pool} = pg;
 
 
@@ -16,6 +18,7 @@ const pool = new Pool({
 });
 
 const createTables = async () => {
+    //console.log(process.env.PG_USER, process.env.PG_HOST, process.env.PG_DATABASE, process.env.PG_PASSWORD, process.env.PG_PORT);
     try {
         await pool.query(`CREATE TABLE IF NOT EXISTS users (
             id VARCHAR(255) PRIMARY KEY,
