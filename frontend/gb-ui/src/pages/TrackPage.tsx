@@ -183,28 +183,43 @@ export default function TrackPage(){
     
   },[loaderData])
 
-  return(
-    <div className=" h-[calc(100%-3.5rem)] w-full flex flex-col ">
-        <div className=" bg-stone-900 text-stone-200 flex h-32 w-full ">
-
-          <div className=" shrink-0 flex items-center w-32 h-full">
-            <a href={"https://open.spotify.com/track/"+trackData.id} target="_blank">
-            <img src={trackData.image[0]} 
-              className="flex-1 h-32 w-32 object-cover ">
-            </img>
+  return (
+    <div className="min-h-[calc(100%-3.5rem)] w-full flex flex-col">
+      <header className="shrink-0 border-b border-zinc-800/80 bg-zinc-900/50 p-4">
+        <div className="mx-auto max-w-4xl px-4 sm:px-6 py-6 rounded-2xl shadow-xl shadow-green-900/50 bg-gradient-to-br from-zinc-900 via-zinc-800/80 to-green-800/30 border border-green-600/40 ring-1 ring-green-300/20 transition-all duration-300">
+          <div className="flex items-center gap-4 sm:gap-5">
+            <a
+              href={"https://open.spotify.com/track/" + trackData.id}
+              target="_blank"
+              rel="noreferrer"
+              className="shrink-0 rounded-lg overflow-hidden ring-1 ring-zinc-700/50 focus:outline-none focus:ring-2 focus:ring-green-500/50"
+            >
+              <img
+                src={trackData.image[0]}
+                alt=""
+                className="h-20 w-20 sm:h-24 sm:w-24 object-cover"
+              />
             </a>
-          </div>
-
-          <div className="flex flex-1 basis-5/6  flex-col p-1 overflow-y-scroll overflow-x-hidden">
-            <div className="flex-1 text-xl overflow-hidden overflow-y-scroll text-ellipsis">
-              {trackData.name}
-            </div>
-            <div className=" flex-1 text-xl text-stone-300  overflow-y-scroll">
-              <i>{trackData.artist}</i>
+            <div className="min-w-0 flex-1 flex flex-col justify-center gap-0.5">
+              <h1 className="text-lg sm:text-xl font-semibold text-white truncate">
+                {trackData.name}
+              </h1>
+              <p className="text-sm sm:text-base text-zinc-400 truncate">
+                {trackData.artist}
+              </p>
+              <a
+                href={"https://open.spotify.com/track/" + trackData.id}
+                target="_blank"
+                rel="noreferrer"
+                className="mt-1 text-xs text-zinc-500 hover:text-green-500 transition-colors w-fit"
+              >
+                Open in Spotify →
+              </a>
             </div>
           </div>
 
         </div> 
+        </header>
         <Outlet context={{currAudioFeatures:currAudioFeatures satisfies AudioFeatures, trackData:trackData satisfies ITrack }} />
     </div>
   )

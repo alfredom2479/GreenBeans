@@ -277,64 +277,70 @@ export default function RecSection(){
 
   
 
-  return(
+  return (
     <>
-    <div className="flex flex-col h-[calc(100%-8rem)]">
-    <nav className=" font-bold bg-stone-200 h-8  ">
-          <ul className={`flex  h-full`}>
-            <li className="flex-1 flex justify-center bg-stone-100 border-1  border-stone-900">
-              <button 
-                onClick={()=>handleListenOnClick({name:trackData.name,artist:trackData.artist,url:trackData.url?trackData.url:"",image:trackData.image?trackData.image[0]:""})}
-                disabled={trackData.url === null || trackData.url === undefined || trackData.url === "" || trackData.url === " "}
-                className="bg-stone-200 w-full text-center flex items-center justify-center disabled:bg-stone-600 disabled:cursor-not-allowed hover:bg-green-700">
-                <img src={listenSvg} alt="listen" className="w-6"/>
+      <div className="flex flex-col h-[calc(100%-8rem)]">
+        <div className="mx-auto w-full max-w-2xl px-4 sm:px-6 flex flex-col flex-1 min-h-0">
+          <nav className="flex items-stretch h-10 shrink-0 bg-zinc-800/80 border-b border-zinc-700/50 rounded-t-xl overflow-hidden">
+            {/* Listen – action for current track (separate from tabs) */}
+            <div className="flex items-center shrink-0 pl-2 border-r border-zinc-700/50">
+              <button
+                type="button"
+                onClick={() => handleListenOnClick({ name: trackData.name, artist: trackData.artist, url: trackData.url ?? "", image: trackData.image?.[0] ?? "" })}
+                disabled={trackData.url == null || trackData.url === "" || trackData.url === " "}
+                className="flex items-center justify-center gap-2 h-8 px-4 rounded-lg bg-green-600 text-white font-medium shadow-md shadow-green-900/40 hover:bg-green-500 hover:shadow-lg hover:shadow-green-900/50 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-green-600 disabled:shadow-md disabled:hover:shadow-green-900/40 transition-all"
+                title="Listen to this track"
+              >
+                <img src={listenSvg} alt="" className="w-5 h-5 brightness-0 invert" />
+                <span className="text-sm">Listen</span>
               </button>
-            </li>
-            <li className={` flex-[2_2_0%] flex justify-center `}>
-              <button onClick={()=>setIsSelectingOptions(false)}
-                className={!isSelectingOptions ? " bg-green-600 text-center w-full " : "text-center w-full hover:bg-green-700"}>
-                  Tracks
+            </div>
+            {/* Tracks | Preferences – section tabs */}
+            <div className="flex flex-1 min-w-0">
+              <button
+                type="button"
+                onClick={() => setIsSelectingOptions(false)}
+                className={`flex-1 flex items-center justify-center text-sm font-medium transition-colors ${!isSelectingOptions ? "bg-green-600 text-white" : "text-zinc-400 hover:bg-zinc-700/50 hover:text-zinc-200"}`}
+              >
+                Tracks
               </button>
-            </li>
-            <li className={` flex-[2_2_0%] flex justify-center `}>
-              <button onClick={()=>setIsSelectingOptions(true)}  
-                className={isSelectingOptions ? " bg-green-600 text-center w-full " : "text-center w-full hover:bg-green-700"}>
-                  Preferences
+              <button
+                type="button"
+                onClick={() => setIsSelectingOptions(true)}
+                className={`flex-1 flex items-center justify-center text-sm font-medium transition-colors ${isSelectingOptions ? "bg-green-600 text-white" : "text-zinc-400 hover:bg-zinc-700/50 hover:text-zinc-200"}`}
+              >
+                Preferences
               </button>
-            </li>
-            
-          </ul>
-        </nav>
+            </div>
+          </nav>
 
-  {isSelectingOptions
-          ? <RecOptionsSection
-              checkedBoxes={checkedBoxes}
-              setCheckedBoxes={setCheckedBoxes}
-              audioFeatures={currAudioFeatures}
-              setIsSelectingOptions={setIsSelectingOptions}
-              setIsLoadingRecs={setIsLoadingRecs}
-              audioSettings={audioSettings}
-              setAudioSettings={setAudioSettings}
-            />
-          :
+          <div className="flex-1 min-h-0 flex flex-col overflow-hidden bg-zinc-900/30 border border-t-0 border-zinc-800/50 rounded-b-xl">
+            {isSelectingOptions ? (
+              <RecOptionsSection
+                checkedBoxes={checkedBoxes}
+                setCheckedBoxes={setCheckedBoxes}
+                audioFeatures={currAudioFeatures}
+                setIsSelectingOptions={setIsSelectingOptions}
+                setIsLoadingRecs={setIsLoadingRecs}
+                audioSettings={audioSettings}
+                setAudioSettings={setAudioSettings}
+              />
+            ) : (
               <RecList
                 listTracks={recList}
                 handleOnClick={handleListenOnClick}
                 isLoadingRecs={isLoadingRecs}
               />
-}
-
+            )}
+          </div>
         </div>
-        {
-          showModal 
-            ? 
-              <SongPreviewModal
-                setShowModal={setShowModal}
-                songPreviewInfo={modalSongPreviewInfo}
-              />
-            :
-              null
-        }
+      </div>
+      {showModal && (
+        <SongPreviewModal
+          setShowModal={setShowModal}
+          songPreviewInfo={modalSongPreviewInfo}
+        />
+      )}
     </>
   )
 }
