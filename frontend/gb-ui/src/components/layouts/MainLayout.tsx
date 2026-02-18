@@ -107,16 +107,17 @@ export default function NavBar(){
       </nav>
     </div>
       <div className="h-[100dvh] flex flex-col items-center w-full ">
-        <div className="h-14 flex items-center justify-between w-full px-2">
+
+      <div className="h-14 flex items-center justify-between w-full px-2">
         <div className="flex-1">
-        <button className="flex-1 lg:hidden"
+          <button className="flex-1 lg:hidden"
             onClick={()=>{setShowSideBar(true)}} >
               <img className="flex-1 h-10"
                 src={hamburgerSvg}/>
           </button>
           <div className="hidden lg:block text-green-600 text-4xl ">GreenBeans</div>
         </div>
-        <div className="flex flex-1 justify-center items-center">
+        <div className="flex flex-1 justify-end items-center">
           <div className="text-stone-400 pr-2">Powered by </div>
           <a className="flex h-6 w-6"
             href='https://spotify.com' 
@@ -126,9 +127,9 @@ export default function NavBar(){
           </a>
         </div>
         
-        <h1 className="flex-1 text-white font-bold text-3xl text-right">
+        {/* <h1 className="flex-1 text-white font-bold text-3xl text-right">
           {pageName}
-        </h1>
+        </h1> */}
       </div>
       <Outlet/>
       {showSideBar ? 
