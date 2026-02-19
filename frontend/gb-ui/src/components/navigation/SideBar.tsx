@@ -5,7 +5,6 @@ import userIcon from "../../assets/user-svgrepo-com.svg";
 interface params{
   setShowSidebar: Dispatch<SetStateAction<boolean>>,
   currUser: string|null,
-  setPageName: Dispatch<SetStateAction<string>>
   setShowLogOutModal: Dispatch<SetStateAction<boolean>>
 }
 
