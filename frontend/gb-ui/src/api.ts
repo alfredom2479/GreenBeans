@@ -320,6 +320,7 @@ export async function requestSpotifySearch(accessToken:string, searchQuery:strin
       accessToken,
       RequestMethods.Get
     );
+    console.log(data);
     return data;
   }
   else{

@@ -2,3 +2,4 @@ node_modules
 server/node_modules
 .env
 server/dist
+server/pnpm-lock.yaml

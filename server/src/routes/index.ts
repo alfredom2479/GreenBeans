@@ -7,6 +7,7 @@ import spotifyRoutes from "./spotifyRoutes.js"
 import databaseRoutes from "./databaseRoutes.js";
 const constructorMethod = (app:Application) =>{
 
+    console.log("routes");
     
     app.use("/api/auth",authRoutes);
     app.use("/api/spotify",spotifyRoutes);
