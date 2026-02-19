@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Outlet, useLoaderData, useLocation, useNavigate} from "react-router-dom";
+import { Outlet, useLoaderData,  useNavigate} from "react-router-dom";
 import {  requestMySpotifyAccount } from "../../api";
 import LogOutModal from "../modals/LogOutModal";
 import hamburgerSvg from '../../assets/hamburger3.svg';
@@ -53,12 +53,13 @@ export default function NavBar(){
   const [currUser, setCurrUser] = useState<string|null>("")
   const [showLogOutModal, setShowLogOutModal] = useState<boolean>(false);
   const [showSideBar, setShowSideBar] = useState<boolean>(false);
-  const [pageName, setPageName] = useState<string>("Link-Search");
+  //const [pageName, setPageName] = useState<string>("Link-Search");
 
   const loaderDataUsername = useLoaderData();
   const navigate = useNavigate();
-  const location = useLocation();
+  //const location = useLocation();
 
+  /*
   useEffect(()=>{
     const urlPath:string = location.pathname;
     if (urlPath.includes("top")) setPageName("Top")
@@ -67,6 +68,7 @@ export default function NavBar(){
     else if (urlPath.includes("link")) setPageName("Link")
     else setPageName("Search")
   },[location])
+  */
 
   useEffect(()=>{
     typeof loaderDataUsername ==="string" ? setCurrUser(loaderDataUsername) : setCurrUser(null);
@@ -136,7 +138,6 @@ export default function NavBar(){
           <SideBar 
             setShowSidebar={setShowSideBar} 
             currUser={currUser} 
-            setPageName={setPageName}
             setShowLogOutModal={setShowLogOutModal}
           />
         : null}
