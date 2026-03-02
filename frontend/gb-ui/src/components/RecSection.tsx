@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { AudioFeatureSettings, ITrack, SongPreviewInfo, TrackSaveState, useTrackAndAudioFeatures } from "../interfaces";
-import {  redirect, useActionData, useLoaderData } from "react-router-dom";
+import { redirect, useFetcher, useLoaderData } from "react-router-dom";
 import RecOptionsSection from "./feature-settings/RecOptionsSection";
 import SongPreviewModal from "./modals/SongPreviewModal";
 import { isTrack } from "../utils";
@@ -48,8 +48,8 @@ export default function RecSection(){
   const [modalSongPreviewInfo, setModalSongPreviewInfo] = useState<SongPreviewInfo>({name:"",artist:"",url:"",image:""});
   
   const loaderData = useLoaderData();
-  const actionData= useActionData();
-  //console.log("actionData",actionData);
+  const fetcher = useFetcher();
+  const actionData = fetcher.data;
 
   const [recList, setRecList] = useState<ITrack[]>([]);
 
@@ -77,39 +77,31 @@ export default function RecSection(){
 
   
   useEffect(()=>{
-    //console.log("actionData",actionData);
-  if(Array.isArray(actionData)){
-      const tempTrackList:ITrack[] = [];
-      let possibleTrack: ITrack|null = null;
+    if(!Array.isArray(actionData)) return;
+    const tempTrackList: ITrack[] = [];
+    let possibleTrack: ITrack | null = null;
 
-      for(let i=0; i < actionData.length;i++){
-        possibleTrack = null;
-
-        if(typeof actionData[i].id === 'string' && 
-        typeof actionData[i].id === 'string' &&
+    for(let i = 0; i < actionData.length; i++){
+      possibleTrack = null;
+      if(typeof actionData[i].id === 'string' &&
         typeof actionData[i].name === 'string' &&
         typeof actionData[i].artist === 'string' &&
-        Array.isArray(actionData[i].image) && actionData[i].image.length > 0 && 
+        Array.isArray(actionData[i].image) && actionData[i].image.length > 0 &&
         actionData[i].trackSaveState !== null){
-
-          possibleTrack = {
-            id:actionData[i].id,
-            name: actionData[i].name,
-            artist: actionData[i].artist,
-            image: actionData[i].image,
-            url: actionData[i].url ? actionData[i].url : null,
-            trackSaveState: actionData[i].trackSaveState
-          }
-        }
-        if(possibleTrack != null){
-          tempTrackList.push(possibleTrack);
-        }
+        possibleTrack = {
+          id: actionData[i].id,
+          name: actionData[i].name,
+          artist: actionData[i].artist,
+          image: actionData[i].image,
+          url: actionData[i].url ? actionData[i].url : null,
+          trackSaveState: actionData[i].trackSaveState
+        };
       }
-      setRecList(tempTrackList);
-      setIsLoadingRecs(false);
-      //console.log("tempTrackList",tempTrackList);
+      if(possibleTrack != null) tempTrackList.push(possibleTrack);
     }
-  }, [actionData])
+    setRecList(tempTrackList);
+    setIsLoadingRecs(false);
+  }, [actionData]);
 
   useEffect(()=>{
     if(audioSettings.id === "" || currAudioFeatures.id !== audioSettings.id){
@@ -324,6 +316,7 @@ export default function RecSection(){
                 setIsLoadingRecs={setIsLoadingRecs}
                 audioSettings={audioSettings}
                 setAudioSettings={setAudioSettings}
+                submitRecsRequest={(payload) => fetcher.submit(payload, { method: "post", encType: "application/json" })}
               />
             ) : (
               <RecList

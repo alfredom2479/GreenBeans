@@ -200,8 +200,8 @@ export async function requestSpotifyRec(
   audioFeatureSettings:AudioFeatureSettings,
   isLoggedIn: boolean
 ){
-  //console.log("audioFeatureSettings",audioFeatureSettings);
-  //console.log("selectedOptions",selectedOptions);
+  console.log("audioFeatureSettings",audioFeatureSettings);
+  console.log("selectedOptions",selectedOptions);
 
   let queryOptionSuffix:string = trackId;
 
@@ -266,6 +266,7 @@ export async function requestSpotifyRec(
       return data;
   }
   else{
+    console.log("in not logged in");
       const res = await fetch(`/api/spotify/getrecs?querysuffix=${encodeURIComponent(queryOptionSuffix)}`,{
         method: "GET"
       });

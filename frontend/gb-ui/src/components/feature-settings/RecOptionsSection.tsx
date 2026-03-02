@@ -57,8 +57,10 @@ export async function action({params,request}:IURLParams){
     isLoggedIn
   );
 
-  if(data.tracks && Array.isArray(data.tracks)){
+  console.log("data",data);
 
+  if(data.tracks && Array.isArray(data.tracks)){
+    console.log("in if data.tracks && Array.isArray(data.tracks)");
     const trackData = data.tracks;
     const tempTrackList:ITrack[] =[];
 
@@ -93,10 +95,11 @@ export async function action({params,request}:IURLParams){
         }
       }
     }
-    //console.log(tempTrackList);
+    console.log(tempTrackList);
     return tempTrackList;
   }
 
+  console.log("returning empty array");
   return [];
 }
 
@@ -108,20 +111,22 @@ interface RecOptionsSectionProps{
   setIsLoadingRecs: React.Dispatch<boolean>,
   audioSettings: AudioFeatureSettings,
   setAudioSettings: React.Dispatch<React.SetStateAction<AudioFeatureSettings>>,
+  submitRecsRequest?: (payload: string) => void,
 }
 
 export default function RecOptionsSection({
   checkedBoxes,
-  setCheckedBoxes, 
-  audioFeatures, 
-  setIsSelectingOptions, 
+  setCheckedBoxes,
+  audioFeatures,
+  setIsSelectingOptions,
   setIsLoadingRecs,
   audioSettings,
   setAudioSettings,
-  
+  submitRecsRequest,
 }:RecOptionsSectionProps){
 
   const submit = useSubmit();
+  const submitRecs = submitRecsRequest ?? ((payload: string) => submit(payload, { method: "post", encType: "application/json" }));
 
  
   const audioFeatureNames: [keyof AudioFeatures, string][] = [
@@ -271,10 +276,7 @@ const audioFeatureReadableData = getAudioFeatureReadableData(audioFeatures);
                 popularity: audioSettings.popularity
               } as AudioFeatureSettings
             });
-          submit(
-            submissionJSON,
-            { method: "post", encType: "application/json" }
-          );
+          submitRecs(submissionJSON);
           setIsSelectingOptions(false)
           setIsLoadingRecs(true)
           

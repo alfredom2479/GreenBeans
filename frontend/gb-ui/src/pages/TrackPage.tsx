@@ -1,5 +1,5 @@
 import {useState, useEffect } from "react";
-import { Outlet, useLoaderData} from "react-router-dom";
+import { Outlet, useActionData, useLoaderData} from "react-router-dom";
 import { requestSpotifyTrack,requestSpotifyTrackAudioFeatures,sendTrackSeenRequest } from "../api";
 import type {Params} from "react-router-dom";
 import { ITrack, AudioFeatures, TrackSaveState,  } from "../interfaces";
@@ -88,10 +88,14 @@ export async function loader({params}:IURLParams){
 export default function TrackPage(){
 
   const loaderData = useLoaderData();
+  const actionData = useActionData();
 
   const [trackData, setTrackData] = useState<ITrack>({id:"",name: "", artist: "", image:[],trackSaveState:TrackSaveState.CantSave});
   const [currAudioFeatures,setCurrAudioFeatures] = useState<AudioFeatures>({id:""});
 
+  useEffect(()=>{
+    console.log("TrackPage actionData",actionData);
+  },[actionData])
     
   useEffect(()=>{
 
