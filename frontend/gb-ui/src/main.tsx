@@ -92,17 +92,14 @@ const router = createBrowserRouter([
           element: <TrackPage/>,
           errorElement: <RootErrorBoundary/>,
           loader: trackDataLoader,
+          // Only parent has action: POST is matched to this route. Child (RecSection) uses useFetcher() to get the response. See docs/react-router-action-notes.md.
           action: getRecsAction,
-          
           children:[
             {
               path: "",
               element: <RecSection/>,
               loader: preRecLoader,
-              action:getRecsAction,
-              shouldRevalidate: ({formMethod}) => {
-                return formMethod !== "post"
-              }
+              shouldRevalidate: ({ formMethod }) => formMethod !== "post"
             }
           ]
         }
