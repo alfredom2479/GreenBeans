@@ -7,14 +7,14 @@ import axios from "axios";
 
 import { generateRandomString } from "../utils/cryptoUtils.js";
 
-const stateKey:string = "spotify_auth_state";
+//const stateKey:string = "spotify_auth_state";
 
 const spotifyLoginUser =  (req:Request,res:Response)
   :void=>{
   //Protection against CSRF
   const state:string = generateRandomString(16);
 
-  res.cookie(stateKey, state);
+  //res.cookie(stateKey, state);
 
   const authScope:string = "user-top-read user-read-private user-read-email user-library-read user-library-modify";
 
@@ -35,14 +35,21 @@ const spotifyLoginUser =  (req:Request,res:Response)
 const getInitialTokens = asyncHandler( async (req:Request,res:Response): Promise<void>=>{
   const authCode = req.query.code || null;
   const authState = req.query.state || null;
-  const storedState:string|null = req.cookies ? req.cookies[stateKey] : null;
+  //const storedState:string|null = req.cookies ? req.cookies[stateKey] : null;
 
+  /*
   if(authState === null || authState !== storedState){
     res.status(500);
     res.json({error: {message:'state_mismatch',state:500}});
   }
+  */
+ if(authState === null){
+  res.status(500)
+  res.json({error: {message:'no_state_provided',state:500}});
+  
+ }
   else{
-    res.clearCookie[stateKey];
+    //res.clearCookie[stateKey];
     const authHeaderStr = 'Basic '+ (Buffer.from(process.env.SPOTIFY_CLIENT_ID+
           ":"+process.env.SPOTIFY_CLIENT_SECRET,"utf-8").toString('base64'))
 
