@@ -188,7 +188,7 @@ export default function TrackPage(){
   },[loaderData])
 
   return (
-    <div className="min-h-[calc(100%-3.5rem)] w-full flex flex-col">
+    <div className="flex-1min-h-0 w-full flex flex-col overflow-hidden">
       <header className="shrink-0 border-b border-zinc-800/80 bg-zinc-900/50 p-4">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 py-6 rounded-2xl shadow-xl shadow-green-900/50 bg-gradient-to-br from-zinc-900 via-zinc-800/80 to-green-800/30 border border-green-600/40 ring-1 ring-green-300/20 transition-all duration-300">
           <div className="flex items-center gap-4 sm:gap-5">
@@ -224,7 +224,9 @@ export default function TrackPage(){
 
         </div> 
         </header>
-        <Outlet context={{currAudioFeatures:currAudioFeatures satisfies AudioFeatures, trackData:trackData satisfies ITrack }} />
+        <div className="flex-1 min-h-0 flex flex-col overflow-hidden">
+          <Outlet context={{currAudioFeatures:currAudioFeatures satisfies AudioFeatures, trackData:trackData satisfies ITrack }} />
+        </div>
     </div>
   )
 }

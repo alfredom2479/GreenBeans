@@ -271,7 +271,7 @@ export default function RecSection(){
 
   return (
     <>
-      <div className="flex flex-col h-[calc(100%-8rem)]">
+      <div className="flex flex-col flex-1 min-h-0"> 
         <div className="mx-auto w-full max-w-2xl px-4 sm:px-6 flex flex-col flex-1 min-h-0">
           <nav className="flex items-stretch h-10 shrink-0 bg-zinc-800/80 border-b border-zinc-700/50 rounded-t-xl overflow-hidden">
             {/* Listen – action for current track (separate from tabs) */}
