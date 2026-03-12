@@ -135,7 +135,7 @@ export default function RecOptionsSection({
     ["danceability", "Danceability"],
     ["acousticness", "Acousticness"],
     ["tempo", "Tempo"],
-    ["key", "Key"],
+    // ["key", "Key"],
     ["mode", "Mode"],
   ]
 
@@ -181,88 +181,112 @@ const audioFeatureReadableData = getAudioFeatureReadableData(audioFeatures);
 
   
   return(
-    // <>
-     <div className=" flex flex-col h-[calc(100%-2rem)]">
-    <div className=" flex flex-col justify-between max-w-full   overflow-y-scroll">
-      <div className="flex flex-col justify-items-center w-full">
-
-      {audioFeatureNames.map((feature)=>{
-        //console.log(audioFeatures[feature[0]])
-        return (
-          <div key={feature[0]} className="flex m-2 lg:m-4  items-center">
-            <div className="flex items-center w-56 h-16">
-            <input 
-              className="w-5 h-5 cursor-pointer accent-green-800 rounded-xl border-2 border-green-500 focus:ring-gray-500 focus:ring-2"
-              onClick={()=>handleToggleSettingBox(feature[0])} 
-              defaultChecked={isSettingPicked(feature[0])} 
-              name={feature[0]} 
-              id={feature[0]} 
-              type="checkbox">
-            </input>
-            <label className="text-lg h-16  lg:text-xl text-green-50 px-2" htmlFor={feature[0]}> 
-              {feature[1]}  <br/> <b className="text-green-600">{audioFeatureReadableData[feature[0]]}</b>
-            </label>
+    <div className="flex flex-col h-[calc(100%-2rem)]">
+      <div className="flex flex-col justify-between max-w-full overflow-y-auto">
+        <div className="flex flex-col gap-3 w-full">
+          {audioFeatureNames.map((feature) => {
+            const isChecked = isSettingPicked(feature[0]);
+            return (
+            <div
+              key={feature[0]}
+              className={"flex flex-wrap items-center gap-4 rounded-xl border px-4 py-3 shadow-sm transition-colors " + (isChecked ? "border-green-500/70 bg-stone-800/70 shadow-green-500/5" : "border-stone-600/50 bg-stone-800/40")}
+            >
+              <div className="flex items-center gap-3 min-w-[12rem] shrink-0">
+                <label htmlFor={feature[0]} className="relative flex h-5 w-5 shrink-0 cursor-pointer items-center justify-center">
+                  <input
+                    type="checkbox"
+                    id={feature[0]}
+                    name={feature[0]}
+                    checked={isChecked}
+                    onChange={() => handleToggleSettingBox(feature[0])}
+                    className="peer sr-only"
+                  />
+                  <span className="absolute inset-0 rounded-md border-2 border-stone-500 bg-stone-800 transition-colors peer-focus-visible:ring-2 peer-focus-visible:ring-green-500/50 peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-stone-900 peer-checked:border-green-500 peer-checked:bg-green-600/90" />
+                  <svg className="pointer-events-none relative h-3 w-3 text-white opacity-0 transition-opacity peer-checked:opacity-100" viewBox="0 0 12 10" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M1 5l3 3 7-7" />
+                  </svg>
+                </label>
+                <label
+                  htmlFor={feature[0]}
+                  className="cursor-pointer text-base font-medium text-stone-100 lg:text-lg"
+                >
+                  <span className="block">{feature[1]}</span>
+                  <span className="text-sm font-normal text-green-400/90">
+                    {audioFeatureReadableData[feature[0]]}
+                  </span>
+                </label>
+              </div>
+              <div className="min-w-0 flex-1 basis-full sm:basis-0">
+              {featureNameToSettingsTypeMap[feature[0]] === SettingsType.PERCENTAGE_MIN_MAX && (
+                <FeatureSettingsBox
+                  featureName={feature[0]}
+                  audioFeatureSettings={audioSettings}
+                  setAudioFeatureSetting={setAudioSettings}
+                  featureSettingEnabled={checkedBoxes.includes(feature[0])}
+                />
+              )}
+              {featureNameToSettingsTypeMap[feature[0]] === SettingsType.BOOL && (
+                <BoolFeatureSettingsBox
+                  featureName={feature[0]}
+                  audioFeatureSettings={audioSettings}
+                  setAudioFeatureSetting={setAudioSettings}
+                  featureSettingEnabled={checkedBoxes.includes(feature[0])}
+                />
+              )}
+              {featureNameToSettingsTypeMap[feature[0]] === SettingsType.OPTIONS && (
+                <OptionFeatureSettBox
+                  featureName={feature[0]}
+                  audioFeatureSettings={audioSettings}
+                  setAudioFeatureSetting={setAudioSettings}
+                  featureSettingEnabled={checkedBoxes.includes(feature[0])}
+                />
+              )}
+              </div>
             </div>
-            {((featureNameToSettingsTypeMap[feature[0]] === SettingsType.PERCENTAGE_MIN_MAX &&
-              <FeatureSettingsBox 
-                featureName={feature[0]} 
-                audioFeatureSettings={audioSettings}
-                setAudioFeatureSetting={setAudioSettings}
-                featureSettingEnabled={checkedBoxes.includes(feature[0])}
-              />
-            ) ||
-            (featureNameToSettingsTypeMap[feature[0]] === SettingsType.BOOL &&
-              <BoolFeatureSettingsBox
-                featureName={feature[0]}
-                audioFeatureSettings={audioSettings}
-                setAudioFeatureSetting={setAudioSettings}
-                featureSettingEnabled={checkedBoxes.includes(feature[0])}
-              />
-            ) ||
-            (featureNameToSettingsTypeMap[feature[0]] === SettingsType.OPTIONS &&
-              <OptionFeatureSettBox
-                featureName={feature[0]}
-                audioFeatureSettings={audioSettings}
-                setAudioFeatureSetting={setAudioSettings}
-                featureSettingEnabled={checkedBoxes.includes(feature[0])}
-              />
-            ))}
-            <br/>
-          </div>
-        )
-      })}
-      <div key="popularity" className="flex m-2 lg:m-4 h-16 items-center">
-        <div className="flex items-center w-56 h-16">
-        <input 
-          onClick={()=>handleToggleSettingBox("popularity")} 
-          defaultChecked={isSettingPicked("popularity")} 
-          name="popularity" 
-          id="popularity" 
-          type="checkbox"
-          className="w-5 h-5 cursor-pointer accent-green-800 rounded-xl border-2 border-green-500 focus:ring-gray-500 focus:ring-2"
+          );
+          })}
+          <div
+            className={"flex flex-wrap items-center gap-4 rounded-xl border px-4 py-3 shadow-sm transition-colors " + (isSettingPicked("popularity") ? "border-green-500/70 bg-stone-800/70 shadow-green-500/5" : "border-stone-600/50 bg-stone-800/40")}
           >
-        </input>
-        <label className="text-lg lg:text-xl text-green-50 pl-2" htmlFor="popularity"> 
-          Popularity
-        </label>
+            <div className="flex items-center gap-3 min-w-[12rem] shrink-0">
+              <label htmlFor="popularity" className="relative flex h-5 w-5 shrink-0 cursor-pointer items-center justify-center">
+                <input
+                  type="checkbox"
+                  id="popularity"
+                  name="popularity"
+                  checked={isSettingPicked("popularity")}
+                  onChange={() => handleToggleSettingBox("popularity")}
+                  className="peer sr-only"
+                />
+                <span className="absolute inset-0 rounded-md border-2 border-stone-500 bg-stone-800 transition-colors peer-focus-visible:ring-2 peer-focus-visible:ring-green-500/50 peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-stone-900 peer-checked:border-green-500 peer-checked:bg-green-600/90" />
+                <svg className="pointer-events-none relative h-3 w-3 text-white opacity-0 transition-opacity peer-checked:opacity-100" viewBox="0 0 12 10" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M1 5l3 3 7-7" />
+                </svg>
+              </label>
+              <label
+                htmlFor="popularity"
+                className="cursor-pointer text-base font-medium text-stone-100 lg:text-lg"
+              >
+                Popularity
+              </label>
+            </div>
+            <div className="min-w-0 flex-1 basis-full sm:basis-0">
+            <FeatureSettingsBox
+              featureName="popularity"
+              audioFeatureSettings={audioSettings}
+              setAudioFeatureSetting={setAudioSettings}
+              featureSettingEnabled={checkedBoxes.includes("popularity")}
+            />
+            </div>
+          </div>
         </div>
-        { <FeatureSettingsBox 
-            featureName="popularity" 
-            audioFeatureSettings={audioSettings}
-            setAudioFeatureSetting={setAudioSettings}
-            featureSettingEnabled={checkedBoxes.includes("popularity")}
-          />
-        }
       </div>
-      
-      </div>
-      
-    </div>
-      <div className=" flex flex-col items-center justify-center p-2 ">
-      <button 
-        onClick={()=>{
-          const submissionJSON = JSON.stringify(
-            {settings:checkedBoxes,
+      <div className="mt-4 flex flex-col items-center justify-center p-2">
+        <button
+          type="button"
+          onClick={() => {
+            const submissionJSON = JSON.stringify({
+              settings: checkedBoxes,
               audioFeatures,
               audioFeatureSettings: {
                 acousticness: audioSettings.acousticness,
@@ -273,19 +297,18 @@ const audioFeatureReadableData = getAudioFeatureReadableData(audioFeatures);
                 key: audioSettings.key,
                 mode: audioSettings.mode,
                 duration_ms: audioSettings.duration_ms,
-                popularity: audioSettings.popularity
-              } as AudioFeatureSettings
+                popularity: audioSettings.popularity,
+              } as AudioFeatureSettings,
             });
-          submitRecs(submissionJSON);
-          setIsSelectingOptions(false)
-          setIsLoadingRecs(true)
-          
-        }}
-        className=" max-h-[10vh]  bg-green-50 hover:bg-green-200 text-stone-900 text-lg lg:text-xl rounded-xl font-bold p-2 w-1/2 text-center flex justify-center items-center disabled:bg-gray-400 disabled:text-gray-600"
-        >Get New Tracks
-      </button>
-      
+            submitRecs(submissionJSON);
+            setIsSelectingOptions(false);
+            setIsLoadingRecs(true);
+          }}
+          className="w-full max-w-xs rounded-xl bg-green-600 px-6 py-3 text-center text-lg font-semibold text-white shadow-md transition-colors hover:bg-green-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-stone-900 disabled:bg-stone-600 disabled:text-stone-400"
+        >
+          Get New Tracks
+        </button>
       </div>
-      </div>
-  )
+    </div>
+  );
 }
