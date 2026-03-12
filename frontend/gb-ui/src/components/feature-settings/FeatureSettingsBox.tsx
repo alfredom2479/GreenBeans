@@ -38,25 +38,26 @@ export default function FeatureSettingsBox({
   
 
   return (
-    <div className="p-4 w-full">
-        <div className="flex flex-col gap-4">
-         <div className="flex gap-4 max-w-2xl ">
-          <div className="flex flex-1 items-center">
-            <label htmlFor={`${featureName}-preference`} className=" text-white  lg:pr-6 flex-1 "> 
-              {formatDisplayValue(audioFeatureSettings[featureName] as number)}
-            </label>
-            <input type="range" min="0" max={max} step={step} 
-              className="w-full h-2 appearance-none cursor-pointer rounded-lg bg-gray-700 flex-[2_2_0%] disabled:bg-stone-800" 
-              disabled={!featureSettingEnabled}
-              id={`${featureName}-preference`} 
-              value={audioFeatureSettings[featureName] as number} 
-              onChange={(e) => handleValueChange(e)} />
-          </div>
-
-          </div>
-
-        </div>
-      
+    <div className="flex flex-[2] grow min-w-0 max-w-2xl items-center gap-4 py-1">
+      <span
+        id={`${featureName}-value`}
+        className="min-w-[4.5rem] text-right text-sm font-medium tabular-nums text-stone-300"
+        aria-live="polite"
+      >
+        {formatDisplayValue(audioFeatureSettings[featureName] as number)}
+      </span>
+      <input
+        type="range"
+        min="0"
+        max={max}
+        step={step}
+        id={`${featureName}-preference`}
+        value={audioFeatureSettings[featureName] as number}
+        onChange={handleValueChange}
+        disabled={!featureSettingEnabled}
+        aria-labelledby={`${featureName}-value`}
+        className="h-2 w-full min-w-0 flex-1 cursor-pointer appearance-none rounded-full bg-stone-600 disabled:cursor-not-allowed disabled:opacity-50 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-green-500 [&::-webkit-slider-thumb]:shadow [&::-webkit-slider-thumb]:transition-colors [&::-webkit-slider-thumb]:hover:bg-green-400 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:bg-green-500"
+      />
     </div>
   )
 }
