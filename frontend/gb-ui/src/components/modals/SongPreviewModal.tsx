@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useCallback, useEffect, useRef, useState } from "react"
+import { Dispatch, SetStateAction, useCallback, useEffect, useRef, } from "react"
 import { SongPreviewInfo } from "../../interfaces"
 
 const SWIPE_THRESHOLD_PX = 50
