@@ -8,15 +8,23 @@ export default function TopPage(){
 
   const [showModal, setShowModal] = useState(false);
   const [modalSongPreviewInfo, setModalSongPreviewInfo] = useState<SongPreviewInfo>({name:"",artist:"",url:"",image:""});
+  const [modalSongList, setModalSongList] = useState<SongPreviewInfo[]>([]);
+  const [modalCurrentIndex, setModalCurrentIndex] = useState(0);
 
-  function handleListenOnClick(songPreviewInfo:SongPreviewInfo|undefined){
+  function handleListenOnClick(songPreviewInfo:SongPreviewInfo|undefined, list?: SongPreviewInfo[], index?: number){
     if(songPreviewInfo === undefined || songPreviewInfo === null){
       console.log("Song preview is undefined");
       return
     }
     setModalSongPreviewInfo(songPreviewInfo);
+    if (list && list.length > 0 && index !== undefined) {
+      setModalSongList(list);
+      setModalCurrentIndex(index);
+    } else {
+      setModalSongList([]);
+      setModalCurrentIndex(0);
+    }
     setShowModal(true);
-    return;
   }
 
   return(
@@ -28,6 +36,9 @@ export default function TopPage(){
           <SongPreviewModal 
             setShowModal={setShowModal} 
             songPreviewInfo={modalSongPreviewInfo}
+            songList={modalSongList.length > 0 ? modalSongList : undefined}
+            currentIndex={modalCurrentIndex}
+            onIndexChange={setModalCurrentIndex}
           />
         :
           null
