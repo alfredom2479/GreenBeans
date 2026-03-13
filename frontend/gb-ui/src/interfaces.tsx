@@ -61,7 +61,7 @@ export interface AudioFeatureSettings  {
 
 
 export type ListenOnClickContextType = {
-  handleListenOnClick:(songPreviewInfo:SongPreviewInfo|undefined) =>void
+  handleListenOnClick:(songPreviewInfo:SongPreviewInfo|undefined, list?: SongPreviewInfo[], index?: number) =>void
 }
 
 export function useHandleListenOnClick(){

@@ -3,7 +3,7 @@ import TrackCard from "../TrackCard"
 
 interface CompParams{
   listTracks: ITrack[],
-  handleOnClick: (songPreviewInfo:SongPreviewInfo|undefined)=>void,
+  handleOnClick: (songPreviewInfo:SongPreviewInfo|undefined, index?: number)=>void,
   isLoadingRecs: boolean
 }
 
@@ -18,13 +18,13 @@ export default function RecList({listTracks,handleOnClick,isLoadingRecs}:CompPar
     <div className="flex flex-col flex-1 min-h-0 overflow-y-auto">
       {isLoadingRecs  ? <p className="text-white">Loading...</p> :
         <ul>
-          {listTracks.map((track)=>{
+          {listTracks.map((track, index)=>{
             return (
               <li key={track.id}>
                 <TrackCard
                   hideSaveButton={refreshToken === null || refreshToken.length < 1}
                   track={track}
-                  popModal={handleOnClick}
+                  popModal={(info) => handleOnClick(info, index)}
                 />
               </li>
             )

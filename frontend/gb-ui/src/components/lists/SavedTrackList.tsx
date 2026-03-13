@@ -1,4 +1,4 @@
-import {useState, useEffect, useRef} from "react"
+import {useState, useEffect, useMemo, useRef} from "react"
 import { redirect, useLoaderData, useParams, NavLink } from "react-router-dom";
 import TrackCard from "../TrackCard";
 import { requestSavedTracks } from "../../api";
@@ -106,6 +106,11 @@ export default function SavedTrackList(){
     if(listRef !== null && listRef.current !== null) listRef.current.scrollTo(0,0);
   },[loaderData]);
 
+  const songListForModal = useMemo(
+    () => savedTracksList.map((t) => ({ name: t.name, artist: t.artist, url: t.url ?? "", image: t.image[0] })),
+    [savedTracksList]
+  );
+
   return(
   <div className="flex flex-col h-full ">
     <div className="flex">
@@ -152,13 +157,13 @@ export default function SavedTrackList(){
     <div className="overflow-y-scroll" 
       ref={listRef}>
         <ul>
-          {savedTracksList.map((track)=>{
+          {savedTracksList.map((track, index)=>{
             return (
               <li key={track.id}>
                 <TrackCard
                   hideSaveButton={true}
                   track={{...track,trackSaveState:TrackSaveState.Saved}}
-                  popModal={handleListenOnClick}
+                  popModal={(info) => handleListenOnClick(info, songListForModal, index)}
                 />
               </li>
             )

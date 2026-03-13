@@ -66,6 +66,8 @@ export default function SearchPage(){
     const [searchResults,setSearchResults] = useState<ITrack[]>([]);
     const [showModal,setShowModal] = useState(false);
     const [modalSongPreviewInfo, setModalSongPreviewInfo] = useState<SongPreviewInfo>({name:"",artist:"",url:"",image:""});
+    const [modalSongList, setModalSongList] = useState<SongPreviewInfo[]>([]);
+    const [modalCurrentIndex, setModalCurrentIndex] = useState(0);
 
     const searchInputRef = useRef<HTMLInputElement | null>(null);
     const actionData = useActionData();
@@ -98,13 +100,19 @@ export default function SearchPage(){
         //console.log("in useEffect 2");
     },[actionData])
 
-    function handleListenOnClick(songPreviewInfo:SongPreviewInfo|undefined){
+    function handleListenOnClick(songPreviewInfo:SongPreviewInfo|undefined, index?: number){
         if(songPreviewInfo === undefined){
             return;
         }
         setModalSongPreviewInfo(songPreviewInfo);
+        if (searchResults.length > 0 && index !== undefined) {
+            setModalSongList(searchResults.map((t) => ({ name: t.name, artist: t.artist, url: t.url ?? "", image: t.image[0] })));
+            setModalCurrentIndex(index);
+        } else {
+            setModalSongList([]);
+            setModalCurrentIndex(0);
+        }
         setShowModal(true);
-        return;
     }
 
     return (
@@ -190,11 +198,11 @@ export default function SearchPage(){
                         </div>
                     ) : (
                         <ul className="divide-y divide-zinc-800/80 overflow-y-auto max-h-[50vh] sm:max-h-[55vh]">
-                            {searchResults.map((track) => (
+                            {searchResults.map((track, index) => (
                                 <li key={track.id}>
                                     <TrackCard
                                         track={track}
-                                        popModal={handleListenOnClick}
+                                        popModal={(info) => handleListenOnClick(info, index)}
                                         hideSaveButton={true}
                                     />
                                 </li>
@@ -208,6 +216,9 @@ export default function SearchPage(){
                 <SongPreviewModal
                     setShowModal={setShowModal}
                     songPreviewInfo={modalSongPreviewInfo}
+                    songList={modalSongList.length > 0 ? modalSongList : undefined}
+                    currentIndex={modalCurrentIndex}
+                    onIndexChange={setModalCurrentIndex}
                 />
             )}
         </div>
