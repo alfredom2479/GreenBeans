@@ -20,6 +20,7 @@ export default function SongPreviewModal({
 }: params) {
   const audioRef = useRef<HTMLAudioElement>(null)
   const touchStartX = useRef<number | null>(null)
+  const touchStartedOnAudio = useRef(false)
 
   const hasList = Array.isArray(songList) && songList.length > 1 && typeof onIndexChange === "function"
   const displayInfo: SongPreviewInfo = hasList && songList.length > 0
@@ -42,10 +43,24 @@ export default function SongPreviewModal({
   }, [displayInfo.url])
 
   const handleTouchStart = useCallback((e: React.TouchEvent) => {
-    touchStartX.current = e.touches[0].clientX
+    const el = audioRef.current
+    const x = e.touches[0].clientX
+    const y = e.touches[0].clientY
+    if (el) {
+      const rect = el.getBoundingClientRect()
+      touchStartedOnAudio.current = x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom
+    } else {
+      touchStartedOnAudio.current = false
+    }
+    touchStartX.current = x
   }, [])
 
   const handleTouchEnd = useCallback((e: React.TouchEvent) => {
+    if (touchStartedOnAudio.current) {
+      touchStartX.current = null
+      touchStartedOnAudio.current = false
+      return
+    }
     if (!hasList || touchStartX.current == null) return
     const endX = e.changedTouches[0].clientX
     const delta = touchStartX.current - endX
