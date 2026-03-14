@@ -46,8 +46,8 @@ export default function RecSection(){
   const [isLoadingRecs, setIsLoadingRecs] = useState(true);
   
   const [modalSongPreviewInfo, setModalSongPreviewInfo] = useState<SongPreviewInfo>({name:"",artist:"",url:"",image:""});
-  const [modalSongList, setModalSongList] = useState<SongPreviewInfo[]>([]);
   const [modalCurrentIndex, setModalCurrentIndex] = useState(0);
+  const [modalTrackList, setModalTrackList] = useState<ITrack[]>([]);
   
   const loaderData = useLoaderData();
   const fetcher = useFetcher();
@@ -260,16 +260,16 @@ export default function RecSection(){
   },[loaderData])
 
 
-  function handleListenOnClick(songPreviewInfo:SongPreviewInfo|undefined, index?: number){
+  function handleListenOnClick(songPreviewInfo:SongPreviewInfo|undefined, index?: number, trackList?: ITrack[]){
     if(songPreviewInfo === undefined){
       return;
     }
     setModalSongPreviewInfo(songPreviewInfo);
-    if (recList.length > 0 && index !== undefined) {
-      setModalSongList(recList.map((t) => ({ name: t.name, artist: t.artist, url: t.url ?? "", image: t.image[0] })));
+    if (trackList && trackList.length > 0 && index !== undefined) {
+      setModalTrackList(trackList);
       setModalCurrentIndex(index);
     } else {
-      setModalSongList([]);
+      setModalTrackList([trackData]);
       setModalCurrentIndex(0);
     }
     setShowModal(true);
@@ -286,7 +286,7 @@ export default function RecSection(){
             <div className="flex items-center shrink-0 pl-2 border-r border-zinc-700/50">
               <button
                 type="button"
-                onClick={() => handleListenOnClick({ name: trackData.name, artist: trackData.artist, url: trackData.url ?? "", image: trackData.image?.[0] ?? "" }, undefined)}
+                onClick={() => handleListenOnClick({ name: trackData.name, artist: trackData.artist, url: trackData.url ?? "", image: trackData.image?.[0] ?? "" }, undefined, undefined)}
                 disabled={trackData.url == null || trackData.url === "" || trackData.url === " "}
                 className="flex items-center justify-center gap-2 h-8 px-4 rounded-lg bg-green-600 text-white font-medium shadow-md shadow-green-900/40 hover:bg-green-500 hover:shadow-lg hover:shadow-green-900/50 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-green-600 disabled:shadow-md disabled:hover:shadow-green-900/40 transition-all"
                 title="Listen to this track"
@@ -340,9 +340,10 @@ export default function RecSection(){
         <SongPreviewModal
           setShowModal={setShowModal}
           songPreviewInfo={modalSongPreviewInfo}
-          songList={modalSongList.length > 0 ? modalSongList : undefined}
           currentIndex={modalCurrentIndex}
           onIndexChange={setModalCurrentIndex}
+          trackList={modalTrackList.length > 0 ? modalTrackList : undefined}
+          onTrackSaved={(track) => setRecList((prev) => prev.map((t) => t.id === track.id ? { ...t, trackSaveState: TrackSaveState.Saved } : t))}
         />
       )}
     </>
