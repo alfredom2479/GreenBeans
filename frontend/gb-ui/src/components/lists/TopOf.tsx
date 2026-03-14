@@ -1,4 +1,4 @@
-import {useEffect, useMemo, useRef, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import { redirect,useLoaderData} from "react-router-dom";
 import type {Params} from 'react-router-dom';
 import TrackCard from "../TrackCard";
@@ -69,11 +69,6 @@ export default function TopOf(){
     if(listRef !== null && listRef.current !== null) listRef.current.scrollTo(0,0);
   },[loadedData])
 
-  const songListForModal = useMemo(
-    () => topTracksList.map((t) => ({ name: t.name, artist: t.artist, url: t.url ?? "", image: t.image[0] })),
-    [topTracksList]
-  );
-
   return(
     <>
       <div className="basis-1/12 flex flex-col">
@@ -100,7 +95,7 @@ export default function TopOf(){
             <TrackCard 
               hideSaveButton={true}
               track={{...track,trackSaveState:TrackSaveState.CantSave}}
-              popModal={(info) => handleListenOnClick(info, songListForModal, index)}
+              popModal={(info) => handleListenOnClick(info, index, topTracksList, (track) => setTopTracksList((prev) => prev.map((t) => t.id === track.id ? { ...t, trackSaveState: TrackSaveState.Saved } : t)))}
             />
             </li>)
           })}

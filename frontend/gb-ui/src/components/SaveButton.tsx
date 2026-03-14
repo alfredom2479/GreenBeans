@@ -8,12 +8,11 @@ import { saveSpotifyTrack } from "../api";
 //import { Stores, updateITrack } from "../idb";
 import { didb } from "../dexiedb";
 interface SaveButtonParams{
-  //trackSaveState: TrackSaveState,
-  //id: string
   trackInfo: ITrack
+  onSaved?: (track: ITrack) => void
 }
 
-export default function SaveButton({trackInfo}:SaveButtonParams){
+export default function SaveButton({trackInfo, onSaved}:SaveButtonParams){
 
   const savedSaveButtonClassName= "flex-1 bg-green-600 text-black flex p-1 text-center items-center justify-center font-bold text-lg shrink-0  h-full"
   const disabledSaveButtonClassName= "flex-1 bg-neutral-600 text-black flex p-1 text-center items-center justify-center font-bold text-lg shrink-0  h-full"
@@ -73,6 +72,7 @@ export default function SaveButton({trackInfo}:SaveButtonParams){
               console.log(err);
             }
             sessionStorage.setItem("last_track_saved_time",Date.now().toString());
+            onSaved?.(trackInfo);
           }
         }catch(err){
           console.log("Error saving track");

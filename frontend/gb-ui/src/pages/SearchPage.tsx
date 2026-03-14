@@ -1,7 +1,7 @@
 import { useRef, useEffect, useState } from "react";
 import { useActionData, Form } from "react-router-dom";
 import { requestSpotifySearch } from "../api";
-import { ITrack, SongPreviewInfo } from "../interfaces";
+import { ITrack, SongPreviewInfo, TrackSaveState } from "../interfaces";
 import { isTrack, isITrackObject } from "../utils";
 import TrackCard from "../components/TrackCard";
 import SongPreviewModal from "../components/modals/SongPreviewModal";
@@ -66,8 +66,8 @@ export default function SearchPage(){
     const [searchResults,setSearchResults] = useState<ITrack[]>([]);
     const [showModal,setShowModal] = useState(false);
     const [modalSongPreviewInfo, setModalSongPreviewInfo] = useState<SongPreviewInfo>({name:"",artist:"",url:"",image:""});
-    const [modalSongList, setModalSongList] = useState<SongPreviewInfo[]>([]);
     const [modalCurrentIndex, setModalCurrentIndex] = useState(0);
+    const [modalTrackList, setModalTrackList] = useState<ITrack[]>([]);
 
     const searchInputRef = useRef<HTMLInputElement | null>(null);
     const actionData = useActionData();
@@ -100,16 +100,16 @@ export default function SearchPage(){
         //console.log("in useEffect 2");
     },[actionData])
 
-    function handleListenOnClick(songPreviewInfo:SongPreviewInfo|undefined, index?: number){
+    function handleListenOnClick(songPreviewInfo:SongPreviewInfo|undefined, index?: number, trackList?: ITrack[]){
         if(songPreviewInfo === undefined){
             return;
         }
         setModalSongPreviewInfo(songPreviewInfo);
-        if (searchResults.length > 0 && index !== undefined) {
-            setModalSongList(searchResults.map((t) => ({ name: t.name, artist: t.artist, url: t.url ?? "", image: t.image[0] })));
+        if (searchResults.length > 0 && index !== undefined && trackList?.length) {
+            setModalTrackList(trackList);
             setModalCurrentIndex(index);
         } else {
-            setModalSongList([]);
+            setModalTrackList([]);
             setModalCurrentIndex(0);
         }
         setShowModal(true);
@@ -202,7 +202,7 @@ export default function SearchPage(){
                                 <li key={track.id}>
                                     <TrackCard
                                         track={track}
-                                        popModal={(info) => handleListenOnClick(info, index)}
+                                        popModal={(info) => handleListenOnClick(info, index, searchResults)}
                                         hideSaveButton={true}
                                     />
                                 </li>
@@ -216,9 +216,10 @@ export default function SearchPage(){
                 <SongPreviewModal
                     setShowModal={setShowModal}
                     songPreviewInfo={modalSongPreviewInfo}
-                    songList={modalSongList.length > 0 ? modalSongList : undefined}
                     currentIndex={modalCurrentIndex}
                     onIndexChange={setModalCurrentIndex}
+                    trackList={modalTrackList.length > 0 ? modalTrackList : undefined}
+                    onTrackSaved={(track) => setSearchResults((prev) => prev.map((t) => t.id === track.id ? { ...t, trackSaveState: TrackSaveState.Saved } : t))}
                 />
             )}
         </div>

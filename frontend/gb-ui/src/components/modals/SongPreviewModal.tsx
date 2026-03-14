@@ -1,34 +1,44 @@
-import { Dispatch, SetStateAction, useCallback, useEffect, useRef, } from "react"
-import { SongPreviewInfo } from "../../interfaces"
+import { Dispatch, SetStateAction, useCallback, useEffect, useRef } from "react"
+import { Link } from "react-router-dom"
+import { ITrack, SongPreviewInfo } from "../../interfaces"
+import SaveButton from "../SaveButton"
+import findRecsSvg from "../../assets/search-list.svg"
 
 const SWIPE_THRESHOLD_PX = 50
+
+function trackToPreview(t: ITrack): SongPreviewInfo {
+  return { name: t.name, artist: t.artist, url: t.url ?? "", image: t.image[0] }
+}
 
 interface params {
   setShowModal: Dispatch<SetStateAction<boolean>>,
   songPreviewInfo: SongPreviewInfo,
-  songList?: SongPreviewInfo[],
   currentIndex?: number,
   onIndexChange?: (index: number) => void,
+  trackList?: ITrack[],
+  hideSaveButton?: boolean,
+  onTrackSaved?: (track: ITrack) => void,
 }
 
 export default function SongPreviewModal({
   setShowModal,
   songPreviewInfo,
-  songList,
   currentIndex = 0,
   onIndexChange,
+  trackList,
+  hideSaveButton = false,
+  onTrackSaved,
 }: params) {
   const audioRef = useRef<HTMLAudioElement>(null)
   const touchStartX = useRef<number | null>(null)
   const touchStartedOnAudio = useRef(false)
 
-  const hasList = Array.isArray(songList) && songList.length > 1 && typeof onIndexChange === "function"
-  const displayInfo: SongPreviewInfo = hasList && songList.length > 0
-    ? songList[Math.max(0, Math.min(currentIndex, songList.length - 1))]
-    : songPreviewInfo
-  const index = hasList ? Math.max(0, Math.min(currentIndex, songList.length - 1)) : 0
+  const index = trackList && trackList.length > 0 ? Math.max(0, Math.min(currentIndex, trackList.length - 1)) : 0
+  const currentTrack: ITrack | undefined = trackList?.[index]
+  const hasList = Array.isArray(trackList) && trackList.length > 1 && typeof onIndexChange === "function"
+  const displayInfo: SongPreviewInfo = currentTrack ? trackToPreview(currentTrack) : songPreviewInfo
   const canPrev = hasList && index > 0
-  const canNext = hasList && index < songList.length - 1
+  const canNext = hasList && index < trackList!.length - 1
 
   const goPrev = useCallback(() => {
     if (canPrev && onIndexChange) onIndexChange(index - 1)
@@ -142,9 +152,9 @@ export default function SongPreviewModal({
             {displayInfo.artist}
           </p>
 
-          {hasList && (
+          {hasList && trackList && (
             <p className="text-xs text-zinc-500 mt-1">
-              {index + 1} / {songList!.length}
+              {index + 1} / {trackList.length}
             </p>
           )}
 
@@ -154,6 +164,24 @@ export default function SongPreviewModal({
             controls
             className="w-full mt-4 h-10 accent-green-500 [&::-webkit-media-controls-panel]:bg-zinc-800"
           />
+
+          {/* Recs + Save (same as TrackCard) */}
+          {currentTrack && (
+            <div className="flex gap-2 mt-4 items-stretch">
+              {!hideSaveButton && (
+                <div className="flex-1 min-w-0 flex items-center">
+                  <SaveButton trackInfo={currentTrack} onSaved={onTrackSaved} />
+                </div>
+              )}
+              <Link
+                to={`/track/${currentTrack.id}`}
+                onClick={(e) => { e.stopPropagation(); setShowModal(false); }}
+                className="flex-1 bg-stone-200 hover:bg-green-700 text-black flex p-2 sm:p-3 text-center items-center justify-center font-bold rounded-xl shrink-0 transition-colors"
+              >
+                <img src={findRecsSvg} alt="Find recs" className="w-8 h-8" />
+              </Link>
+            </div>
+          )}
         </div>
       </div>
     </div>
