@@ -260,6 +260,8 @@ export default function RecSection(){
   },[loaderData])
 
 
+  const [hideFindRecsInModal, setHideFindRecsInModal] = useState(false);
+
   function handleListenOnClick(songPreviewInfo:SongPreviewInfo|undefined, index?: number, trackList?: ITrack[]){
     if(songPreviewInfo === undefined){
       return;
@@ -268,9 +270,11 @@ export default function RecSection(){
     if (trackList && trackList.length > 0 && index !== undefined) {
       setModalTrackList(trackList);
       setModalCurrentIndex(index);
+      setHideFindRecsInModal(false);
     } else {
       setModalTrackList([trackData]);
       setModalCurrentIndex(0);
+      setHideFindRecsInModal(true);
     }
     setShowModal(true);
   }
@@ -342,6 +346,7 @@ export default function RecSection(){
           currentIndex={modalCurrentIndex}
           onIndexChange={setModalCurrentIndex}
           trackList={modalTrackList.length > 0 ? modalTrackList : undefined}
+          hideFindRecs={hideFindRecsInModal}
           onTrackSaved={(track) => {
             setRecList((prev) => prev.map((t) => t.id === track.id ? { ...t, trackSaveState: TrackSaveState.Saved } : t));
             onTrackSavedFromContext?.(track);
