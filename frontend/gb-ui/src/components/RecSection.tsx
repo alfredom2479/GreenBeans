@@ -281,40 +281,39 @@ export default function RecSection(){
     <>
       <div className="flex flex-col flex-1 min-h-0"> 
         <div className="mx-auto w-full max-w-2xl px-4 sm:px-6 pb-6 flex flex-col flex-1 min-h-0">
-          <nav className="flex items-stretch h-10 shrink-0 bg-zinc-800/80 border-b border-zinc-700/50 rounded-t-xl overflow-hidden">
-            {/* Listen – action for current track (separate from tabs) */}
-            <div className="flex items-center shrink-0 pl-2 border-r border-zinc-700/50">
-              <button
-                type="button"
-                onClick={() => handleListenOnClick({ name: trackData.name, artist: trackData.artist, url: trackData.url ?? "", image: trackData.image?.[0] ?? "" }, undefined, undefined)}
-                disabled={trackData.url == null || trackData.url === "" || trackData.url === " "}
-                className="flex items-center justify-center gap-2 h-8 px-4 rounded-lg bg-green-600 text-white font-medium shadow-md shadow-green-900/40 hover:bg-green-500 hover:shadow-lg hover:shadow-green-900/50 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-green-600 disabled:shadow-md disabled:hover:shadow-green-900/40 transition-all"
-                title="Listen to this track"
-              >
-                <img src={listenSvg} alt="" className="w-5 h-5 brightness-0 invert" />
-                <span className="text-sm">Listen</span>
-              </button>
-            </div>
-            {/* Tracks | Preferences – section tabs */}
-            <div className="flex flex-1 min-w-0">
+          <nav
+            className="flex items-center gap-2 sm:gap-3 p-1.5 rounded-xl bg-zinc-800/50 border border-zinc-700/50 shrink-0"
+            aria-label="Track actions and sections"
+          >
+            <button
+              type="button"
+              onClick={() => handleListenOnClick({ name: trackData.name, artist: trackData.artist, url: trackData.url ?? "", image: trackData.image?.[0] ?? "" }, undefined, undefined)}
+              disabled={trackData.url == null || trackData.url === "" || trackData.url === " "}
+              className="flex items-center justify-center gap-2 h-9 px-4 rounded-lg bg-green-600 text-white text-sm font-medium hover:bg-green-500 focus:outline-none focus:ring-2 focus:ring-green-500/50 focus:ring-offset-2 focus:ring-offset-zinc-900 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-green-600 transition-colors shrink-0"
+              title="Listen to this track"
+            >
+              <img src={listenSvg} alt="" className="w-4 h-4 brightness-0 invert" />
+              <span>Listen</span>
+            </button>
+            <div className="flex-1 flex rounded-lg overflow-hidden bg-zinc-800/80 border border-zinc-700/50">
               <button
                 type="button"
                 onClick={() => setIsSelectingOptions(false)}
-                className={`flex-1 flex items-center justify-center text-sm font-medium transition-colors ${!isSelectingOptions ? "bg-green-600 text-white" : "text-zinc-400 hover:bg-zinc-700/50 hover:text-zinc-200"}`}
+                className={`flex-1 flex items-center justify-center py-2 px-3 text-sm font-medium transition-colors ${!isSelectingOptions ? "bg-zinc-700 text-white" : "text-zinc-400 hover:text-white hover:bg-zinc-700/70"}`}
               >
                 Tracks
               </button>
               <button
                 type="button"
                 onClick={() => setIsSelectingOptions(true)}
-                className={`flex-1 flex items-center justify-center text-sm font-medium transition-colors ${isSelectingOptions ? "bg-green-600 text-white" : "text-zinc-400 hover:bg-zinc-700/50 hover:text-zinc-200"}`}
+                className={`flex-1 flex items-center justify-center py-2 px-3 text-sm font-medium transition-colors ${isSelectingOptions ? "bg-zinc-700 text-white" : "text-zinc-400 hover:text-white hover:bg-zinc-700/70"}`}
               >
                 Preferences
               </button>
             </div>
           </nav>
 
-          <div className="flex flex-col overflow-hidden max-h-[60vh] sm:max-h-[65vh] bg-zinc-900/30 border border-t-0 border-zinc-800/50 rounded-b-xl">
+          <div className="flex flex-col overflow-hidden min-h-[60vh] sm:min-h-[65vh] max-h-[60vh] sm:max-h-[65vh] mt-3 bg-zinc-900/30 border border-zinc-800/50 rounded-xl">
             {isSelectingOptions ? (
               <RecOptionsSection
                 checkedBoxes={checkedBoxes}
