@@ -158,12 +158,16 @@ export default function SongPreviewModal({
             </p>
           )}
 
-          <audio
-            ref={audioRef}
-            src={displayInfo.url}
-            controls
-            className="w-full mt-4 h-10 accent-green-500 [&::-webkit-media-controls-panel]:bg-zinc-800"
-          />
+          {displayInfo.url && displayInfo.url.trim() !== "" ? (
+            <audio
+              ref={audioRef}
+              src={displayInfo.url}
+              controls
+              className="w-full mt-4 h-10 accent-green-500 [&::-webkit-media-controls-panel]:bg-zinc-800"
+            />
+          ) : (
+            <p className="mt-4 text-sm text-zinc-500">Preview unavailable</p>
+          )}
 
           {/* Recs + Save (same as TrackCard) */}
           {currentTrack && (

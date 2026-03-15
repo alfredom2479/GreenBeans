@@ -69,6 +69,6 @@ export function useHandleListenOnClick(){
 }
 
 export function useTrackAndAudioFeatures(){
-  return useOutletContext<{currAudioFeatures:AudioFeatures, trackData:ITrack}>();
+  return useOutletContext<{currAudioFeatures:AudioFeatures, trackData:ITrack, onTrackSaved?: (track: ITrack) => void}>();
 }
 

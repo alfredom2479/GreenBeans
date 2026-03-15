@@ -16,8 +16,12 @@ export default function RecList({listTracks,handleOnClick,isLoadingRecs}:CompPar
 
   return (
     <div className="flex flex-col flex-1 min-h-0 overflow-y-auto">
-      {isLoadingRecs  ? <p className="text-white">Loading...</p> :
-        <ul>
+      {isLoadingRecs  ? (
+        <div className="h-48 sm:h-56 flex flex-col items-center justify-center gap-2 px-4 text-center">
+          <p className="text-zinc-500 text-sm sm:text-base">Loading…</p>
+        </div>
+      ) : (
+        <ul className="divide-y divide-zinc-800/80">
           {listTracks.map((track, index)=>{
             return (
               <li key={track.id}>
@@ -30,7 +34,7 @@ export default function RecList({listTracks,handleOnClick,isLoadingRecs}:CompPar
             )
           })}
         </ul>
-      }
+      )}
     </div>
   )
 }

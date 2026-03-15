@@ -181,9 +181,9 @@ const audioFeatureReadableData = getAudioFeatureReadableData(audioFeatures);
 
   
   return(
-    <div className="flex flex-col h-[calc(100%-2rem)]">
-      <div className="flex flex-col justify-between max-w-full overflow-y-auto">
-        <div className="flex flex-col gap-3 w-full">
+    <div className="flex flex-col flex-1 min-h-0 h-full">
+      <div className="flex-1 min-h-0 overflow-y-auto">
+        <div className="flex flex-col gap-3 w-full p-3 sm:p-4">
           {audioFeatureNames.map((feature) => {
             const isChecked = isSettingPicked(feature[0]);
             return (
@@ -281,7 +281,7 @@ const audioFeatureReadableData = getAudioFeatureReadableData(audioFeatures);
           </div>
         </div>
       </div>
-      <div className="mt-4 flex flex-col items-center justify-center p-2">
+      <div className="shrink-0 flex flex-col items-center justify-center p-3 sm:p-4 border-t border-zinc-800/50">
         <button
           type="button"
           onClick={() => {
