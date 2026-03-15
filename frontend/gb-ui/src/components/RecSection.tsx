@@ -57,7 +57,7 @@ export default function RecSection(){
 
   const [isSelectingOptions, setIsSelectingOptions] = useState<boolean>(false);
 
-  const {currAudioFeatures,trackData} = useTrackAndAudioFeatures();
+  const {currAudioFeatures, trackData, onTrackSaved: onTrackSavedFromContext} = useTrackAndAudioFeatures();
   //const currAudioFeatures = useAudioFeatures().currAudioFeatures;
   //const trackData = useAudioFeatures().trackData;
 
@@ -280,7 +280,7 @@ export default function RecSection(){
   return (
     <>
       <div className="flex flex-col flex-1 min-h-0"> 
-        <div className="mx-auto w-full max-w-2xl px-4 sm:px-6 flex flex-col flex-1 min-h-0">
+        <div className="mx-auto w-full max-w-2xl px-4 sm:px-6 pb-6 flex flex-col flex-1 min-h-0">
           <nav className="flex items-stretch h-10 shrink-0 bg-zinc-800/80 border-b border-zinc-700/50 rounded-t-xl overflow-hidden">
             {/* Listen – action for current track (separate from tabs) */}
             <div className="flex items-center shrink-0 pl-2 border-r border-zinc-700/50">
@@ -314,7 +314,7 @@ export default function RecSection(){
             </div>
           </nav>
 
-          <div className="flex-1 min-h-0 flex flex-col overflow-hidden bg-zinc-900/30 border border-t-0 border-zinc-800/50 rounded-b-xl">
+          <div className="flex flex-col overflow-hidden max-h-[60vh] sm:max-h-[65vh] bg-zinc-900/30 border border-t-0 border-zinc-800/50 rounded-b-xl">
             {isSelectingOptions ? (
               <RecOptionsSection
                 checkedBoxes={checkedBoxes}
@@ -343,7 +343,10 @@ export default function RecSection(){
           currentIndex={modalCurrentIndex}
           onIndexChange={setModalCurrentIndex}
           trackList={modalTrackList.length > 0 ? modalTrackList : undefined}
-          onTrackSaved={(track) => setRecList((prev) => prev.map((t) => t.id === track.id ? { ...t, trackSaveState: TrackSaveState.Saved } : t))}
+          onTrackSaved={(track) => {
+            setRecList((prev) => prev.map((t) => t.id === track.id ? { ...t, trackSaveState: TrackSaveState.Saved } : t));
+            onTrackSavedFromContext?.(track);
+          }}
         />
       )}
     </>

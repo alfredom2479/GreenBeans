@@ -1,6 +1,6 @@
 import {useState, useEffect } from "react";
 import { Outlet, useActionData, useLoaderData} from "react-router-dom";
-import { requestSpotifyTrack,requestSpotifyTrackAudioFeatures,sendTrackSeenRequest } from "../api";
+import { requestSaveStatus, requestSpotifyTrack,requestSpotifyTrackAudioFeatures,sendTrackSeenRequest } from "../api";
 import type {Params} from "react-router-dom";
 import { ITrack, AudioFeatures, TrackSaveState,  } from "../interfaces";
 import { isAudioFeatures, isITrackObject, isTrack } from "../utils";
@@ -166,6 +166,19 @@ export default function TrackPage(){
         if(!usingIDBTrackData){
           addTrackToDexie(possibleTrack);
         }
+        const accessToken = localStorage.getItem("access_token");
+        if(!accessToken || accessToken === ""){
+          setTrackData((prev) => ({ ...prev, trackSaveState: TrackSaveState.CantSave }));
+        } else {
+          requestSaveStatus(accessToken, [possibleTrack]).then((saveStatusData) => {
+            if(Array.isArray(saveStatusData) && saveStatusData.length > 0){
+              setTrackData((prev) => ({
+                ...prev,
+                trackSaveState: saveStatusData[0] ? TrackSaveState.Saved : TrackSaveState.Saveable,
+              }));
+            }
+          });
+        }
       }
 
       if(typeof audioFeatureLoaderData === 'object' && audioFeatureLoaderData){
@@ -188,7 +201,7 @@ export default function TrackPage(){
   },[loaderData])
 
   return (
-    <div className="flex-1min-h-0 w-full flex flex-col overflow-hidden">
+    <div className="flex-1 min-h-0 w-full flex flex-col overflow-hidden">
       <header className="shrink-0 border-b border-zinc-800/80 bg-zinc-900/50 p-4">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 py-6 rounded-2xl shadow-xl shadow-green-900/50 bg-gradient-to-br from-zinc-900 via-zinc-800/80 to-green-800/30 border border-green-600/40 ring-1 ring-green-300/20 transition-all duration-300">
           <div className="flex items-center gap-4 sm:gap-5">
@@ -224,8 +237,12 @@ export default function TrackPage(){
 
         </div> 
         </header>
-        <div className="flex-1 min-h-0 flex flex-col overflow-hidden">
-          <Outlet context={{currAudioFeatures:currAudioFeatures satisfies AudioFeatures, trackData:trackData satisfies ITrack }} />
+        <div className="flex-1 min-h-0 flex flex-col overflow-hidden px-4 sm:px-6 pb-6">
+          <Outlet context={{
+            currAudioFeatures: currAudioFeatures satisfies AudioFeatures,
+            trackData: trackData satisfies ITrack,
+            onTrackSaved: (track: ITrack) => setTrackData((prev) => (prev.id === track.id ? { ...prev, trackSaveState: TrackSaveState.Saved } : prev)),
+          }} />
         </div>
     </div>
   )

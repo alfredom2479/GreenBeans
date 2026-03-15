@@ -1,6 +1,6 @@
 import { useRef, useEffect, useState } from "react";
 import { useActionData, Form } from "react-router-dom";
-import { requestSpotifySearch } from "../api";
+import { requestSaveStatus, requestSpotifySearch } from "../api";
 import { ITrack, SongPreviewInfo, TrackSaveState } from "../interfaces";
 import { isTrack, isITrackObject } from "../utils";
 import TrackCard from "../components/TrackCard";
@@ -74,30 +74,36 @@ export default function SearchPage(){
 
 
     useEffect(()=>{
-        //console.log("actionData",actionData);
-        //console.log("in useEffect");
-
         if(actionData && Array.isArray(actionData)){
-            //console.log("actionData is an array");
             const tempTrackList:ITrack[] = [];
             let possibleTrack: ITrack|null = null;
 
             for(let i=0; i < actionData.length; i++){
                 possibleTrack = isITrackObject(actionData[i]);
-                //console.log("possibleTrack",possibleTrack);
                 if(possibleTrack !== null){
                     tempTrackList.push(possibleTrack);
                 }
             }
             setSearchResultsLoading(false);
             setSearchResults(tempTrackList);
+
+            const accessToken = localStorage.getItem("access_token");
+            if(accessToken && accessToken !== "" && tempTrackList.length > 0){
+                requestSaveStatus(accessToken, tempTrackList).then((saveStatusData) => {
+                    if(Array.isArray(saveStatusData) && saveStatusData.length === tempTrackList.length){
+                        setSearchResults((prev) =>
+                            prev.map((t, i) => ({
+                                ...t,
+                                trackSaveState: saveStatusData[i] ? TrackSaveState.Saved : TrackSaveState.Saveable,
+                            }))
+                        );
+                    }
+                });
+            }
         }
         else{
-            //setSearchResultsLoading(false);
             setSearchResults([]);
         }
-        //console.log("searchResults",searchResults);
-        //console.log("in useEffect 2");
     },[actionData])
 
     function handleListenOnClick(songPreviewInfo:SongPreviewInfo|undefined, index?: number, trackList?: ITrack[]){
@@ -203,7 +209,8 @@ export default function SearchPage(){
                                     <TrackCard
                                         track={track}
                                         popModal={(info) => handleListenOnClick(info, index, searchResults)}
-                                        hideSaveButton={true}
+                                        hideSaveButton={false}
+                                        onSaved={(track) => setSearchResults((prev) => prev.map((t) => t.id === track.id ? { ...t, trackSaveState: TrackSaveState.Saved } : t))}
                                     />
                                 </li>
                             ))}
@@ -219,7 +226,11 @@ export default function SearchPage(){
                     currentIndex={modalCurrentIndex}
                     onIndexChange={setModalCurrentIndex}
                     trackList={modalTrackList.length > 0 ? modalTrackList : undefined}
-                    onTrackSaved={(track) => setSearchResults((prev) => prev.map((t) => t.id === track.id ? { ...t, trackSaveState: TrackSaveState.Saved } : t))}
+                    onTrackSaved={(track) => {
+                        const update = (prev: ITrack[]) => prev.map((t) => t.id === track.id ? { ...t, trackSaveState: TrackSaveState.Saved } : t);
+                        setSearchResults(update);
+                        setModalTrackList((prev) => (prev.length > 0 ? update(prev) : prev));
+                    }}
                 />
             )}
         </div>

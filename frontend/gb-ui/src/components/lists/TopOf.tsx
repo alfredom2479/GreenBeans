@@ -69,38 +69,55 @@ export default function TopOf(){
     if(listRef !== null && listRef.current !== null) listRef.current.scrollTo(0,0);
   },[loadedData])
 
-  return(
-    <>
-      <div className="basis-1/12 flex flex-col">
-        <nav className="flex flex-col justify-center font-bold  h-12">
-          <ul className={`flex text-stone-200`}>
-          <TopNavItem path="/top/month" name="30d" onClick={()=>{
-            setTopTracksList([]);
-          }}/>
-          <TopNavItem path="/top/sixmonths" name="6m" onClick={()=>{
-            setTopTracksList([]);
-          }}/>
-          <TopNavItem path="/top/alltime" name="y+" onClick={()=>{
-            setTopTracksList([]);
-          }}/>
-        </ul>
-      </nav>
-      </div>
-
-      <div className="overflow-y-scroll" ref={listRef}>
-        <ul>
-          {topTracksList.map((track, index)=>{
-            return (
-            <li key={track.id}>
-            <TrackCard 
-              hideSaveButton={true}
-              track={{...track,trackSaveState:TrackSaveState.CantSave}}
-              popModal={(info) => handleListenOnClick(info, index, topTracksList, (track) => setTopTracksList((prev) => prev.map((t) => t.id === track.id ? { ...t, trackSaveState: TrackSaveState.Saved } : t)))}
-            />
-            </li>)
-          })}
-          </ul>
+  return (
+    <div className="min-h-[calc(100%-3.5rem)] w-full flex flex-col">
+      <section className="shrink-0 px-4 sm:px-6 pt-6 sm:pt-10 pb-4">
+        <div className="mx-auto max-w-2xl">
+          <h1 className="text-center text-3xl sm:text-4xl font-bold text-white tracking-tight">
+            My Top Tracks
+          </h1>
+          <p className="text-center text-zinc-400 text-sm sm:text-base mt-1">
+            Your most played tracks
+          </p>
+          <nav className="mt-4 flex rounded-lg overflow-hidden bg-zinc-800/50 border border-zinc-700/50 p-1" aria-label="Time range">
+            <ul className="flex flex-1 text-zinc-300">
+              <TopNavItem path="/top/month" name="30d" onClick={() => setTopTracksList([])} />
+              <TopNavItem path="/top/sixmonths" name="6m" onClick={() => setTopTracksList([])} />
+              <TopNavItem path="/top/alltime" name="y+" onClick={() => setTopTracksList([])} />
+            </ul>
+          </nav>
         </div>
-    </>
-  )
+      </section>
+
+      <section className="flex-1 min-h-0 px-4 sm:px-6 pb-6" aria-label="Top tracks list">
+        <div className="mx-auto max-w-2xl h-full rounded-xl overflow-hidden bg-zinc-900/30 border border-zinc-800/50">
+          <div className="overflow-y-auto max-h-[60vh] sm:max-h-[65vh] h-full" ref={listRef}>
+            {topTracksList.length === 0 ? (
+              <div className="h-48 sm:h-56 flex flex-col items-center justify-center gap-2 px-4 text-center">
+                <p className="text-zinc-500 text-sm sm:text-base">Loading top tracks…</p>
+              </div>
+            ) : (
+              <ul className="divide-y divide-zinc-800/80">
+                {topTracksList.map((track, index) => (
+                  <li key={track.id}>
+                    <TrackCard
+                      hideSaveButton={true}
+                      track={{ ...track, trackSaveState: TrackSaveState.CantSave }}
+                      popModal={(info) =>
+                        handleListenOnClick(info, index, topTracksList, (track) =>
+                          setTopTracksList((prev) =>
+                            prev.map((t) => (t.id === track.id ? { ...t, trackSaveState: TrackSaveState.Saved } : t))
+                          )
+                        )
+                      }
+                    />
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </div>
+      </section>
+    </div>
+  );
 }
