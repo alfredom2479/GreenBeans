@@ -11,8 +11,6 @@ export default function RecList({listTracks,handleOnClick,isLoadingRecs}:CompPar
 
   //ad-hoc way of checking if user is logged in lol
   const refreshToken:string|null = localStorage.getItem("refresh_token");
-  console.log("isLoadingRecs",isLoadingRecs);
-  console.log(listTracks);
 
   return (
     <div className="flex flex-col flex-1 min-h-0 overflow-y-auto">
