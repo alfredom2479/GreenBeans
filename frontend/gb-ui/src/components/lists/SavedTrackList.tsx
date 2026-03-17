@@ -165,7 +165,7 @@ export default function SavedTrackList(){
 
       <section className="flex-1 min-h-0 px-4 sm:px-6 pb-6" aria-label="Saved tracks list">
         <div className="mx-auto max-w-2xl h-full rounded-xl overflow-hidden bg-zinc-900/30 border border-zinc-800/50">
-          <div className="overflow-y-auto max-h-[60vh] sm:max-h-[65vh] h-full" ref={listRef}>
+          <div className="overflow-y-auto max-h-[60dvh] sm:max-h-[65dvh] h-full" ref={listRef}>
             {savedTracksList.length === 0 ? (
               <div className="h-48 sm:h-56 flex flex-col items-center justify-center gap-2 px-4 text-center">
                 <p className="text-zinc-500 text-sm sm:text-base">Loading saved tracks…</p>
