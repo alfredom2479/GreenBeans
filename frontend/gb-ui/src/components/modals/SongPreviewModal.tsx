@@ -51,7 +51,14 @@ export default function SongPreviewModal({
   }, [canNext, index, onIndexChange])
 
   useEffect(() => {
-    audioRef.current?.load()
+    const el = audioRef.current
+    if (!el || !displayInfo.url?.trim()) return
+    el.load()
+    const onCanPlay = () => {
+      el.play().catch(() => {}) // ignore autoplay policy rejections
+    }
+    el.addEventListener("canplay", onCanPlay, { once: true })
+    return () => el.removeEventListener("canplay", onCanPlay)
   }, [displayInfo.url])
 
   const handleTouchStart = useCallback((e: React.TouchEvent) => {
