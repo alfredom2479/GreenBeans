@@ -242,6 +242,7 @@ export default function TrackPage(){
             currAudioFeatures: currAudioFeatures satisfies AudioFeatures,
             trackData: trackData satisfies ITrack,
             onTrackSaved: (track: ITrack) => setTrackData((prev) => (prev.id === track.id ? { ...prev, trackSaveState: TrackSaveState.Saved } : prev)),
+            onTrackUnsaved: (track: ITrack) => setTrackData((prev) => (prev.id === track.id ? { ...prev, trackSaveState: TrackSaveState.Saveable } : prev)),
           }} />
         </div>
     </div>

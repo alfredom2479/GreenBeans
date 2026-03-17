@@ -12,14 +12,15 @@ function handleDefaultModalError(songPreviewInfo:SongPreviewInfo | undefined ){
   }
 }
 
-interface TrackCardParams{
-  track : ITrack,
-  popModal: (songPreviewInfo:SongPreviewInfo | undefined) =>void,
+interface TrackCardParams {
+  track: ITrack,
+  popModal: (songPreviewInfo: SongPreviewInfo | undefined) => void,
   hideSaveButton: boolean,
   onSaved?: (track: ITrack) => void,
+  onUnsaved?: (track: ITrack) => void,
 }
 
-export default function TrackCard({track,popModal=handleDefaultModalError,hideSaveButton=false,onSaved}:TrackCardParams){
+export default function TrackCard({ track, popModal = handleDefaultModalError, hideSaveButton = false, onSaved, onUnsaved }: TrackCardParams) {
 
   const defaultTrackCardOptionString  = "flex-1 bg-stone-200 hover:bg-green-700 text-black flex p-1 text-center "
     + "items-center justify-center font-bold text-lg shrink-0  h-full"
@@ -57,7 +58,7 @@ export default function TrackCard({track,popModal=handleDefaultModalError,hideSa
               </button>
           }
 
-           {!hideSaveButton && <SaveButton trackInfo={track} onSaved={onSaved}/>}
+           {!hideSaveButton && <SaveButton trackInfo={track} onSaved={onSaved} onUnsaved={onUnsaved} />}
 
           <Link to={`/track/${track.id}`}
             className={defaultTrackCardOptionString}

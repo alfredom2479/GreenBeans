@@ -19,6 +19,7 @@ interface params {
   hideSaveButton?: boolean,
   hideFindRecs?: boolean,
   onTrackSaved?: (track: ITrack) => void,
+  onTrackUnsaved?: (track: ITrack) => void,
 }
 
 export default function SongPreviewModal({
@@ -30,6 +31,7 @@ export default function SongPreviewModal({
   hideSaveButton = false,
   hideFindRecs = false,
   onTrackSaved,
+  onTrackUnsaved,
 }: params) {
   const audioRef = useRef<HTMLAudioElement>(null)
   const touchStartX = useRef<number | null>(null)
@@ -183,7 +185,7 @@ export default function SongPreviewModal({
             <div className="flex gap-2 mt-4 items-stretch">
               {!hideSaveButton && (
                 <div className="flex-1 min-w-0 flex items-center">
-                  <SaveButton trackInfo={currentTrack} onSaved={onTrackSaved} />
+                  <SaveButton trackInfo={currentTrack} onSaved={onTrackSaved} onUnsaved={onTrackUnsaved} />
                 </div>
               )}
               {!hideFindRecs && (

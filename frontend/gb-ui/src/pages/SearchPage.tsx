@@ -211,6 +211,7 @@ export default function SearchPage(){
                                         popModal={(info) => handleListenOnClick(info, index, searchResults)}
                                         hideSaveButton={false}
                                         onSaved={(track) => setSearchResults((prev) => prev.map((t) => t.id === track.id ? { ...t, trackSaveState: TrackSaveState.Saved } : t))}
+                                        onUnsaved={(track) => setSearchResults((prev) => prev.map((t) => t.id === track.id ? { ...t, trackSaveState: TrackSaveState.Saveable } : t))}
                                     />
                                 </li>
                             ))}
@@ -228,6 +229,11 @@ export default function SearchPage(){
                     trackList={modalTrackList.length > 0 ? modalTrackList : undefined}
                     onTrackSaved={(track) => {
                         const update = (prev: ITrack[]) => prev.map((t) => t.id === track.id ? { ...t, trackSaveState: TrackSaveState.Saved } : t);
+                        setSearchResults(update);
+                        setModalTrackList((prev) => (prev.length > 0 ? update(prev) : prev));
+                    }}
+                    onTrackUnsaved={(track) => {
+                        const update = (prev: ITrack[]) => prev.map((t) => t.id === track.id ? { ...t, trackSaveState: TrackSaveState.Saveable } : t);
                         setSearchResults(update);
                         setModalTrackList((prev) => (prev.length > 0 ? update(prev) : prev));
                     }}

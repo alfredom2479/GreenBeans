@@ -57,7 +57,7 @@ export default function RecSection(){
 
   const [isSelectingOptions, setIsSelectingOptions] = useState<boolean>(false);
 
-  const {currAudioFeatures, trackData, onTrackSaved: onTrackSavedFromContext} = useTrackAndAudioFeatures();
+  const {currAudioFeatures, trackData, onTrackSaved: onTrackSavedFromContext, onTrackUnsaved: onTrackUnsavedFromContext} = useTrackAndAudioFeatures();
   //const currAudioFeatures = useAudioFeatures().currAudioFeatures;
   //const trackData = useAudioFeatures().trackData;
 
@@ -350,6 +350,10 @@ export default function RecSection(){
           onTrackSaved={(track) => {
             setRecList((prev) => prev.map((t) => t.id === track.id ? { ...t, trackSaveState: TrackSaveState.Saved } : t));
             onTrackSavedFromContext?.(track);
+          }}
+          onTrackUnsaved={(track) => {
+            setRecList((prev) => prev.map((t) => t.id === track.id ? { ...t, trackSaveState: TrackSaveState.Saveable } : t));
+            onTrackUnsavedFromContext?.(track);
           }}
         />
       )}

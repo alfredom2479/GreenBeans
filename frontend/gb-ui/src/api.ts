@@ -3,8 +3,8 @@ import { AudioFeatures, ITrack, audioFeatureNames, AudioFeatureSettings } from "
 enum RequestMethods {
   Post = 'POST',
   Get = 'GET',
-  Put = 'PUT'
-
+  Put = 'PUT',
+  Delete = 'DELETE'
 }
 
 export async function requestAuth(){
@@ -162,6 +162,20 @@ export async function saveSpotifyTrack( trackId:string) :Promise<Response|null>{
   //console.log(data);
   return data;
 
+}
+
+export async function unsaveSpotifyTrack(trackId: string): Promise<Response | null> {
+  const accessToken = localStorage.getItem("access_token");
+  if (!accessToken || accessToken === "") {
+    return null;
+  }
+  const res = await sendRequest(
+    "https://api.spotify.com/v1/me/tracks?ids=" + trackId,
+    accessToken,
+    RequestMethods.Delete,
+    false
+  ) as Response;
+  return res;
 }
 
 export async function requestSpotifyTrack(accessToken:string, trackId:string, isLoggedIn:boolean ){
