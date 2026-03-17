@@ -203,7 +203,7 @@ export default function SearchPage(){
                             </p>
                         </div>
                     ) : (
-                        <ul className="divide-y divide-zinc-800/80 overflow-y-auto max-h-[50vh] sm:max-h-[55vh]">
+                        <ul className="divide-y divide-zinc-800/80 overflow-y-auto max-h-[50dvh] sm:max-h-[55dvh]">
                             {searchResults.map((track, index) => (
                                 <li key={track.id}>
                                     <TrackCard

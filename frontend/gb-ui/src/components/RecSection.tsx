@@ -317,7 +317,7 @@ export default function RecSection(){
             </div>
           </nav>
 
-          <div className="flex flex-col overflow-hidden min-h-[60vh] sm:min-h-[65vh] max-h-[60vh] sm:max-h-[65vh] mt-3 bg-zinc-900/30 border border-zinc-800/50 rounded-xl">
+          <div className="flex flex-col overflow-hidden min-h-[60dvh] sm:min-h-[65dvh] max-h-[60dvh] sm:max-h-[65dvh] mt-3 bg-zinc-900/30 border border-zinc-800/50 rounded-xl">
             {isSelectingOptions ? (
               <RecOptionsSection
                 checkedBoxes={checkedBoxes}

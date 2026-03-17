@@ -90,7 +90,7 @@ export default function SongPreviewModal({
       aria-label="Song preview"
     >
       <div
-        className="relative w-full max-w-md max-h-[90vh] overflow-y-auto flex flex-col rounded-2xl bg-zinc-900/95 shadow-2xl border border-zinc-700/50"
+        className="relative w-full max-w-md max-h-[90dvh] overflow-y-auto flex flex-col rounded-2xl bg-zinc-900/95 shadow-2xl border border-zinc-700/50"
         onClick={(e) => e.stopPropagation()}
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
@@ -140,7 +140,7 @@ export default function SongPreviewModal({
           <img
             src={displayInfo.image}
             alt=""
-            className="w-full aspect-square max-h-[50vh] object-cover rounded-t-2xl"
+            className="w-full aspect-square max-h-[50dvh] object-cover rounded-t-2xl"
           />
           <div className="absolute inset-0 rounded-t-2xl bg-gradient-to-t from-zinc-900/80 via-transparent to-transparent pointer-events-none" />
         </div>

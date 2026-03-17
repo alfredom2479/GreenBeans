@@ -108,7 +108,7 @@ export default function NavBar(){
         }
       </nav>
     </div>
-      <div className="h-[100dvh] flex flex-col items-center w-full ">
+      <div className="h-[100dvh] flex flex-col items-center w-full">
 
       <div className="h-14 flex items-center justify-between w-full px-2">
         <div className="flex-1">
@@ -133,7 +133,7 @@ export default function NavBar(){
           {pageName}
         </h1> */}
       </div>
-      <div className="flex-1 min-h-0 w-full flex flex-col overflow-hidden">
+      <div className="flex-1 min-h-0 w-full flex flex-col overflow-hidden pb-[max(var(--safe-area-bottom),0.5rem)]">
         <Outlet/>
       </div>
       {showSideBar ? 

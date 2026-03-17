@@ -4,7 +4,8 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import {
   createBrowserRouter,
-  RouterProvider
+  RouterProvider,
+  type ShouldRevalidateFunctionArgs
 } from "react-router-dom";
 
 import AuthPage, {loader as tokensLoader} from "./pages/AuthPage";
@@ -99,7 +100,7 @@ const router = createBrowserRouter([
               path: "",
               element: <RecSection/>,
               loader: preRecLoader,
-              shouldRevalidate: ({ formMethod }) => formMethod !== "post"
+              shouldRevalidate: ({ formMethod }: ShouldRevalidateFunctionArgs) => formMethod !== "post"
             }
           ]
         }
