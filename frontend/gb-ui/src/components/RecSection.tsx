@@ -283,8 +283,8 @@ export default function RecSection(){
 
   return (
     <>
-      <div className="flex flex-col flex-1 min-h-0"> 
-        <div className="mx-auto w-full max-w-2xl px-4 sm:px-6 pb-6 flex flex-col flex-1 min-h-0">
+      <div className="flex flex-col flex-1 min-h-0 min-h-[24rem]"> 
+        <div className="mx-auto w-full max-w-2xl px-4 sm:px-6 pb-6 flex flex-col flex-1 min-h-0 min-h-[24rem]">
           <nav
             className="flex items-center gap-2 sm:gap-3 p-1.5 rounded-xl bg-zinc-800/50 border border-zinc-700/50 shrink-0"
             aria-label="Track actions and sections"
@@ -317,7 +317,7 @@ export default function RecSection(){
             </div>
           </nav>
 
-          <div className="flex flex-col overflow-hidden min-h-[60dvh] sm:min-h-[65dvh] max-h-[60dvh] sm:max-h-[65dvh] mt-3 bg-zinc-900/30 border border-zinc-800/50 rounded-xl">
+          <div className="flex-1 flex flex-col min-h-0 min-h-[24rem] overflow-hidden mt-3 bg-zinc-900/30 border border-zinc-800/50 rounded-xl">
             {isSelectingOptions ? (
               <RecOptionsSection
                 checkedBoxes={checkedBoxes}

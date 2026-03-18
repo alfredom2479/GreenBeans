@@ -70,7 +70,7 @@ export default function TopOf(){
   },[loadedData])
 
   return (
-    <div className="min-h-[calc(100%-3.5rem)] w-full flex flex-col">
+    <div className="flex-1 min-h-0 w-full flex flex-col">
       <section className="shrink-0 px-4 sm:px-6 pt-6 sm:pt-10 pb-4">
         <div className="mx-auto max-w-2xl">
           <h1 className="text-center text-3xl sm:text-4xl font-bold text-white tracking-tight">
@@ -91,7 +91,7 @@ export default function TopOf(){
 
       <section className="flex-1 min-h-0 px-4 sm:px-6 pb-6" aria-label="Top tracks list">
         <div className="mx-auto max-w-2xl h-full rounded-xl overflow-hidden bg-zinc-900/30 border border-zinc-800/50">
-          <div className="overflow-y-auto max-h-[60dvh] sm:max-h-[65dvh] h-full" ref={listRef}>
+          <div className="overflow-y-auto min-h-0 h-full" ref={listRef}>
             {topTracksList.length === 0 ? (
               <div className="h-48 sm:h-56 flex flex-col items-center justify-center gap-2 px-4 text-center">
                 <p className="text-zinc-500 text-sm sm:text-base">Loading top tracks…</p>
