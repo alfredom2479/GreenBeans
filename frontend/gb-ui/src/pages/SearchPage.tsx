@@ -122,7 +122,7 @@ export default function SearchPage(){
     }
 
     return (
-        <div className="min-h-[calc(100%-3.5rem)] w-full flex flex-col">
+        <div className="flex-1 min-h-0 w-full flex flex-col">
             {/* Search hero */}
             <section className="shrink-0 px-4 sm:px-6 pt-6 sm:pt-10 pb-8">
                 <div className="mx-auto max-w-2xl">
@@ -183,8 +183,8 @@ export default function SearchPage(){
             </section>
 
             {/* Results */}
-            <section className="flex-1 min-h-0 px-4 sm:px-6 pb-6" aria-label="Search results">
-                <div className="mx-auto max-w-2xl h-full rounded-xl overflow-hidden bg-zinc-900/30 border border-zinc-800/50">
+            <section className="flex-1 min-h-0 flex flex-col px-4 sm:px-6 pb-6" aria-label="Search results">
+                <div className="mx-auto max-w-2xl flex-1 min-h-0 flex flex-col rounded-xl overflow-hidden bg-zinc-900/30 border border-zinc-800/50">
                     {searchResultsLoading ? (
                         <div className="h-48 sm:h-56 flex flex-col items-center justify-center gap-4 text-zinc-400">
                             <svg className="animate-spin h-10 w-10 text-green-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -203,7 +203,7 @@ export default function SearchPage(){
                             </p>
                         </div>
                     ) : (
-                        <ul className="divide-y divide-zinc-800/80 overflow-y-auto max-h-[50dvh] sm:max-h-[55dvh]">
+                        <ul className="divide-y divide-zinc-800/80 overflow-y-auto min-h-0 flex-1">
                             {searchResults.map((track, index) => (
                                 <li key={track.id}>
                                     <TrackCard

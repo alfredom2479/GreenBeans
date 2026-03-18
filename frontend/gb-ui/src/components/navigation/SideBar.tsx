@@ -10,15 +10,15 @@ interface params{
 
 export default function SideBar({setShowSidebar, currUser, setShowLogOutModal}:params){
   return (
-    <div className="z-10 fixed h-full w-full left-0 top-0 flex  bg-[rgba(0,0,0,.4)]"
+    <div className="z-10 fixed h-full w-full max-h-[100dvh] left-0 top-0 flex  bg-[rgba(0,0,0,.4)]"
       onClick={()=>{setShowSidebar(false)}}>
-        <div className="bg-stone-800 w-64 h-full p-2 pt-5 ">
-          <nav className="flex flex-col text-white items-center text-2xl">
+        <div className="flex flex-col bg-stone-800 w-64 h-full p-2 pt-5 ">
+          <nav className=" flex flex-col text-white items-center text-lg overflow-y-scroll">
             <img className="w-10 mb-5" src={greenBeansLogo}/>
             {currUser !== null ? 
                 <div className="flex justify-center border-b mb-6 pb-2 border-stone-400 w-full">
                   <img className="flex w-8 mr-2" src={userIcon}/>
-                  <div className="flex text-3xl font-bold  truncate ">
+                  <div className="flex text-xl font-bold  truncate ">
                       {currUser}
                   </div> 
                 </div>

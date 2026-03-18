@@ -47,7 +47,7 @@ export default  function SavedPage(){
     setShowModal(true);
   }
   return(
-    <div className="h-[calc(100%-3.5rem)] w-full flex flex-col">
+    <div className="flex-1 min-h-0 w-full flex flex-col">
 
       <Outlet context={{handleListenOnClick} satisfies ListenOnClickContextType}/>
 
