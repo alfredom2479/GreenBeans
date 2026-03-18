@@ -68,7 +68,7 @@ export async function action({params,request}:IURLParams){
 
     for(let i=0; i <trackData.length; i++){
       possibleTrack = isTrack(trackData[i]);
-      if(possibleTrack != null){
+      if(possibleTrack != null && possibleTrack.id !== trackId){
         tempTrackList.push(possibleTrack);
       }
     }
