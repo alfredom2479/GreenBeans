@@ -94,14 +94,14 @@ export default function NavBar(){
         <SideBarNavItem path="/saved" name="My Saved Tracks" isDisabled={currUser === null}/>
         <SideBarNavItem path="/top" name="My Top Tracks" isDisabled={currUser === null}/>
         {currUser == null ?
-          <a className="flex justify-center items-center basis-32 grow text-center font-bold hover:text-green-400"
+          <a className="flex justify-center items-center basis-32 grow text-center font-bold hover:text-stone-400"
           //this might be causing req hang issue on mobile
           //remember to update in both nav bars
             href="/api/auth/requestauth">
               Log In
           </a>
         :
-          <button className="flex justify-center items-center basis-32 grow text-center font-bold hover:text-green-400"
+          <button className="flex justify-center items-center basis-32 grow text-center font-bold hover:text-stone-400"
             onClick={()=>{setShowLogOutModal(true)}}>
               Log Out
           </button>

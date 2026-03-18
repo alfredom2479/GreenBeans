@@ -183,23 +183,24 @@ export default function SongPreviewModal({
           {/* Recs + Save (same as TrackCard) */}
           {currentTrack && (!hideSaveButton || !hideFindRecs) && (
             <div className="flex gap-2 mt-4 items-stretch">
-              {!hideSaveButton && (
-                <div className="flex-1 min-w-0 flex items-center">
-                  <SaveButton trackInfo={currentTrack} onSaved={onTrackSaved} onUnsaved={onTrackUnsaved} />
-                </div>
-              )}
+              
               {!hideFindRecs && (
                 <Link
                   to={`/track/${currentTrack.id}`}
                   onClick={(e) => { e.stopPropagation(); setShowModal(false); }}
                   //className="flex-1 flex items-center justify-center gap-1.5 h-9 px-4 rounded-lg bg-zinc-700/90 hover:bg-zinc-600 text-zinc-100 hover:text-white border border-zinc-600/50 transition-colors focus:outline-none focus:ring-2 focus:ring-green-500/50 focus:ring-offset-2 focus:ring-offset-zinc-900 shrink-0"
-                  className="flex-1 bg-stone-200 hover:bg-green-700 text-black flex p-2 sm:p-3 text-center items-center justify-center font-bold  shrink-0 transition-colors"
+                  className="flex-1 bg-stone-200 hover:bg-stone-300 text-black flex p-2 sm:p-3 text-center items-center justify-center font-bold  shrink-0 transition-colors"
 
                   aria-label="Find recommendations"
                 >
                   <img src={findRecsSvg} alt="" className="w-8 h-8" />
                   {/* <span className="text-sm font-medium">Find recs</span> */}
                 </Link>
+              )}
+              {!hideSaveButton && (
+                <div className="flex-1 min-w-0 flex items-center">
+                  <SaveButton trackInfo={currentTrack} onSaved={onTrackSaved} onUnsaved={onTrackUnsaved} />
+                </div>
               )}
             </div>
           )}

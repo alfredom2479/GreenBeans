@@ -68,7 +68,7 @@ export async function action({params,request}:IURLParams){
 
     for(let i=0; i <trackData.length; i++){
       possibleTrack = isTrack(trackData[i]);
-      if(possibleTrack != null){
+      if(possibleTrack != null && possibleTrack.id !== trackId){
         tempTrackList.push(possibleTrack);
       }
     }
@@ -208,10 +208,10 @@ const audioFeatureReadableData = getAudioFeatureReadableData(audioFeatures);
                 </label>
                 <label
                   htmlFor={feature[0]}
-                  className="cursor-pointer text-base font-medium text-stone-100 lg:text-lg"
+                  className="cursor-pointer text-base font-medium text-stone-100 lg:text-lg flex items-center gap-2"
                 >
-                  <span className="block">{feature[1]}</span>
-                  <span className="text-sm font-normal text-green-400/90">
+                  <span>{feature[1]}</span>
+                  <span className=" font-normal text-green-400/90">
                     {audioFeatureReadableData[feature[0]]}
                   </span>
                 </label>

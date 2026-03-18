@@ -1,19 +1,20 @@
 import { Dispatch, SetStateAction } from "react"
-import { useNavigate } from "react-router-dom"
 
-export default function LogOutModal({
-  setShowModal,
-}: {
+interface RemoveFromLibraryModalParams {
   setShowModal: Dispatch<SetStateAction<boolean>>
-}) {
-  const navigate = useNavigate()
+  trackName: string
+  artistName: string
+  onConfirm: () => void | Promise<void>
+}
 
-  function handleLogOut() {
-    setShowModal(false)
-    localStorage.clear()
-    sessionStorage.clear()
-    navigate("/")
-    window.location.reload()
+export default function RemoveFromLibraryModal({
+  setShowModal,
+  trackName,
+  artistName,
+  onConfirm,
+}: RemoveFromLibraryModalParams) {
+  async function handleConfirm() {
+    await onConfirm()
   }
 
   return (
@@ -22,8 +23,8 @@ export default function LogOutModal({
       onClick={() => setShowModal(false)}
       role="dialog"
       aria-modal="true"
-      aria-labelledby="logout-title"
-      aria-describedby="logout-description"
+      aria-labelledby="remove-from-library-title"
+      aria-describedby="remove-from-library-description"
     >
       <div
         className="relative w-full max-w-sm rounded-2xl bg-zinc-900/95 shadow-2xl border border-zinc-700/50 p-6 sm:p-8"
@@ -31,20 +32,24 @@ export default function LogOutModal({
       >
         <div className="flex flex-col gap-1 text-center mb-6">
           <h2
-            id="logout-title"
+            id="remove-from-library-title"
             className="text-xl sm:text-2xl font-semibold text-white"
           >
-            Log out?
+            Remove from library?
           </h2>
           <p
-            id="logout-description"
+            id="remove-from-library-description"
             className="text-sm text-zinc-400"
           >
-            You’ll need to sign in again to add songs to your library and view your saved and top tracks.
+            Are you sure you want to remove{" "}
+            <span className="font-medium text-zinc-200">{trackName}</span>
+            {" "}by{" "}
+            <span className="font-medium text-zinc-200">{artistName}</span>
+            {" "}from your library?
           </p>
         </div>
 
-        <div className="flex flex-col-reverse sm:flex-row gap-3 sm:gap-3">
+        <div className="flex flex-col-reverse sm:flex-row gap-3">
           <button
             type="button"
             onClick={() => setShowModal(false)}
@@ -54,10 +59,10 @@ export default function LogOutModal({
           </button>
           <button
             type="button"
-            onClick={handleLogOut}
+            onClick={handleConfirm}
             className="flex-1 px-4 py-3 rounded-xl text-base font-medium text-white bg-red-600 hover:bg-red-500 border border-red-500/30 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-zinc-900"
           >
-            Log out
+            Remove
           </button>
         </div>
       </div>

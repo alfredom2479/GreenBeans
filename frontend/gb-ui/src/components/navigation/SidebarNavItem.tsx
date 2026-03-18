@@ -5,7 +5,7 @@ export default function SideBarNavItem({path,name, isDisabled}:{path:string,name
   const activeStyleStrong = "text-green-400 font-bold pointer-events-none"
   const pendingStyleString = "pointer-events-none"
   const transitioningStyleString = "pointer-events-none"
-  const baseStyleString = "hover:text-green-400 my-4"
+  const baseStyleString = "hover:text-stone-400 my-4"
 
   return(
     <NavLink
