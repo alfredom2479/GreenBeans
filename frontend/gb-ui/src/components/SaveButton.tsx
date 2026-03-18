@@ -15,9 +15,9 @@ interface SaveButtonParams {
 
 export default function SaveButton({ trackInfo, onSaved, onUnsaved }: SaveButtonParams) {
 
-  const savedSaveButtonClassName= "flex-1 bg-green-600 text-black flex p-1 text-center items-center justify-center font-bold text-lg shrink-0  h-full"
+  const savedSaveButtonClassName= "flex-1 bg-green-200 text-black flex p-1 text-center items-center justify-center font-bold text-lg shrink-0  h-full"
   const disabledSaveButtonClassName= "flex-1 bg-neutral-600 text-black flex p-1 text-center items-center justify-center font-bold text-lg shrink-0  h-full"
-  const saveableSaveButtonClassName= "flex-1 bg-stone-200 text-black flex p-1 text-center items-center justify-center font-bold text-lg shrink-0  h-full hover:bg-green-700"
+  const saveableSaveButtonClassName= "flex-1 bg-stone-200 text-black flex p-1 text-center items-center justify-center font-bold text-lg shrink-0  h-full hover:bg-stone-300"
 
 
   const [saveButton,setSaveButton] = useState(
