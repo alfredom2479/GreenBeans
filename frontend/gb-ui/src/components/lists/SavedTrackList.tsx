@@ -175,7 +175,7 @@ export default function SavedTrackList(){
                 {savedTracksList.map((track, index) => (
                   <li key={track.id}>
                     <TrackCard
-                      hideSaveButton={false}
+                      hideSaveButton={true}
                       track={{ ...track, trackSaveState: TrackSaveState.Saved }}
                       popModal={(info) =>
                         handleListenOnClick(info, index, savedTracksList, (track) =>
