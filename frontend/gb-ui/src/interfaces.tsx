@@ -13,7 +13,7 @@ export interface ITrack{
   image: string[]
   url?: string,
   spotify_url?:string,
-  trackSaveState: TrackSaveState
+  trackSaveState?: TrackSaveState
 }
 
 export interface SongPreviewInfo{

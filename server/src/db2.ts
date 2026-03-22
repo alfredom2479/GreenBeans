@@ -22,7 +22,7 @@ export type Track = {
   name: string;
   artist: string;
   preview_url: string | null;
-  images: string[] | null;
+  image: string[] | null;
   spotify_url: string | null;
   created_at: Date;
 };
@@ -83,7 +83,7 @@ export const getUserBySpotifyId = async (
 ): Promise<User | null> => {
   try {
     const res = await pool.query(
-      "SELECT * FROM users WHERE spotify_user_id = $1",
+      "SELECT * FROM users WHERE id = $1",
       [spotifyUserId]
     );
     return res.rows.length > 0 ? res.rows[0] : null;
@@ -94,17 +94,19 @@ export const getUserBySpotifyId = async (
 };
 
 export const createUser = async (
-  spotifyUserId: string,
+  id: string,
   username: string | null,
   accessTokenHash: string
 ): Promise<boolean> => {
   try {
     await pool.query(
-      `INSERT INTO users (spotify_user_id, username, access_token_hash)
-       VALUES ($1, $2, $3)`,
-      [spotifyUserId, username, accessTokenHash]
-    );
-    console.log("User created:", spotifyUserId);
+      `INSERT INTO users (id, username, access_token_hash)
+       VALUES ($1, $2, $3)
+       ON CONFLICT (id) DO UPDATE SET
+       username = EXCLUDED.username,
+       access_token_hash = EXCLUDED.access_token_hash`,
+        [id, username, accessTokenHash]);
+    console.log("User created:", id);
     return true;
   } catch (err) {
     console.error("Error in createUser:", err);
@@ -118,7 +120,7 @@ export const updateUserTokenHash = async (
 ): Promise<boolean> => {
   try {
     await pool.query(
-      "UPDATE users SET access_token_hash = $1 WHERE spotify_user_id = $2",
+      "UPDATE users SET access_token_hash = $1 WHERE id = $2",
       [newTokenHash, spotifyUserId]
     );
     return true;
@@ -143,7 +145,7 @@ export const storeTrack = async (track: Track): Promise<boolean> => {
         track.name,
         track.artist,
         track.preview_url,
-        track.images,
+        track.image,
         track.spotify_url,
       ]
     );
@@ -163,10 +165,25 @@ export const storeSearch = async (
   userId: string | null
 ): Promise<boolean> => {
   try {
-    await pool.query(
-      `INSERT INTO searches (track_id, user_id) VALUES ($1, $2)`,
-      [trackId, userId]
-    );
+    if (userId !== null){
+        await pool.query(
+            `INSERT INTO searches (track_id, user_id) 
+            VALUES ($1, $2)
+            ON CONFLICT (user_id, track_id)
+            DO UPDATE SET searched_at = now()`,
+            [trackId, userId]
+        );
+    }
+    else{
+        await pool.query(
+            `INSERT INTO searches (track_id, user_id) 
+            VALUES ($1, NULL)
+            ON CONFLICT (track_id)
+            WHERE user_id is NULL
+            DO UPDATE SET searched_at = now()`,
+            [trackId]
+        );
+    }
     return true;
   } catch (err) {
     console.error("Error in storeSearch:", err);
@@ -225,21 +242,41 @@ export const storeTrackAndSearch = async (
     await pool.query(
       `INSERT INTO tracks (id, name, artist, preview_url, images, spotify_url)
        VALUES ($1, $2, $3, $4, $5, $6)
-       ON CONFLICT (id) DO NOTHING`,
+       ON CONFLICT (id) DO UPDATE SET
+       name         = EXCLUDED.name,
+       artist       = EXCLUDED.artist,
+       preview_url  = EXCLUDED.preview_url,
+       images       = EXCLUDED.images,
+       spotify_url  = EXCLUDED.spotify_url,
+       created_at   = now()`,
       [
         track.id,
         track.name,
         track.artist,
         track.preview_url,
-        track.images,
+        track.image,
         track.spotify_url,
       ]
     );
-
-    await pool.query(
-      `INSERT INTO searches (track_id, user_id) VALUES ($1, $2)`,
-      [track.id, userId]
-    );
+    if (userId !== null){
+       await pool.query(
+        `INSERT INTO searches (track_id, user_id) 
+        VALUES ($1, $2)
+        ON CONFLICT (user_id, track_id)
+        DO UPDATE SET searched_at = now()`,
+        [track.id, userId]
+      );
+    }
+    else{
+        await pool.query(
+            `INSERT INTO searches (track_id, user_id) 
+            VALUES ($1, NULL)
+            ON CONFLICT (track_id)
+            WHERE user_id is NULL
+            DO UPDATE SET searched_at = now()`,
+            [track.id]
+        );
+    }
 
     await pool.query("COMMIT");
     return true;

@@ -178,6 +178,20 @@ export async function unsaveSpotifyTrack(trackId: string): Promise<Response | nu
   return res;
 }
 
+export async function getSpotifyTracksByIds(idList: string): Promise<any> {
+  console.log("getSpotifyTracksByIds function called");
+  const accessToken = localStorage.getItem("access_token");
+  if (!accessToken || accessToken === "") {
+    return null;
+  }
+  const data = await sendRequest(
+    `https://api.spotify.com/v1/tracks?ids=${idList}`,
+    accessToken,
+    RequestMethods.Get
+  );
+  return data;
+}
+
 export async function requestSpotifyTrack(accessToken:string, trackId:string, isLoggedIn:boolean ){
 
   if(isLoggedIn){
@@ -394,7 +408,7 @@ export async function requestSaveStatus (accessToken:string|null,tracks: ITrack[
 
 
 
-export async function sendTrackSeenRequest(track:ITrack,audioFeatures:AudioFeatures){
+export async function sendTrackSeenRequest(track:ITrack,){
 
   let isLoggedIn:boolean = true;
 
@@ -402,30 +416,34 @@ export async function sendTrackSeenRequest(track:ITrack,audioFeatures:AudioFeatu
   const displayName:string|null = localStorage.getItem("greenbeans_user");
   const userId:string|null = localStorage.getItem("greenbeans_user_id");
 
-  if(accessToken === null || accessToken === undefined || accessToken === ""){
-    isLoggedIn = false;
-  }
-  else if(displayName === null || displayName === undefined || displayName === ""){
-    isLoggedIn = false;
-  }
-  else if(userId === null || userId === undefined || userId === ""){
+  if (
+    !accessToken || accessToken === null || accessToken === undefined || accessToken === "" ||
+    !displayName || displayName === null || displayName === undefined || displayName === "" ||
+    !userId || userId === null || userId === undefined || userId === ""
+  ) {
     isLoggedIn = false;
   }
 
   let payload = null;
 
+  // Deep clone the track and remap url -> preview_url for payload
+  const trackForPayload = {
+    ...track,
+    preview_url: track.url, // map url to preview_url
+  };
+  delete (trackForPayload as any).url; // remove url property to avoid duplication
+  console.log("trackForPayload",trackForPayload);
+
   if(isLoggedIn === false){
     payload = {
-      track:track,
-      audioFeatures:audioFeatures,
-    }
+      track: trackForPayload,
+    };
   }
   else{
     payload = {
-      user:{id:userId,displayName:displayName, access_token:accessToken},
-      track:track,
-      audioFeatures:audioFeatures,
-    }
+      user: { id: userId, displayName: displayName, access_token: accessToken },
+      track: trackForPayload,
+    };
   }
 
   try{

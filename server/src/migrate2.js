@@ -52,7 +52,8 @@ async function migrate() {
         id          SERIAL      PRIMARY KEY,
         track_id    VARCHAR     NOT NULL REFERENCES tracks(id) ON DELETE CASCADE,
         user_id     VARCHAR     REFERENCES users(id)  ON DELETE CASCADE,
-        searched_at TIMESTAMPTZ DEFAULT now() NOT NULL
+        searched_at TIMESTAMPTZ DEFAULT now() NOT NULL,
+        UNIQUE (user_id, track_id)
       )
     `);
     console.log("Created table: searches");
@@ -71,6 +72,12 @@ async function migrate() {
         ON searches(searched_at DESC)
         WHERE user_id IS NULL
     `);
+    await client.query(`
+      CREATE UNIQUE INDEX idx_searches_anon_unique_track
+        ON searches(track_id)
+        WHERE user_id IS NULL
+    `);
+
     console.log("Created indexes");
 
     // ---------------------------------------------------------

@@ -39,6 +39,7 @@ export interface AudioFeatures{
 }
 
 const isUser = (value: unknown): value is User => {
+    console.log("isUser function called");
     return (
         !!value &&
         typeof value === 'object' &&
@@ -51,6 +52,7 @@ const isUser = (value: unknown): value is User => {
     )
 }
 const isTrack = (value: unknown): value is Track => {
+    console.log("isTrack function called");
     return (
         !!value &&
         typeof value === 'object' &&
@@ -69,6 +71,8 @@ const isTrack = (value: unknown): value is Track => {
 }
 
 const isAudioFeatures = (value: unknown): value is AudioFeatures => {
+
+    console.log("isAudioFeatures function called");
     return (
         !!value &&
         typeof value === 'object' &&
@@ -94,12 +98,14 @@ const isAudioFeatures = (value: unknown): value is AudioFeatures => {
 }   
 
 const testDatabase = asyncHandler(async (req:Request,res:Response)=>{
+    console.log("testDatabase function called");
     testDatabaseQuery();
     res.status(200).json({message:"database test"});
 })
 
 
 const storeTrack = asyncHandler(async (req:Request,res:Response)=>{
+    console.log("storeTrack function called");
     //This function sends response early because history doesnt HAVE to be updated
     //every return is indicative of a fail state that does not have to be
     //dealt with
@@ -192,6 +198,7 @@ const storeTrack = asyncHandler(async (req:Request,res:Response)=>{
 })
 
 const getSpotifyUser = async (accessToken:string) => {
+    console.log("getSpotifyUser function called");
     try{
         const response:AxiosResponse = await axios.get('https://api.spotify.com/v1/me', {
             headers: {
