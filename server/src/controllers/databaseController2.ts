@@ -6,7 +6,8 @@ import { storeTrack,
     storeTrackAndSearch,
     hashToken,
     getUserByTokenHash,
-    createUser } from "../db2.js";
+    createUser,
+    getUserSearches } from "../db2.js";
 import axios from "axios";
 
 const getSpotifyUser = async (accessToken:string) => {
@@ -84,4 +85,56 @@ storeTrackAndSearch(track, dbUser.id);
 
 }
 
-export {storeTrackAndSearchToDatabase};
+function firstQueryString(value: unknown): string | null {
+    if (typeof value === "string" && value.length > 0) {
+        return value;
+    }
+    if (Array.isArray(value) && typeof value[0] === "string" && value[0].length > 0) {
+        return value[0];
+    }
+    return null;
+}
+
+function bearerTokenFromRequest(req: Request): string | null {
+    const raw = req.headers.authorization;
+    if (typeof raw !== "string" || !raw.startsWith("Bearer ")) {
+        return null;
+    }
+    const token = raw.slice("Bearer ".length).trim();
+    return token.length > 0 ? token : null;
+}
+
+const getSearchesFromDatabase = async (req: Request, res: Response): Promise<Track[]> => {
+    console.log("getSearchesFromDatabase function called");
+    const access_token = bearerTokenFromRequest(req);
+    const id = firstQueryString(req.query.userId);
+    const displayName = firstQueryString(req.query.displayName);
+
+    if (!access_token || !id || !displayName) {
+        console.error("History GET missing token, userId, or displayName");
+        res.status(200).json([] as Track[]);
+        return;
+    }
+
+    const user = { id, displayName, access_token };
+
+    const accessTokenHash = hashToken(user.access_token);
+    const dbUser = await getUserByTokenHash(accessTokenHash);
+    if (!dbUser) {
+        const response = await getSpotifyUser(user.access_token);
+        if (!response || !response.id || response.id !== user.id) {
+            console.error("User not found/ user id does not match");
+            res.status(200).json([] as Track[]);
+            return;
+        }
+        await createUser(response.id, response.display_name, accessTokenHash);
+        const searches = await getUserSearches(response.id);
+        res.status(200).json(searches);
+        return;
+    }
+    const searches = await getUserSearches(user.id);
+    res.status(200).json(searches);
+    return;
+}
+
+export {storeTrackAndSearchToDatabase, getSearchesFromDatabase};

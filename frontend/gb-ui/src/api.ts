@@ -459,7 +459,9 @@ export async function sendTrackSeenRequest(track:ITrack,){
       //throw new Response("Request failed",{status:res.status})
       console.log("history request failed",{status:res.status})
     }
+    else{
     console.log("history updated");
+    }
     /*
     try{
       console.log(await res.json());
@@ -475,6 +477,58 @@ export async function sendTrackSeenRequest(track:ITrack,){
 
 }
 
+export async function requestHistory(){
+
+  let isLoggedIn:boolean = true;
+
+  const accessToken:string|null = localStorage.getItem("access_token");
+  const displayName:string|null = localStorage.getItem("greenbeans_user");
+  const userId:string|null = localStorage.getItem("greenbeans_user_id");
+
+  if (
+    !accessToken || accessToken === null || accessToken === undefined || accessToken === "" ||
+    !displayName || displayName === null || displayName === undefined || displayName === "" ||
+    !userId || userId === null || userId === undefined || userId === ""
+  ) {
+    isLoggedIn = false;
+    console.log("not logged in");
+    return []
+  }
+    try{
+      const params = new URLSearchParams({
+        userId,
+        displayName,
+      });
+      const res = await fetch(`/api/history/getmyhistory?${params.toString()}`, {
+        method: RequestMethods.Get,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      })
+      if(!res.ok){
+        //throw new Response("Request failed",{status:res.status})
+        console.log("history request failed",{status:res.status})
+        console.log("res is NOT ok");
+        return [];
+      }
+      console.log("history gotten");
+      return await res.json();
+      /*
+      try{
+        console.log(await res.json());
+      }catch(err){
+        console.log("history returned non json",{status:500})
+        console.log(res);
+      }
+      */
+    }catch(err){
+      //throw new Response("Request failed",{status:500})
+      console.log("history request failed",{status:500})
+      return [];
+    }
+  
+  
+}
 async function sendRequest(endpoint:string, accessToken:string,requestMethod:RequestMethods,expectsJson:boolean=true){
 
   console.log('request to '+endpoint)

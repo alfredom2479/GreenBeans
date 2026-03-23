@@ -20,6 +20,7 @@ import MainLayout, {loader as loggedInCheckerLoader} from './components/layouts/
 import RootErrorBoundary from './components/error-components/RootErrorBoundary';
 import RecSection, {loader as preRecLoader} from './components/RecSection';
 import SearchPage, {action as searchAction} from './pages/SearchPage';
+import HistoryPage, { HistoryLoader } from './pages/HistoryPage';
 const router = createBrowserRouter([
   {
     path: "/",
@@ -76,6 +77,12 @@ const router = createBrowserRouter([
             errorElement: <RootErrorBoundary/>
           }
         ]
+      },
+      {
+        path: "/history",
+        element: <HistoryPage/>,
+        loader: HistoryLoader,
+        errorElement: <RootErrorBoundary/>
       },
       
       // {
