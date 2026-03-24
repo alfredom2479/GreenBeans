@@ -78,20 +78,7 @@ export const getUserByTokenHash = async (
   }
 };
 
-export const getUserBySpotifyId = async (
-  spotifyUserId: string
-): Promise<User | null> => {
-  try {
-    const res = await pool.query(
-      "SELECT * FROM users WHERE id = $1",
-      [spotifyUserId]
-    );
-    return res.rows.length > 0 ? res.rows[0] : null;
-  } catch (err) {
-    console.error("Error in getUserBySpotifyId:", err);
-    return null;
-  }
-};
+
 
 export const createUser = async (
   id: string,
