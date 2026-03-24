@@ -134,7 +134,7 @@ export default function NavBar(){
           {pageName}
         </h1> */}
       </div>
-      <div className="flex-1 min-h-[24rem] w-full flex flex-col overflow-hidden pb-[max(var(--safe-area-bottom),0.5rem)]  ">
+      <div className="flex-1 min-h-[30rem] w-full flex flex-col overflow-hidden pb-[max(var(--safe-area-bottom),0.5rem)]  ">
         <Outlet/>
       </div>
       {showSideBar ? 

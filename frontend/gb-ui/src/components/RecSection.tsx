@@ -270,8 +270,8 @@ export default function RecSection(){
 
   return (
     <>
-      <div className="flex flex-col flex-1 min-h-0 min-h-[24rem]"> 
-        <div className="mx-auto w-full max-w-2xl px-4 sm:px-6 pb-6 flex flex-col flex-1 min-h-0 min-h-[24rem]">
+      <div className="flex flex-col flex-1 min-h-0 w-full">
+        <div className="mx-auto w-full max-w-2xl px-4 sm:px-6 pb-6 flex flex-col flex-1 min-h-0">
           <nav
             className="flex items-center gap-2 sm:gap-3 p-1.5 rounded-xl bg-zinc-800/50 border border-zinc-700/50 shrink-0"
             aria-label="Track actions and sections"
@@ -304,25 +304,27 @@ export default function RecSection(){
             </div>
           </nav>
 
-          <div className="flex-1 flex flex-col min-h-0 min-h-[24rem] overflow-hidden mt-3 bg-zinc-900/30 border border-zinc-800/50 rounded-xl">
-            {isSelectingOptions ? (
-              <RecOptionsSection
-                checkedBoxes={checkedBoxes}
-                setCheckedBoxes={setCheckedBoxes}
-                audioFeatures={currAudioFeatures}
-                setIsSelectingOptions={setIsSelectingOptions}
-                setIsLoadingRecs={setIsLoadingRecs}
-                audioSettings={audioSettings}
-                setAudioSettings={setAudioSettings}
-                submitRecsRequest={(payload) => fetcher.submit(payload, { method: "post", encType: "application/json" })}
-              />
-            ) : (
-              <RecList
-                listTracks={recList}
-                handleOnClick={handleListenOnClick}
-                isLoadingRecs={isLoadingRecs}
-              />
-            )}
+          <div className="flex-1 flex flex-col min-h-0 mt-3 rounded-xl overflow-hidden bg-zinc-900/30 border border-zinc-800/50">
+            <div className="flex-1 min-h-0 overflow-y-scroll">
+              {isSelectingOptions ? (
+                <RecOptionsSection
+                  checkedBoxes={checkedBoxes}
+                  setCheckedBoxes={setCheckedBoxes}
+                  audioFeatures={currAudioFeatures}
+                  setIsSelectingOptions={setIsSelectingOptions}
+                  setIsLoadingRecs={setIsLoadingRecs}
+                  audioSettings={audioSettings}
+                  setAudioSettings={setAudioSettings}
+                  submitRecsRequest={(payload) => fetcher.submit(payload, { method: "post", encType: "application/json" })}
+                />
+              ) : (
+                <RecList
+                  listTracks={recList}
+                  handleOnClick={handleListenOnClick}
+                  isLoadingRecs={isLoadingRecs}
+                />
+              )}
+            </div>
           </div>
         </div>
       </div>
