@@ -1,4 +1,4 @@
-import { AudioFeatures, ITrack, audioFeatureNames, AudioFeatureSettings } from "./interfaces";
+import { AudioFeatures, ITrack, TrackSaveState, audioFeatureNames, AudioFeatureSettings } from "./interfaces";
 
 enum RequestMethods {
   Post = 'POST',
@@ -404,6 +404,27 @@ export async function requestSaveStatus (accessToken:string|null,tracks: ITrack[
       RequestMethods.Get
     );
     return data;
+}
+
+/** Refreshes library save state from Spotify; use after loading tracks from cache (e.g. IndexedDB). */
+export async function mergeSaveStatusIntoTracks(
+  accessToken: string | null,
+  tracks: ITrack[]
+): Promise<ITrack[]> {
+  if (tracks.length === 0) {
+    return tracks;
+  }
+  if (!accessToken || accessToken === "") {
+    return tracks.map((t) => ({ ...t, trackSaveState: TrackSaveState.CantSave }));
+  }
+  const saveStatusData = await requestSaveStatus(accessToken, tracks);
+  if (!Array.isArray(saveStatusData) || saveStatusData.length !== tracks.length) {
+    return tracks.map((t) => ({ ...t, trackSaveState: TrackSaveState.CantSave }));
+  }
+  return tracks.map((t, i) => ({
+    ...t,
+    trackSaveState: saveStatusData[i] ? TrackSaveState.Saved : TrackSaveState.Saveable,
+  }));
 }
 
 
