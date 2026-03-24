@@ -182,41 +182,43 @@ export default function SearchPage(){
                 </div>
             </section>
 
-            {/* Results */}
-            <section className="flex-1 min-h-0 flex flex-col px-4 sm:px-6 pb-6" aria-label="Search results">
-                <div className="mx-auto max-w-2xl flex-1 min-h-0 flex flex-col rounded-xl overflow-hidden bg-zinc-900/30 border border-zinc-800/50">
-                    {searchResultsLoading ? (
-                        <div className="h-48 sm:h-56 flex flex-col items-center justify-center gap-4 text-zinc-400">
-                            <svg className="animate-spin h-10 w-10 text-green-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                            </svg>
-                            <p className="text-sm sm:text-base">Finding tracks…</p>
-                        </div>
-                    ) : searchResults.length === 0 ? (
-                        <div className="h-48 sm:h-56 flex flex-col items-center justify-center gap-2 px-4 text-center">
-                            <p className="text-zinc-500 text-sm sm:text-base">
-                                Your search results will appear here
-                            </p>
-                            <p className="text-zinc-600 text-xs sm:text-sm">
-                                Enter a song or artist name above to get started
-                            </p>
-                        </div>
-                    ) : (
-                        <ul className="divide-y divide-zinc-800/80 overflow-y-auto min-h-0 flex-1">
-                            {searchResults.map((track, index) => (
-                                <li key={track.id}>
-                                    <TrackCard
-                                        track={track}
-                                        popModal={(info) => handleListenOnClick(info, index, searchResults)}
-                                        hideSaveButton={false}
-                                        onSaved={(track) => setSearchResults((prev) => prev.map((t) => t.id === track.id ? { ...t, trackSaveState: TrackSaveState.Saved } : t))}
-                                        onUnsaved={(track) => setSearchResults((prev) => prev.map((t) => t.id === track.id ? { ...t, trackSaveState: TrackSaveState.Saveable } : t))}
-                                    />
-                                </li>
-                            ))}
-                        </ul>
-                    )}
+            {/* Results — scroll + min height like Top / Saved (MainLayout outlet uses min-h-[24rem]) */}
+            <section className="flex-1 flex flex-col min-h-0 px-4 sm:px-6 pb-6" aria-label="Search results">
+                <div className="mx-auto w-full max-w-2xl flex-1 flex flex-col min-h-[clamp(12rem,35dvh,24rem)] rounded-xl overflow-hidden bg-zinc-900/30 border border-zinc-800/50">
+                    <div className="flex-1 min-h-0 overflow-y-auto">
+                        {searchResultsLoading ? (
+                            <div className="h-48 sm:h-56 flex flex-col items-center justify-center gap-4 text-zinc-400">
+                                <svg className="animate-spin h-10 w-10 text-green-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                                </svg>
+                                <p className="text-sm sm:text-base">Finding tracks…</p>
+                            </div>
+                        ) : searchResults.length === 0 ? (
+                            <div className="h-48 sm:h-56 flex flex-col items-center justify-center gap-2 px-4 text-center">
+                                <p className="text-zinc-500 text-sm sm:text-base">
+                                    Your search results will appear here
+                                </p>
+                                <p className="text-zinc-600 text-xs sm:text-sm">
+                                    Enter a song or artist name above to get started
+                                </p>
+                            </div>
+                        ) : (
+                            <ul className="divide-y divide-zinc-800/80">
+                                {searchResults.map((track, index) => (
+                                    <li key={track.id}>
+                                        <TrackCard
+                                            track={track}
+                                            popModal={(info) => handleListenOnClick(info, index, searchResults)}
+                                            hideSaveButton={false}
+                                            onSaved={(track) => setSearchResults((prev) => prev.map((t) => t.id === track.id ? { ...t, trackSaveState: TrackSaveState.Saved } : t))}
+                                            onUnsaved={(track) => setSearchResults((prev) => prev.map((t) => t.id === track.id ? { ...t, trackSaveState: TrackSaveState.Saveable } : t))}
+                                        />
+                                    </li>
+                                ))}
+                            </ul>
+                        )}
+                    </div>
                 </div>
             </section>
 
