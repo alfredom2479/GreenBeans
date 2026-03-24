@@ -116,7 +116,7 @@ async function clearAllDexieTables() {
 // eslint-disable-next-line  @typescript-eslint/no-explicit-any
 const isTrack = (possibleTrack: any ): ITrack|null=>{
 
-  const tempTrack:ITrack = {id: "", name:"",artist:"",image:[],trackSaveState:TrackSaveState.CantSave} ;
+  const tempTrack:ITrack = {id: "", name:"",artist:"",image:[], url:"", spotify_url:"", trackSaveState:TrackSaveState.CantSave} ;
 
   if(possibleTrack === null || possibleTrack === undefined){
     return null;
@@ -168,6 +168,8 @@ const isITrackObject = (possibleITrack:any):ITrack|null=>{
     id: "", 
     name:"",
     artist:"",
+    url: "",
+    spotify_url: "",
     image:[],
     trackSaveState:TrackSaveState.CantSave
   };
@@ -204,6 +206,10 @@ const isITrackObject = (possibleITrack:any):ITrack|null=>{
 
     if(possibleITrack.url && typeof possibleITrack.url === "string"){
       tempTrack.url = possibleITrack.url;
+    }
+
+    if(possibleITrack.spotify_url && typeof possibleITrack.spotify_url === "string"){
+      tempTrack.spotify_url = possibleITrack.spotify_url;
     }
 
     if(possibleITrack.trackSaveState && typeof possibleITrack.trackSaveState === 'number' 

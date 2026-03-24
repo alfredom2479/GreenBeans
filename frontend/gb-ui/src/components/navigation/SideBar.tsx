@@ -27,6 +27,7 @@ export default function SideBar({setShowSidebar, currUser, setShowLogOutModal}:p
             {/* <SideBarNavItem path="/link" name="Use Share Link" isDisabled={false}/> */}
             <SideBarNavItem path="/saved" name="My Saved Tracks" isDisabled={currUser === null}/>
             <SideBarNavItem path="/top" name="My Top Tracks" isDisabled={currUser === null}/>
+            <SideBarNavItem path="/history" name="History" isDisabled={currUser === null}/>
             {currUser == null ?
                 <a className= "flex justify-center items-center basis-32 grow text-center font-bold hover:text-stone-400"
                   href="/api/auth/requestauth">

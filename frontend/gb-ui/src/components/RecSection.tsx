@@ -6,7 +6,7 @@ import SongPreviewModal from "./modals/SongPreviewModal";
 import { isTrack } from "../utils";
 
 import type {Params} from "react-router-dom";
-import {  requestSaveStatus, requestSpotifyRec } from "../api";
+import { mergeSaveStatusIntoTracks, requestSpotifyRec } from "../api";
 import RecList from "./lists/RecList";
 import { addTracksToDidb, getTrackListFromDidb } from "../utils";
 import listenSvg from "../assets/listen.svg";
@@ -170,8 +170,13 @@ export default function RecSection(){
 
 
       if(didbTrackListData !== null ){
-          setRecList(didbTrackListData);
-          setIsLoadingRecs(false)
+          if(!isLoggedIn){
+            const list = didbTrackListData.map((t) => ({ ...t, trackSaveState: TrackSaveState.CantSave }));
+            if(!ignore){ setRecList(list); setIsLoadingRecs(false); }
+            return;
+          }
+          const merged = await mergeSaveStatusIntoTracks(token, didbTrackListData);
+          if(!ignore){ setRecList(merged); setIsLoadingRecs(false); }
           return;
       }
 
@@ -207,35 +212,17 @@ export default function RecSection(){
           }
         }
 
+        let listToShow: ITrack[];
         if(!isLoggedIn){
-          for(let i=0; i <tempTrackList.length; i++){
-            tempTrackList[i].trackSaveState = TrackSaveState.CantSave;
-          }
+          listToShow = tempTrackList.map((t) => ({ ...t, trackSaveState: TrackSaveState.CantSave }));
         }
         else{
-          const saveStatusData = await requestSaveStatus(token,tempTrackList);
-
-          if(Array.isArray(saveStatusData) && saveStatusData.length === tempTrackList.length){
-            for(let i=0; i <tempTrackList.length;i++){
-              if(saveStatusData[i] === true){
-                tempTrackList[i].trackSaveState = TrackSaveState.Saved;
-              }
-              else{
-                tempTrackList[i].trackSaveState = TrackSaveState.Saveable;
-              }
-            }
-          }
-          else{
-            for(let i=0; i <tempTrackList.length; i++){
-              tempTrackList[i].trackSaveState = TrackSaveState.CantSave;
-            }
-          }
+          listToShow = await mergeSaveStatusIntoTracks(token, tempTrackList);
         }
         if(!ignore){
-          setRecList(tempTrackList);
+          setRecList(listToShow);
           if(didbTrackListData === null){
-            addTracksToDidb(tempTrackList,id);
-            //addTracksToDidb(tempTrackList,id);
+            addTracksToDidb(listToShow,id);
           }
           setIsLoadingRecs(false);
        }

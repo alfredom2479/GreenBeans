@@ -8,7 +8,7 @@ import configureRoutes from "./routes/index.js";
 
 console.log(process.env.PORT);
 const port = process.env.PORT || 6000;
-console.log(process.env);
+//console.log(process.env);
 console.log(port);
 
 const app = express();

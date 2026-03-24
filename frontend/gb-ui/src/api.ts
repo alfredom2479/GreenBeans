@@ -1,4 +1,4 @@
-import { AudioFeatures, ITrack, audioFeatureNames, AudioFeatureSettings } from "./interfaces";
+import { AudioFeatures, ITrack, TrackSaveState, audioFeatureNames, AudioFeatureSettings } from "./interfaces";
 
 enum RequestMethods {
   Post = 'POST',
@@ -176,6 +176,20 @@ export async function unsaveSpotifyTrack(trackId: string): Promise<Response | nu
     false
   ) as Response;
   return res;
+}
+
+export async function getSpotifyTracksByIds(idList: string): Promise<any> {
+  console.log("getSpotifyTracksByIds function called");
+  const accessToken = localStorage.getItem("access_token");
+  if (!accessToken || accessToken === "") {
+    return null;
+  }
+  const data = await sendRequest(
+    `https://api.spotify.com/v1/tracks?ids=${idList}`,
+    accessToken,
+    RequestMethods.Get
+  );
+  return data;
 }
 
 export async function requestSpotifyTrack(accessToken:string, trackId:string, isLoggedIn:boolean ){
@@ -392,9 +406,30 @@ export async function requestSaveStatus (accessToken:string|null,tracks: ITrack[
     return data;
 }
 
+/** Refreshes library save state from Spotify; use after loading tracks from cache (e.g. IndexedDB). */
+export async function mergeSaveStatusIntoTracks(
+  accessToken: string | null,
+  tracks: ITrack[]
+): Promise<ITrack[]> {
+  if (tracks.length === 0) {
+    return tracks;
+  }
+  if (!accessToken || accessToken === "") {
+    return tracks.map((t) => ({ ...t, trackSaveState: TrackSaveState.CantSave }));
+  }
+  const saveStatusData = await requestSaveStatus(accessToken, tracks);
+  if (!Array.isArray(saveStatusData) || saveStatusData.length !== tracks.length) {
+    return tracks.map((t) => ({ ...t, trackSaveState: TrackSaveState.CantSave }));
+  }
+  return tracks.map((t, i) => ({
+    ...t,
+    trackSaveState: saveStatusData[i] ? TrackSaveState.Saved : TrackSaveState.Saveable,
+  }));
+}
 
 
-export async function sendTrackSeenRequest(track:ITrack,audioFeatures:AudioFeatures){
+
+export async function sendTrackSeenRequest(track:ITrack,){
 
   let isLoggedIn:boolean = true;
 
@@ -402,30 +437,34 @@ export async function sendTrackSeenRequest(track:ITrack,audioFeatures:AudioFeatu
   const displayName:string|null = localStorage.getItem("greenbeans_user");
   const userId:string|null = localStorage.getItem("greenbeans_user_id");
 
-  if(accessToken === null || accessToken === undefined || accessToken === ""){
-    isLoggedIn = false;
-  }
-  else if(displayName === null || displayName === undefined || displayName === ""){
-    isLoggedIn = false;
-  }
-  else if(userId === null || userId === undefined || userId === ""){
+  if (
+    !accessToken || accessToken === null || accessToken === undefined || accessToken === "" ||
+    !displayName || displayName === null || displayName === undefined || displayName === "" ||
+    !userId || userId === null || userId === undefined || userId === ""
+  ) {
     isLoggedIn = false;
   }
 
   let payload = null;
 
+  // Deep clone the track and remap url -> preview_url for payload
+  const trackForPayload = {
+    ...track,
+    preview_url: track.url, // map url to preview_url
+  };
+  delete (trackForPayload as any).url; // remove url property to avoid duplication
+  console.log("trackForPayload",trackForPayload);
+
   if(isLoggedIn === false){
     payload = {
-      track:track,
-      audioFeatures:audioFeatures,
-    }
+      track: trackForPayload,
+    };
   }
   else{
     payload = {
-      user:{id:userId,displayName:displayName, access_token:accessToken},
-      track:track,
-      audioFeatures:audioFeatures,
-    }
+      user: { id: userId, displayName: displayName, access_token: accessToken },
+      track: trackForPayload,
+    };
   }
 
   try{
@@ -441,7 +480,9 @@ export async function sendTrackSeenRequest(track:ITrack,audioFeatures:AudioFeatu
       //throw new Response("Request failed",{status:res.status})
       console.log("history request failed",{status:res.status})
     }
+    else{
     console.log("history updated");
+    }
     /*
     try{
       console.log(await res.json());
@@ -457,6 +498,58 @@ export async function sendTrackSeenRequest(track:ITrack,audioFeatures:AudioFeatu
 
 }
 
+export async function requestHistory(){
+
+  let isLoggedIn:boolean = true;
+
+  const accessToken:string|null = localStorage.getItem("access_token");
+  const displayName:string|null = localStorage.getItem("greenbeans_user");
+  const userId:string|null = localStorage.getItem("greenbeans_user_id");
+
+  if (
+    !accessToken || accessToken === null || accessToken === undefined || accessToken === "" ||
+    !displayName || displayName === null || displayName === undefined || displayName === "" ||
+    !userId || userId === null || userId === undefined || userId === ""
+  ) {
+    isLoggedIn = false;
+    console.log("not logged in");
+    return []
+  }
+    try{
+      const params = new URLSearchParams({
+        userId,
+        displayName,
+      });
+      const res = await fetch(`/api/history/getmyhistory?${params.toString()}`, {
+        method: RequestMethods.Get,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      })
+      if(!res.ok){
+        //throw new Response("Request failed",{status:res.status})
+        console.log("history request failed",{status:res.status})
+        console.log("res is NOT ok");
+        return [];
+      }
+      console.log("history gotten");
+      return await res.json();
+      /*
+      try{
+        console.log(await res.json());
+      }catch(err){
+        console.log("history returned non json",{status:500})
+        console.log(res);
+      }
+      */
+    }catch(err){
+      //throw new Response("Request failed",{status:500})
+      console.log("history request failed",{status:500})
+      return [];
+    }
+  
+  
+}
 async function sendRequest(endpoint:string, accessToken:string,requestMethod:RequestMethods,expectsJson:boolean=true){
 
   console.log('request to '+endpoint)

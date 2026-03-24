@@ -189,7 +189,7 @@ export default function TrackPage(){
             addAudioFeaturesToDexie(possibleAudioFeatures);
           }
           if(possibleTrack != null){
-            sendTrackSeenRequest(possibleTrack,possibleAudioFeatures);
+            sendTrackSeenRequest(possibleTrack);
           }
         }
       }
