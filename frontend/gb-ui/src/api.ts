@@ -500,7 +500,7 @@ export async function sendTrackSeenRequest(track:ITrack,){
 
 export async function requestHistory(){
 
-  let isLoggedIn:boolean = true;
+  //let isLoggedIn:boolean = true;
 
   const accessToken:string|null = localStorage.getItem("access_token");
   const displayName:string|null = localStorage.getItem("greenbeans_user");
@@ -511,7 +511,7 @@ export async function requestHistory(){
     !displayName || displayName === null || displayName === undefined || displayName === "" ||
     !userId || userId === null || userId === undefined || userId === ""
   ) {
-    isLoggedIn = false;
+    //isLoggedIn = false;
     console.log("not logged in");
     return []
   }
