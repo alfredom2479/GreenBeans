@@ -31,19 +31,13 @@ const parseListLoaderData =
 }
 
 const addTracksToDidb = async (trackList:ITrack[],trackListId:string)=>{
-  const idList:string[] = [];
-
-  for(let i=0; i < trackList.length; i++){
-    try{
-      idList.push(trackList[i].id);
-      await didb.tracks.add(trackList[i]);
-    }
-    catch(err){
-      console.log("error adding track to dexie "+err);
-    }
-  }
+  if(trackList.length === 0) return;
+  const idList = trackList.map((t) => t.id);
   try{
-    await didb.track_lists.put(idList,trackListId);
+    await didb.transaction('rw', didb.tracks, didb.track_lists, async () => {
+      await didb.tracks.bulkPut(trackList);
+      await didb.track_lists.put(idList, trackListId);
+    });
   }
   catch(err){
     console.log("error adding track list to dexie ");
@@ -52,49 +46,42 @@ const addTracksToDidb = async (trackList:ITrack[],trackListId:string)=>{
 }
 
 const getTrackListFromDidb = async (id:string):Promise<ITrack[]|null>=>{
-  return new Promise( async (resolve)=>{
-    let trackListIdList:string[]|null = null;
-    //check if track list exists and if its valid
-    try{
-      trackListIdList= await didb.track_lists.get(id) || null;
-      //console.log(trackListIdList);
-    }
-    catch(err){
-      console.log("error getting track list from dexie ");
-      console.log(err);
-      resolve(null);
-      return;
-    }
+  let trackListIdList:string[]|null = null;
+  try{
+    trackListIdList = await didb.track_lists.get(id) ?? null;
+  }
+  catch(err){
+    console.log("error getting track list from dexie ");
+    console.log(err);
+    return null;
+  }
 
-    if(trackListIdList === null){
-      resolve(null);
-      return;
-    }
+  if(trackListIdList === null){
+    return null;
+  }
+  if(trackListIdList.length === 0){
+    return [];
+  }
 
-    const trackList:ITrack[] = [];
-    let possibleITrack:ITrack|null = null;
-    for(let i = 0; i < trackListIdList.length; i++){
-      try{
-        possibleITrack = await didb.tracks.get(trackListIdList[i]) || null;
-        if(possibleITrack === null){
-          //if 1 to n-1 tracks are missing, list quality is unacceptable.
-          //Also signal that indexedDB is in an incomplete state.
-          resolve(null);
-          return;
-        }
-      }
-      catch(err){
-        console.log("error getting track from dexie ");
-        console.log(err);
-        resolve(null);
-        return;
+  try{
+    const rows = await didb.tracks.bulkGet(trackListIdList);
+    const trackList: ITrack[] = [];
+    for(let i = 0; i < rows.length; i++){
+      const possibleITrack = rows[i];
+      if(possibleITrack === undefined){
+        //if 1 to n-1 tracks are missing, list quality is unacceptable.
+        //Also signal that indexedDB is in an incomplete state.
+        return null;
       }
       trackList.push(possibleITrack);
     }
-    resolve(trackList);
-    return;
-  })
-  
+    return trackList;
+  }
+  catch(err){
+    console.log("error getting track from dexie ");
+    console.log(err);
+    return null;
+  }
 }
 
 async function clearAllDexieTables() {
