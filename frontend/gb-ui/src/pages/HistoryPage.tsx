@@ -1,6 +1,12 @@
 import { useEffect, useState } from "react";
 import { useLoaderData } from "react-router-dom";
-import { requestHistory, requestSaveStatus } from "../api";
+import {
+  handleNewTokens,
+  refreshTokens,
+  requestHistory,
+  requestSaveStatus,
+} from "../api";
+import refreshSvg from "../assets/refresh-ccw-svgrepo-com.svg";
 import TrackCard from "../components/TrackCard";
 import SongPreviewModal from "../components/modals/SongPreviewModal";
 import { ITrack, SongPreviewInfo, TrackSaveState } from "../interfaces";
@@ -77,7 +83,8 @@ export type HistoryLoaderData = {
   info: string | null;
 };
 
-export async function HistoryLoader(): Promise<HistoryLoaderData> {
+/** Shared by route loader and “Refresh session” on the history page. */
+export async function fetchHistoryLoaderData(): Promise<HistoryLoaderData> {
   try {
     const result = await requestHistory();
     if (!Array.isArray(result)) {
@@ -139,14 +146,59 @@ export async function HistoryLoader(): Promise<HistoryLoaderData> {
   }
 }
 
+export async function HistoryLoader(): Promise<HistoryLoaderData> {
+  return fetchHistoryLoaderData();
+}
+
 export default function HistoryPage() {
   const { tracks: loaderTracks, error: loaderError, info: loaderInfo } =
     useLoaderData() as HistoryLoaderData;
 
   const [tracks, setTracks] = useState<ITrack[]>(loaderTracks);
+  const [error, setError] = useState<string | null>(loaderError);
+  const [info, setInfo] = useState<string | null>(loaderInfo);
+  const [refreshing, setRefreshing] = useState(false);
+
   useEffect(() => {
     setTracks(loaderTracks);
-  }, [loaderTracks]);
+    setError(loaderError);
+    setInfo(loaderInfo);
+  }, [loaderTracks, loaderError, loaderInfo]);
+
+  async function handleRefreshSessionAndHistory() {
+    setRefreshing(true);
+    setError(null);
+    setInfo(null);
+    try {
+      const { access_token } = await refreshTokens(
+        localStorage.getItem("refresh_token")
+      );
+      if (access_token == null) {
+        setError("Could not refresh access token. Try logging in again.");
+        return;
+      }
+      const tokensHandled = handleNewTokens(access_token);
+      if (!tokensHandled) {
+        setError("Could not store the new access token.");
+        return;
+      }
+
+      const data = await fetchHistoryLoaderData();
+      setTracks(data.tracks);
+      setError(data.error);
+      setInfo(data.info);
+    } catch (err) {
+      if (err instanceof Response) {
+        setError(`Token refresh failed (${err.status}).`);
+      } else if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Token refresh or history failed.");
+      }
+    } finally {
+      setRefreshing(false);
+    }
+  }
 
   const [showModal, setShowModal] = useState(false);
   const [modalSongPreviewInfo, setModalSongPreviewInfo] =
@@ -179,19 +231,38 @@ export default function HistoryPage() {
   return (
     <div className="flex-1 min-h-0 w-full flex flex-col px-4 sm:px-6 py-6 sm:py-10">
       <div className="mx-auto w-full max-w-2xl flex flex-1 min-h-0 flex-col gap-6">
-        <h1 className="shrink-0 text-2xl font-bold text-white tracking-tight">
-          History
-        </h1>
+        <div className="shrink-0 flex flex-wrap items-center justify-between gap-3">
+          <h1 className="text-2xl font-bold text-white tracking-tight">
+            History
+          </h1>
+          <button
+            type="button"
+            onClick={handleRefreshSessionAndHistory}
+            disabled={refreshing}
+            className="flex items-center justify-center gap-2 h-10 px-4 rounded-lg bg-zinc-800/80 text-zinc-300 hover:bg-zinc-700 hover:text-white border border-zinc-600/50 transition-colors focus:outline-none focus:ring-2 focus:ring-green-500/50 disabled:opacity-50 disabled:pointer-events-none"
+            aria-label="Refresh access token and reload history"
+          >
+            <img
+              src={refreshSvg}
+              alt=""
+              className={`w-5 h-5 ${refreshing ? "animate-spin" : ""}`}
+              aria-hidden
+            />
+            <span className="text-sm font-medium">
+              {refreshing ? "Refreshing…" : "Refresh"}
+            </span>
+          </button>
+        </div>
 
-        {loaderError ? (
+        {error ? (
           <p className="shrink-0 text-red-400 text-sm" role="alert">
-            {loaderError}
+            {error}
           </p>
         ) : null}
 
-        {loaderInfo && !loaderError ? (
+        {info && !error ? (
           <p className="shrink-0 text-zinc-400 text-sm" role="status">
-            {loaderInfo}
+            {info}
           </p>
         ) : null}
 

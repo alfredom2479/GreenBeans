@@ -29,7 +29,7 @@ export async function requestAuth(){
   return data;
 }
 
-function handleNewTokens(newAccessToken:string):boolean{
+export function handleNewTokens(newAccessToken:string):boolean{
 
   if(!newAccessToken){
     console.log("There was an error parsing new tokens")
