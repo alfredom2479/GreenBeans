@@ -37,23 +37,17 @@ export async function loader({params}:IURLParams){
   //const idbTrackData:ITrack|null= await getITrack(Stores.Tracks,trackId);
   //const idbAudioFeatureData:AudioFeatures|null = await getAudioFeatures(Stores.AudioFeatures,trackId);
 
-  let didbTrackData:ITrack|null; 
-  let didbAudioFeatureData:AudioFeatures|null;
+  let didbTrackData:ITrack|null = null;
+  let didbAudioFeatureData:AudioFeatures|null = null;
 
   try {
-    didbTrackData = await didb.tracks.get(trackId) || null;
+    [didbTrackData, didbAudioFeatureData] = await Promise.all([
+      didb.tracks.get(trackId).then((r) => r ?? null),
+      didb.audio_features.get(trackId).then((r) => r ?? null),
+    ]);
   }
   catch(err){
-    didbTrackData = null;
-    console.log("error getting track from dexie");
-  }
-
-  try {
-    didbAudioFeatureData = await didb.audio_features.get(trackId) || null;
-  }
-  catch(err){
-    didbAudioFeatureData = null;
-    console.log("error getting audio features from dexie");
+    console.log("error getting track or audio features from dexie", err);
   }
 
 
@@ -107,7 +101,7 @@ export default function TrackPage(){
 
     async function addTrackToDexie(track:ITrack){
       try{
-         await didb.tracks.add(track);
+         await didb.tracks.put(track);
       }
       catch(err){
         console.log("error adding track to dexie "+err);
@@ -115,7 +109,7 @@ export default function TrackPage(){
     }
     async function addAudioFeaturesToDexie(audioFeatures:AudioFeatures){
      try{
-      await didb.audio_features.add(audioFeatures);
+      await didb.audio_features.put(audioFeatures);
      } 
      catch(err){
       console.log("error adding audio features to dexie "+err);

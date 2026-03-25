@@ -72,6 +72,8 @@ export default function SearchPage(){
     const searchInputRef = useRef<HTMLInputElement | null>(null);
     const actionData = useActionData();
 
+    const refreshToken = localStorage.getItem("refresh_token");
+    const hideSaveOnTrackCards = refreshToken === null || refreshToken.length < 1;
 
     useEffect(()=>{
         if(actionData && Array.isArray(actionData)){
@@ -210,7 +212,7 @@ export default function SearchPage(){
                                         <TrackCard
                                             track={track}
                                             popModal={(info) => handleListenOnClick(info, index, searchResults)}
-                                            hideSaveButton={false}
+                                            hideSaveButton={hideSaveOnTrackCards}
                                             onSaved={(track) => setSearchResults((prev) => prev.map((t) => t.id === track.id ? { ...t, trackSaveState: TrackSaveState.Saved } : t))}
                                             onUnsaved={(track) => setSearchResults((prev) => prev.map((t) => t.id === track.id ? { ...t, trackSaveState: TrackSaveState.Saveable } : t))}
                                         />
