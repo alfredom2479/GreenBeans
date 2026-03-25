@@ -7,7 +7,8 @@ import { storeTrack,
     hashToken,
     getUserByTokenHash,
     createUser,
-    getUserSearches } from "../db2.js";
+    getUserSearches,
+    clearUserSearches } from "../db2.js";
 import axios from "axios";
 
 const getSpotifyUser = async (accessToken:string) => {
@@ -137,4 +138,36 @@ const getSearchesFromDatabase = async (req: Request, res: Response): Promise<Tra
     return;
 }
 
-export {storeTrackAndSearchToDatabase, getSearchesFromDatabase};
+const clearUserHistoryFromDatabase = async (req: Request, res: Response): Promise<void> => {
+    console.log("clearUserHistoryFromDatabase called");
+    const access_token = bearerTokenFromRequest(req);
+    const id = firstQueryString(req.query.userId);
+    const displayName = firstQueryString(req.query.displayName);
+
+    if (!access_token || !id || !displayName) {
+        console.error("Clear history missing token, userId, or displayName");
+        res.status(400).json({ ok: false, error: "Missing token, userId, or displayName" });
+        return;
+    }
+
+    const user = { id, displayName, access_token };
+
+    const accessTokenHash = hashToken(user.access_token);
+    const dbUser = await getUserByTokenHash(accessTokenHash);
+    if (!dbUser) {
+        const response = await getSpotifyUser(user.access_token);
+        if (!response || !response.id || response.id !== user.id) {
+            console.error("Clear history: user not found or id mismatch");
+            res.status(401).json({ ok: false, error: "Unauthorized" });
+            return;
+        }
+        await createUser(response.id, response.display_name, accessTokenHash);
+        const cleared = await clearUserSearches(response.id);
+        res.status(200).json({ ok: cleared });
+        return;
+    }
+    const cleared = await clearUserSearches(user.id);
+    res.status(200).json({ ok: cleared });
+};
+
+export {storeTrackAndSearchToDatabase, getSearchesFromDatabase, clearUserHistoryFromDatabase};
