@@ -3,10 +3,12 @@ import { useLoaderData } from "react-router-dom";
 import {
   handleNewTokens,
   refreshTokens,
+  requestClearHistory,
   requestHistory,
   requestSaveStatus,
 } from "../api";
 import refreshSvg from "../assets/refresh-ccw-svgrepo-com.svg";
+import ClearHistoryModal from "../components/modals/ClearHistoryModal";
 import TrackCard from "../components/TrackCard";
 import SongPreviewModal from "../components/modals/SongPreviewModal";
 import { ITrack, SongPreviewInfo, TrackSaveState } from "../interfaces";
@@ -158,6 +160,19 @@ export default function HistoryPage() {
   const [error, setError] = useState<string | null>(loaderError);
   const [info, setInfo] = useState<string | null>(loaderInfo);
   const [refreshing, setRefreshing] = useState(false);
+  const [clearing, setClearing] = useState(false);
+  const [showClearHistoryModal, setShowClearHistoryModal] = useState(false);
+
+  const [showModal, setShowModal] = useState(false);
+  const [modalSongPreviewInfo, setModalSongPreviewInfo] =
+    useState<SongPreviewInfo>({
+      name: "",
+      artist: "",
+      url: "",
+      image: "",
+    });
+  const [modalCurrentIndex, setModalCurrentIndex] = useState(0);
+  const [modalTrackList, setModalTrackList] = useState<ITrack[]>([]);
 
   useEffect(() => {
     setTracks(loaderTracks);
@@ -200,16 +215,25 @@ export default function HistoryPage() {
     }
   }
 
-  const [showModal, setShowModal] = useState(false);
-  const [modalSongPreviewInfo, setModalSongPreviewInfo] =
-    useState<SongPreviewInfo>({
-      name: "",
-      artist: "",
-      url: "",
-      image: "",
-    });
-  const [modalCurrentIndex, setModalCurrentIndex] = useState(0);
-  const [modalTrackList, setModalTrackList] = useState<ITrack[]>([]);
+  async function performClearHistory() {
+    setClearing(true);
+    setError(null);
+    setInfo(null);
+    try {
+      const result = await requestClearHistory();
+      if (!result.ok) {
+        setError(result.error ?? "Could not clear history.");
+        return;
+      }
+      setTracks([]);
+      setInfo("History cleared.");
+      setModalTrackList([]);
+      setShowModal(false);
+      setShowClearHistoryModal(false);
+    } finally {
+      setClearing(false);
+    }
+  }
 
   function handleListenOnClick(
     songPreviewInfo: SongPreviewInfo | undefined,
@@ -235,23 +259,33 @@ export default function HistoryPage() {
           <h1 className="text-2xl font-bold text-white tracking-tight">
             History
           </h1>
-          <button
-            type="button"
-            onClick={handleRefreshSessionAndHistory}
-            disabled={refreshing}
-            className="flex items-center justify-center gap-2 h-10 px-4 rounded-lg bg-zinc-800/80 text-zinc-300 hover:bg-zinc-700 hover:text-white border border-zinc-600/50 transition-colors focus:outline-none focus:ring-2 focus:ring-green-500/50 disabled:opacity-50 disabled:pointer-events-none"
-            aria-label="Refresh access token and reload history"
-          >
-            <img
-              src={refreshSvg}
-              alt=""
-              className={`w-5 h-5 ${refreshing ? "animate-spin" : ""}`}
-              aria-hidden
-            />
-            <span className="text-sm font-medium">
-              {refreshing ? "Refreshing…" : "Refresh"}
-            </span>
-          </button>
+          <div className="flex flex-wrap items-center gap-2">
+            <button
+              type="button"
+              onClick={handleRefreshSessionAndHistory}
+              disabled={refreshing || clearing}
+              className="flex items-center justify-center gap-2 h-10 px-4 rounded-lg bg-zinc-800/80 text-zinc-300 hover:bg-zinc-700 hover:text-white border border-zinc-600/50 transition-colors focus:outline-none focus:ring-2 focus:ring-green-500/50 disabled:opacity-50 disabled:pointer-events-none"
+              aria-label="Refresh access token and reload history"
+            >
+              <img
+                src={refreshSvg}
+                alt=""
+                className={`w-5 h-5 ${refreshing ? "animate-spin" : ""}`}
+                aria-hidden
+              />
+              <span className="text-sm font-medium">
+                {refreshing ? "Refreshing…" : "Refresh"}
+              </span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setShowClearHistoryModal(true)}
+              disabled={refreshing || clearing}
+              className="h-10 px-4 rounded-lg text-sm font-medium border border-red-600/50 bg-red-950/40 text-red-200 hover:bg-red-950/70 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-red-500/50 disabled:opacity-50 disabled:pointer-events-none"
+            >
+              Clear history
+            </button>
+          </div>
         </div>
 
         {error ? (
@@ -340,6 +374,14 @@ export default function HistoryPage() {
               prev.length > 0 ? update(prev) : prev
             );
           }}
+        />
+      ) : null}
+
+      {showClearHistoryModal ? (
+        <ClearHistoryModal
+          setShowModal={setShowClearHistoryModal}
+          isClearing={clearing}
+          onConfirm={performClearHistory}
         />
       ) : null}
     </div>

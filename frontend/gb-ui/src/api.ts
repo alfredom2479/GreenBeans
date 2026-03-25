@@ -550,6 +550,52 @@ export async function requestHistory(){
   
   
 }
+
+/** DELETE the current user's search history rows (server: searches for this user_id). */
+export async function requestClearHistory(): Promise<{ ok: boolean; error?: string }> {
+  const accessToken: string | null = localStorage.getItem("access_token");
+  const displayName: string | null = localStorage.getItem("greenbeans_user");
+  const userId: string | null = localStorage.getItem("greenbeans_user_id");
+
+  if (
+    !accessToken ||
+    accessToken === "" ||
+    !displayName ||
+    displayName === "" ||
+    !userId ||
+    userId === ""
+  ) {
+    return { ok: false, error: "Not logged in" };
+  }
+
+  try {
+    const params = new URLSearchParams({
+      userId,
+      displayName,
+    });
+    const res = await fetch(`/api/history/clearmyhistory?${params.toString()}`, {
+      method: RequestMethods.Post,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    let body: { ok?: boolean; error?: string } = {};
+    try {
+      body = await res.json();
+    } catch {
+      /* non-JSON */
+    }
+    if (!res.ok) {
+      return {
+        ok: false,
+        error: typeof body.error === "string" ? body.error : `Request failed (${res.status})`,
+      };
+    }
+    return { ok: body.ok === true };
+  } catch {
+    return { ok: false, error: "Network error" };
+  }
+}
 async function sendRequest(endpoint:string, accessToken:string,requestMethod:RequestMethods,expectsJson:boolean=true){
 
   console.log('request to '+endpoint)
